@@ -3,4 +3,6 @@
 
     <string name="starting_time_in_ms">2500</string>
 
+    <string name="login_bottom">Don\'t have anAccount?</string>
+
 </resources>
