@@ -1,20 +1,15 @@
 package com.zone.chatterz
 
 import android.content.Intent
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
-import com.google.android.gms.common.internal.Objects
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_register.*
-import java.util.*
-import kotlin.collections.HashMap
-import kotlin.collections.HashSet
+
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -31,7 +26,6 @@ class RegisterActivity : AppCompatActivity() {
 
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
-
         }
 
         register_signup_button.setOnClickListener {
@@ -50,12 +44,18 @@ class RegisterActivity : AppCompatActivity() {
                     if (passwordInput.equals(confirmPasswordInput)) {
                         createNewUser(emailInput, passwordInput)
                     } else {
+                        confirm_password_edittext_register.setText("")
+                        dismissSignUp()
                         confirm_password_edittext_register.setError("Password didn't match")
                     }
                 } else {
+                    dismissSignUp()
+                    password_edittext_register.setText("")
                     password_edittext_register.setError(isPasswordValid)
                 }
             } else {
+                dismissSignUp()
+                email_edittext_register.setText("")
                 email_edittext_register.setError(isEmailValid)
             }
         }
@@ -67,12 +67,11 @@ class RegisterActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     //SignUp Sucess ,Update UI with userObject
-                    Log.d("SucessSignUp", "CreateNewUserWithEmailAndPassword::Success")
                     val firebaseUser = mAuth.currentUser
                     val userId = firebaseUser?.uid
 
-                    database =
-                        FirebaseDatabase.getInstance().getReference().child("Users").child(userId!!)
+                    database = FirebaseDatabase.getInstance().getReference().child("Users").child(userId!!)
+
                     val usernameInput = username_edittext_register.text.toString()
                     var hashMap = java.util.HashMap<String, Any>()
                     userId?.let {
@@ -85,20 +84,27 @@ class RegisterActivity : AppCompatActivity() {
                     database.setValue(hashMap).addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             //task sucessfull so its moves to next screen: Main Screen of app
+                            dismissSignUp()
                             val intent = Intent(this, MainActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             startActivity(intent)
                         } else {
+                            dismissSignUp()
                             Toast.makeText(this, "Failed to Load", Toast.LENGTH_LONG).show()
                         }
                     }
                 } else {
                     //if signup Failed , display a message to the user
-                    Log.w("SignUpFailed", "CreateNewUserWithEmailPassword::Failure")
+                    dismissSignUp()
                     Toast.makeText(this, "Sign Up Failed", Toast.LENGTH_LONG).show()
                 }
             }
+    }
 
+    private fun dismissSignUp() {
+        register_signup_button.visibility = View.VISIBLE
+        register_signup_button.isEnabled = true
+        progressBar_register.visibility = View.INVISIBLE
     }
 
 }
