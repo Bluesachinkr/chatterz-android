@@ -1,4 +1,4 @@
-package com.zone.chatterz
+package com.zone.chatterz.PreActivities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +8,9 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.zone.chatterz.MainActivity
+import com.zone.chatterz.ManualAuthentication
+import com.zone.chatterz.R
 import kotlinx.android.synthetic.main.activity_register.*
 
 
@@ -37,8 +40,10 @@ class RegisterActivity : AppCompatActivity() {
             val passwordInput = password_edittext_register.text.toString()
             val confirmPasswordInput = confirm_password_edittext_register.text.toString()
 
-            val isEmailValid = ManualAuthentication.validateEmail(emailInput)
-            val isPasswordValid = ManualAuthentication.validatePassword(passwordInput)
+            val isEmailValid =
+                ManualAuthentication.validateEmail(emailInput)
+            val isPasswordValid =
+                ManualAuthentication.validatePassword(passwordInput)
             if (isEmailValid.equals("Valid")) {
                 if (isPasswordValid.equals("Valid")) {
                     if (passwordInput.equals(confirmPasswordInput)) {

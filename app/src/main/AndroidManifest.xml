@@ -12,11 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".WelcomeActivity" />
-        <activity android:name=".StartActivity">
+        <activity android:name=".ChatActivity"></activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".PreActivities.RegisterActivity" />
+        <activity android:name=".PreActivities.LoginActivity" />
+        <activity android:name=".PreActivities.WelcomeActivity" />
+        <activity android:name=".PreActivities.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

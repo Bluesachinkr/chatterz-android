@@ -1,9 +1,10 @@
-package com.zone.chatterz
+package com.zone.chatterz.PreActivities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import com.zone.chatterz.R
 
 class StartActivity : AppCompatActivity() {
 
@@ -15,7 +16,7 @@ class StartActivity : AppCompatActivity() {
 
         Handler().postDelayed({
 
-            var intent = Intent(this,WelcomeActivity::class.java)
+            var intent = Intent(this, WelcomeActivity::class.java)
             startActivity(intent)
             finish()
 

@@ -1,9 +1,11 @@
-package com.zone.chatterz
+package com.zone.chatterz.PreActivities
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.zone.chatterz.MainActivity
+import com.zone.chatterz.R
 import kotlinx.android.synthetic.main.activity_welcome.*
 
 class WelcomeActivity : AppCompatActivity() {
@@ -18,14 +20,14 @@ class WelcomeActivity : AppCompatActivity() {
 
         loginButton.setOnClickListener {
 
-            val intent = Intent(this,LoginActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
 
         }
 
         registerButton.setOnClickListener {
 
-            val intent = Intent(this,RegisterActivity::class.java)
+            val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
 
         }

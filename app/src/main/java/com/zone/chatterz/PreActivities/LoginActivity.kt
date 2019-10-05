@@ -1,4 +1,4 @@
-package com.zone.chatterz
+package com.zone.chatterz.PreActivities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +8,9 @@ import android.view.View
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.zone.chatterz.MainActivity
+import com.zone.chatterz.ManualAuthentication
+import com.zone.chatterz.R
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -45,8 +48,10 @@ class LoginActivity : AppCompatActivity() {
             val userEmailInput = email_edittext_login.text.toString()
             val userPasswordInput = password_edittext_login.text.toString()
 
-            val isValidEmail = ManualAuthentication.validateEmail(userEmailInput)
-            val isValidPassword = ManualAuthentication.validatePassword(userPasswordInput)
+            val isValidEmail =
+                ManualAuthentication.validateEmail(userEmailInput)
+            val isValidPassword =
+                ManualAuthentication.validatePassword(userPasswordInput)
 
             if (isValidEmail.equals("Valid")) {
                 if (isValidPassword.equals("Valid")) {
