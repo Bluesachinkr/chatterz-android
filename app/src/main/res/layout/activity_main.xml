@@ -6,14 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <RelativeLayout
+    <FrameLayout
+        android:id="@+id/container_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottomNavigationBar">
-
-        <include layout="@layout/activity_chat"
-            />
-    </RelativeLayout>
+        android:layout_above="@id/bottomNavigationBar"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationBar"
