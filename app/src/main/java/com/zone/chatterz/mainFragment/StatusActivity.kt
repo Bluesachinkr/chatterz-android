@@ -1,4 +1,4 @@
-package com.zone.chatterz.MainFragments
+package com.zone.chatterz.mainFragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import com.zone.chatterz.R
 
 
-open class SearchActivity : Fragment() {
+open class StatusActivity : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
+        return inflater.inflate(R.layout.fragment_status, container, false)
     }
 }

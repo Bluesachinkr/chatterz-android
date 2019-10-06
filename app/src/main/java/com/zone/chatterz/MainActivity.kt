@@ -2,10 +2,10 @@ package com.zone.chatterz
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.zone.chatterz.MainFragments.ChatActivity
-import com.zone.chatterz.MainFragments.ProfileActivity
-import com.zone.chatterz.MainFragments.SearchActivity
-import com.zone.chatterz.MainFragments.StatusActivity
+import com.zone.chatterz.mainFragment.ChatActivity
+import com.zone.chatterz.mainFragment.ProfileActivity
+import com.zone.chatterz.mainFragment.SearchActivity
+import com.zone.chatterz.mainFragment.StatusActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -53,9 +53,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             return@setOnNavigationItemSelectedListener false
-
         }
-
     }
 }
 

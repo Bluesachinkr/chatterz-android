@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 open class PagerAdapter(fm: FragmentManager?,arrayLists: ArrayList<Fragment>) :
     FragmentPagerAdapter(fm){
 
-    private var numberOFTabs : Int = 3
+    private var numberOFTabs : Int = 4
     private var arrayList : ArrayList<Fragment> = arrayLists
 
     override fun getItem(position: Int): Fragment? {
