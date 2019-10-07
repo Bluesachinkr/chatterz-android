@@ -3,6 +3,9 @@
     package="com.zone.chatterz">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:allowBackup="true"
@@ -14,6 +17,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".mainFragment.ChatActivity"></activity>
         <activity android:name=".MainActivity" />
+        <activity android:name=".ChatMessageActivity"/>
         <activity android:name=".PreActivities.RegisterActivity" />
         <activity android:name=".PreActivities.LoginActivity" />
         <activity android:name=".PreActivities.WelcomeActivity" />

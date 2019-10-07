@@ -16,4 +16,8 @@ open class FollowerActivity : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_followers, container, false)
     }
+
+    override fun onResume() {
+        super.onResume()
+    }
 }

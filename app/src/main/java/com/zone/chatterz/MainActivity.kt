@@ -2,17 +2,25 @@ package com.zone.chatterz
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toolbar
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.drawerlayout.widget.DrawerLayout
 import com.zone.chatterz.mainFragment.ChatActivity
 import com.zone.chatterz.mainFragment.ProfileActivity
 import com.zone.chatterz.mainFragment.SearchActivity
 import com.zone.chatterz.mainFragment.StatusActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_chat.*
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var drawerToggle : ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val toolbar = androidx.appcompat.widget.Toolbar(this)
 
         val chatsFragment = ChatActivity()
         supportFragmentManager.beginTransaction()
@@ -54,6 +62,7 @@ class MainActivity : AppCompatActivity() {
             }
             return@setOnNavigationItemSelectedListener false
         }
+
     }
 }
 

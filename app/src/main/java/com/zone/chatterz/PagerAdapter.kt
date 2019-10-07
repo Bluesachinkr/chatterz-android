@@ -7,14 +7,16 @@ import androidx.fragment.app.FragmentPagerAdapter
 open class PagerAdapter(fm: FragmentManager?,arrayLists: ArrayList<Fragment>) :
     FragmentPagerAdapter(fm){
 
-    private var numberOFTabs : Int = 4
     private var arrayList : ArrayList<Fragment> = arrayLists
 
     override fun getItem(position: Int): Fragment? {
-        return arrayList.get(position)
+        val fragment = arrayList.get(position)
+        fragment.onResume()
+        return fragment
     }
 
     override fun getCount(): Int {
-        return numberOFTabs
+        return arrayList.size
     }
+
 }

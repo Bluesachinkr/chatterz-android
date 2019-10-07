@@ -81,9 +81,9 @@ class RegisterActivity : AppCompatActivity() {
                     var hashMap = java.util.HashMap<String, Any>()
                     userId?.let {
                         hashMap.put("id", it)
-                        hashMap.put("email", emailInput)
-                        hashMap.put("fullName", usernameInput)
-                        hashMap.put("isVerified", "Not Verified")
+                        hashMap.put("username", usernameInput)
+                        hashMap.put("imageUrl","null")
+                        hashMap.put("bio","null")
                     }
 
                     database.setValue(hashMap).addOnCompleteListener(this) { task ->

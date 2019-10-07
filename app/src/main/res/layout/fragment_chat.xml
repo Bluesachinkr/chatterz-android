@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayoutChat"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".mainFragment.ChatActivity">
@@ -13,35 +14,37 @@
         android:background="#FFFFFF"
         android:fitsSystemWindows="true">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsingToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="true"
-            android:fitsSystemWindows="true"
-            app:title="Chats"
-            app:expandedTitleGravity="bottom|center_horizontal"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:background="#FFFFFF"
-                app:layout_collapseMode="pin"/>
-
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbarMain"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin" />
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@font/carter_one"
+                        android:text="@string/app_name"
+                        android:textColor="#000000"
+                        android:textSize="28sp" />
+
+                </RelativeLayout>
+
+            </androidx.appcompat.widget.Toolbar>
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabBarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:tabIndicatorColor="#000000">
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="24dp"
+                app:tabIndicatorColor="@color/colorLightBlue">
 
             </com.google.android.material.tabs.TabLayout>
 

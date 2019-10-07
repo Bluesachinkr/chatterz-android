@@ -16,4 +16,8 @@ open class GroupChat : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_group_chat, container, false)
     }
+
+    override fun onResume() {
+        super.onResume()
+    }
 }
