@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.ChatMessageActivity
 import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
@@ -20,8 +21,7 @@ class RecentAdapter(context: Context,list: List<User>) : RecyclerView.Adapter<Re
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Viewholder {
         val view = LayoutInflater.from(mContext).inflate(R.layout.user_item,parent,false)
-        val viewholder = Viewholder(view)
-        return viewholder
+        return Viewholder(view)
     }
 
     override fun getItemCount(): Int {
@@ -32,7 +32,7 @@ class RecentAdapter(context: Context,list: List<User>) : RecyclerView.Adapter<Re
 
         val user : User = mUsers.get(position)
         holder.userName.text = user.username
-        if(user.imageUrl.equals("")) {
+        if(user.imageUrl.equals("null")) {
             holder.profileImage.setImageResource(R.mipmap.ic_launcher_round)
         }else{
             Glide.with(mContext).load(user.imageUrl).into(holder.profileImage)

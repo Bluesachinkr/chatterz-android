@@ -1,5 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ChatMessageActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_weight="7"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/backArrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/back_arrow"
+                        android:layout_gravity="center_vertical"/>
+
+                    <com.mikhaellopez.circularimageview.CircularImageView
+                        android:id="@+id/profileImg_chatBar"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="8dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/google_logo" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="4dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/userNameChatBox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:maxLines="1"
+                            android:text="UserName"
+                            android:textColor="#000000"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/lastOnline"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:text="Active 35 min ago"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/appBarlayout">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chatsRecyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/messageAreaChat"/>
+
+        <LinearLayout
+            android:id="@+id/messageAreaChat"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_height="?attr/actionBarSize"
+            android:orientation="horizontal"
+            android:weightSum="6">
+
+            <EditText
+                android:id="@+id/editextMessage"
+                android:layout_width="0dp"
+                android:layout_weight="4.6"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:padding="12dp"
+                android:hint="Enter a message"
+                android:background="@drawable/background_edittext_charbox"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".4"
+                android:background="#FFFFFF"/>
+
+            <ImageView
+                android:id="@+id/sendMessageButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="45dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/send_button" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>
