@@ -6,7 +6,8 @@
 
     <RelativeLayout
         android:layout_width="290dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp">
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/chatProfileImgReceiving"
@@ -22,13 +23,33 @@
             android:layout_height="wrap_content"
             android:fontFamily="serif"
             android:maxLines="30"
-            android:text=""
+            android:text="Hello Bro"
             android:padding="6dp"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             android:textSize="18sp"
             android:layout_marginLeft="5dp"
             android:layout_toEndOf="@id/chatProfileImgReceiving"
             android:background="@drawable/receiving_chat_background"/>
+
+        <ImageView
+        android:id="@+id/isSeenMessage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/seen_icon"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/message"
+        android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/isNotSeenMessage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/not_seen_icon"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/message"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

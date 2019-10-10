@@ -4,10 +4,10 @@
     <item
         android:id="@+id/chats"
         android:title="Chats"
-        android:icon="@drawable/ic_speech_bubble"/>
+        android:icon="@drawable/chats_light_icon"/>
 
     <item
-        android:icon="@drawable/ic_search"
+        android:icon="@drawable/search_light_icon"
         android:title="Search"
         android:id="@+id/search_bottombar"/>
 
@@ -18,7 +18,7 @@
 
     <item
         android:title="Profile"
-        android:icon="@drawable/icon_profile"
+        android:icon="@drawable/proifle_light_icon"
         android:id="@+id/profile_bottombar"/>
     
 </menu>

@@ -1,5 +1,6 @@
 package com.zone.chatterz
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,10 +16,10 @@ import kotlinx.android.synthetic.main.activity_chatmessage.*
 
 class ChatMessageActivity : AppCompatActivity() {
 
-    lateinit var firebaseUser: FirebaseUser
-    lateinit var databaseReference: DatabaseReference
-
-    lateinit var mChat: MutableList<Chat>
+    private lateinit var firebaseUser: FirebaseUser
+    private lateinit var databaseReference: DatabaseReference
+    private lateinit var mChat: MutableList<Chat>
+    private lateinit var seenListener: ValueEventListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +33,6 @@ class ChatMessageActivity : AppCompatActivity() {
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(id)
 
         //RecyclerView for Chats setting linearlayoutManager
-
         chatsRecyclerview.setHasFixedSize(true)
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.stackFromEnd = true
@@ -46,11 +46,10 @@ class ChatMessageActivity : AppCompatActivity() {
                 setProfileNameAndImgAppBar(p0)
                 readMessage(id, firebaseUser.uid)
             }
-
         })
 
         //OnClick of send Message button calls the method sendMessage()
-
+        //sendMessage() sends the load the message on data with sendser and receiver info
         sendMessageButton.setOnClickListener {
             val message = editextMessage.text.toString()
             if (!message.equals("")) {
@@ -62,9 +61,14 @@ class ChatMessageActivity : AppCompatActivity() {
             }
         }
 
+        //set OnBackPressed on backArrow of ChatMessage Screen
         backArrow.setOnClickListener {
-            onBackPressed()
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
         }
+        seen.setOnClickListener { seenMessage(id)
+            readMessage(id, firebaseUser.uid)}
     }
 
     private fun sendMessage(message: String, sender: String, reciever: String) {
@@ -73,6 +77,7 @@ class ChatMessageActivity : AppCompatActivity() {
         hashMap.put("message", message)
         hashMap.put("sender", sender)
         hashMap.put("receiver", reciever)
+        hashMap.put("isSeen",false)
 
         //Clear Edittext and make ready to take next chat
         editextMessage.setText("")
@@ -80,15 +85,13 @@ class ChatMessageActivity : AppCompatActivity() {
     }
 
     private fun readMessage(id: String, userId: String) {
+
         mChat = mutableListOf()
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Chats")
-
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
-
             }
-
             override fun onDataChange(p0: DataSnapshot) {
                 mChat.clear()
                 for (dataset in p0.children) {
@@ -105,7 +108,6 @@ class ChatMessageActivity : AppCompatActivity() {
                 val chatsAdapter = ChatsAdapter(applicationContext, mChat)
                 chatsRecyclerview.adapter = chatsAdapter
             }
-
         })
     }
 
@@ -114,6 +116,8 @@ class ChatMessageActivity : AppCompatActivity() {
     }
 
     private fun setProfileNameAndImgAppBar(dataSnapshot: DataSnapshot) {
+        //Set the Username and Profile image of the user on the appbar of the chatMessage Activity
+        //It also shows the status of the user whom the cureent user is want to send message is Online/Offline as status
         val user = dataSnapshot.getValue(User::class.java)
         if (user != null) {
             if (user.imageUrl.equals("null")) {
@@ -123,5 +127,31 @@ class ChatMessageActivity : AppCompatActivity() {
             }
             userNameChatBox.text = user.username
         }
+    }
+
+    private fun seenMessage(userId : String){
+        databaseReference = FirebaseDatabase.getInstance().getReference("Chats")
+        seenListener = databaseReference.addValueEventListener(object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+            }
+            override fun onDataChange(p0: DataSnapshot) {
+                mChat.clear()
+                for (dataSet in p0.children){
+                    val chat = dataSet.getValue(Chat::class.java)
+                    if(chat!=null) {
+                        if (chat.receiver.equals(firebaseUser.uid) && chat.sender.equals(userId)){
+                            val hashMap = HashMap<String, Any>()
+                            hashMap.put("isSeen",true)
+                            dataSet.ref.updateChildren(hashMap)
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        databaseReference.removeEventListener(seenListener)
     }
 }

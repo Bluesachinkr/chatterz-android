@@ -2,8 +2,9 @@ package com.zone.chatterz.Model
 
 class Chat {
 
-    var message : String = ""
-    var sender : String = ""
-    var receiver : String = ""
+    val message : String = ""
+    val sender : String = ""
+    val receiver : String = ""
+    val isSeen : Boolean = false
 
 }

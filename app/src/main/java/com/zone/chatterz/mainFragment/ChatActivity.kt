@@ -28,7 +28,7 @@ open class ChatActivity : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        tabBarLayout.addTab(tabBarLayout.newTab().setIcon(R.drawable.ic_chat_bubbles))
+        tabBarLayout.addTab(tabBarLayout.newTab().setIcon(R.drawable.chats_light_icon))
         tabBarLayout.addTab(tabBarLayout.newTab().setIcon(R.drawable.ic_multiple_users_silhouette))
         tabBarLayout.addTab(tabBarLayout.newTab().setIcon(R.drawable.ic_followers))
 

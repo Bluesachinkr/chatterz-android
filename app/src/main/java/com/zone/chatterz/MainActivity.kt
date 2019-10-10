@@ -1,5 +1,6 @@
 package com.zone.chatterz
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toolbar
@@ -16,26 +17,26 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var drawerToggle : ActionBarDrawerToggle
 
+    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val toolbar = androidx.appcompat.widget.Toolbar(this)
-
-        val chatsFragment = ChatActivity()
-        supportFragmentManager.beginTransaction()
-            .add(R.id.container_main,chatsFragment)
-            .addToBackStack(null).commit()
+        setNavigationInitially()
 
         bottomNavigationBar.setOnNavigationItemSelectedListener { menuItem ->
-
+            bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.chats_light_icon)
+            bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.search_light_icon)
+            bottomNavigationBar.menu.getItem(2).setIcon(R.drawable.icon_status)
+            bottomNavigationBar.menu.getItem(3).setIcon(R.drawable.proifle_light_icon)
             when(menuItem.itemId){
 
                 R.id.chats ->{
-                    val chatsFragment = ChatActivity()
+                    val chatFragment = ChatActivity()
                     supportFragmentManager.beginTransaction()
-                        .add(R.id.container_main,chatsFragment)
+                        .replace(R.id.container_main,chatFragment)
                         .addToBackStack(null).commit()
+                    menuItem.setIcon(R.drawable.chat_dark_icon)
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.search_bottombar ->{
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container_main,searchActivity)
                         .addToBackStack(null).commit()
+                    menuItem.setIcon(R.drawable.search_dark_icon)
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.status_bottombar ->{
@@ -57,12 +59,21 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container_main,profileActivity)
                         .addToBackStack(null).commit()
+                    menuItem.setIcon(R.drawable.profile_dark_icon)
                     return@setOnNavigationItemSelectedListener true
                 }
             }
             return@setOnNavigationItemSelectedListener false
         }
 
+    }
+    private fun setNavigationInitially(){
+        bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.chats_light_icon)
+        val chatsFragment = ChatActivity()
+        supportFragmentManager.beginTransaction()
+            .add(R.id.container_main,chatsFragment)
+            .addToBackStack(null).commit()
+        bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.chat_dark_icon)
     }
 }
 

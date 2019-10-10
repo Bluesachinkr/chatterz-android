@@ -55,11 +55,11 @@
                             android:id="@+id/userNameChatBox"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="7dp"
                             android:maxLines="1"
                             android:text="UserName"
                             android:textColor="#000000"
-                            android:textSize="16sp"
+                            android:textSize="15sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -68,7 +68,7 @@
                             android:layout_height="wrap_content"
                             android:maxLines="1"
                             android:text="Active 35 min ago"
-                            android:textSize="14sp" />
+                            android:textSize="13sp" />
 
                     </LinearLayout>
 
@@ -89,6 +89,7 @@
             android:id="@+id/chatsRecyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#F0F0F0"
             android:layout_above="@id/messageAreaChat"/>
 
         <LinearLayout
@@ -107,13 +108,13 @@
                 android:layout_margin="5dp"
                 android:padding="12dp"
                 android:hint="Enter a message"
-                android:background="@drawable/background_edittext_charbox"/>
+                android:background="@drawable/background_edittext_chatbox"/>
 
-            <View
+            <Button
+                android:id="@+id/seen"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".4"
-                android:background="#FFFFFF"/>
+                android:layout_weight=".4" />
 
             <ImageView
                 android:id="@+id/sendMessageButton"

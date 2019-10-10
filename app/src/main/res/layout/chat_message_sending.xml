@@ -24,6 +24,26 @@
            android:textColor="#FFFFFF"
            android:textSize="18sp" />
 
+       <ImageView
+       android:id="@+id/isSeenMessage"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+           android:src="@drawable/seen_icon"
+       android:layout_alignParentEnd="true"
+       android:layout_alignParentRight="true"
+       android:layout_below="@id/message"
+       android:visibility="gone"/>
+
+       <ImageView
+           android:id="@+id/isNotSeenMessage"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:src="@drawable/not_seen_icon"
+           android:layout_alignParentEnd="true"
+           android:layout_alignParentRight="true"
+           android:layout_below="@id/message"
+           android:visibility="gone"/>
+
    </RelativeLayout>
 
 

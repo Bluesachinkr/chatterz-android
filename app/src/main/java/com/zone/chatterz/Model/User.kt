@@ -2,9 +2,9 @@ package com.zone.chatterz.Model
 
 class User {
 
-     val id : String = ""
-    var username : String = ""
-    var imageUrl : String = ""
-    var bio : String = ""
+    val id: String = ""
+    val username: String = ""
+    val imageUrl: String = ""
+    val bio: String = ""
 
 }
