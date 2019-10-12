@@ -43,23 +43,23 @@ class ChatsAdapter(context: Context, list: List<Chat>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val chat: Chat = mChat.get(position)
-        holder.textMessage.text = chat.isSeen.toString()
+        holder.textMessage.text = chat.message
 
         if (position == mChat.size - 1) {
+            holder.isSeen.visibility = View.VISIBLE
             if(chat.isSeen) {
-               holder.isSeen.visibility = View.VISIBLE
-                holder.isNotSeen.visibility = View.GONE
+               holder.isSeen.setImageResource(R.drawable.seen_icon)
             }else{
-               holder.isNotSeen.visibility = View.VISIBLE
-                holder.isSeen.visibility = View.GONE
+               holder.isSeen.setImageResource(R.drawable.not_seen_icon)
             }
+        }else{
+            holder.isSeen.visibility = View.GONE
         }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textMessage: TextView = itemView.findViewById(R.id.message)
         var isSeen : ImageView  = itemView.findViewById(R.id.isSeenMessage)
-        var isNotSeen : ImageView = itemView.findViewById(R.id.isNotSeenMessage)
     }
 
     override fun getItemViewType(position: Int): Int {
