@@ -110,8 +110,7 @@
                 android:hint="Enter a message"
                 android:background="@drawable/background_edittext_chatbox"/>
 
-            <Button
-                android:id="@+id/seen"
+            <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight=".4" />

@@ -1,10 +1,20 @@
 package com.zone.chatterz.Model
 
-class User {
+import com.google.firebase.database.Exclude
+import com.google.firebase.database.PropertyName
 
-    val id: String = ""
-    val username: String = ""
-    val imageUrl: String = ""
-    val bio: String = ""
+data class User (
 
+    @Exclude val id: String,
+    @set:PropertyName("username")
+    @get:PropertyName("username")
+    var username: String,
+    @set:PropertyName("imageUrl")
+    @get:PropertyName("imageUrl")
+    var imageUrl: String,
+    @set:PropertyName("bio")
+    @get:PropertyName("bio")
+    var bio: String
+){
+    constructor():this("","","","")
 }

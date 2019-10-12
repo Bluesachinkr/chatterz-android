@@ -67,8 +67,8 @@ class ChatMessageActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
-        seen.setOnClickListener { seenMessage(id)
-            readMessage(id, firebaseUser.uid)}
+
+       seenMessage(id)
     }
 
     private fun sendMessage(message: String, sender: String, reciever: String) {
@@ -146,6 +146,7 @@ class ChatMessageActivity : AppCompatActivity() {
                         }
                     }
                 }
+                readMessage(userId,firebaseUser.uid)
             }
         })
     }
@@ -154,4 +155,5 @@ class ChatMessageActivity : AppCompatActivity() {
         super.onPause()
         databaseReference.removeEventListener(seenListener)
     }
+
 }

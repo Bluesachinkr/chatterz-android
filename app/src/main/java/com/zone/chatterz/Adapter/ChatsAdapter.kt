@@ -42,20 +42,17 @@ class ChatsAdapter(context: Context, list: List<Chat>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val chat = mChat.get(position)
-
-        holder.textMessage.text = chat.message
+        val chat: Chat = mChat.get(position)
+        holder.textMessage.text = chat.isSeen.toString()
 
         if (position == mChat.size - 1) {
-            if (chat.isSeen) {
+            if(chat.isSeen) {
                holder.isSeen.visibility = View.VISIBLE
                 holder.isNotSeen.visibility = View.GONE
             }else{
                holder.isNotSeen.visibility = View.VISIBLE
                 holder.isSeen.visibility = View.GONE
             }
-        }else{
-            holder.isSeen.visibility = View.GONE
         }
     }
 
