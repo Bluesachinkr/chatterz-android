@@ -8,11 +8,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.ChatMessageActivity
+import com.zone.chatterz.MainActivity
 import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
-import kotlinx.android.synthetic.main.follower_item.view.*
 
 class FollowerAdapter(context: Context,list: List<User>) : RecyclerView.Adapter<FollowerAdapter.Viewholder>() {
 
@@ -37,7 +41,11 @@ class FollowerAdapter(context: Context,list: List<User>) : RecyclerView.Adapter<
             Glide.with(mContext).load(user.imageUrl).into(holder.profileImage)
         }
         holder.userName.text = user.username
-
+       if(user.status.equals("online")){
+           holder.status.visibility = View.VISIBLE
+       }else{
+           holder.status.visibility = View.INVISIBLE
+       }
         holder.itemView.setOnClickListener {
             val intent = Intent(mContext, ChatMessageActivity::class.java)
             intent.putExtra("UserId",user.id)
@@ -49,6 +57,7 @@ class FollowerAdapter(context: Context,list: List<User>) : RecyclerView.Adapter<
 
         var profileImage : CircularImageView  = itemView.findViewById(R.id.profileImg_Follower)
         var userName : TextView = itemView.findViewById(R.id.userNameFollower)
+        var status : CircularImageView = itemView.findViewById(R.id.statusFollower)
 
     }
 }

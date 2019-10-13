@@ -75,15 +75,17 @@ class RegisterActivity : AppCompatActivity() {
                     val firebaseUser = mAuth.currentUser
                     val userId = firebaseUser?.uid
 
-                    database = FirebaseDatabase.getInstance().getReference().child("Users").child(userId!!)
+                    database =
+                        FirebaseDatabase.getInstance().getReference().child("Users").child(userId!!)
 
                     val usernameInput = username_edittext_register.text.toString()
                     var hashMap = java.util.HashMap<String, Any>()
                     userId?.let {
                         hashMap.put("id", it)
                         hashMap.put("username", usernameInput)
-                        hashMap.put("imageUrl","null")
-                        hashMap.put("bio","null")
+                        hashMap.put("imageUrl", "null")
+                        hashMap.put("bio", "null")
+                        hashMap.put("status","offline")
                     }
 
                     database.setValue(hashMap).addOnCompleteListener(this) { task ->
@@ -111,6 +113,5 @@ class RegisterActivity : AppCompatActivity() {
         register_signup_button.isEnabled = true
         progressBar_register.visibility = View.INVISIBLE
     }
-
 }
 

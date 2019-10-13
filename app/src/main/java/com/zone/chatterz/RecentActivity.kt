@@ -27,6 +27,9 @@ open class RecentActivity : Fragment() {
     private lateinit var recentAdapter: RecentAdapter
 
     private lateinit var usersList: MutableList<String>
+    private lateinit var lastMessages : MutableList<String>
+
+    private lateinit var lastMessagelistener : ValueEventListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -83,15 +86,9 @@ open class RecentActivity : Fragment() {
                     if(user != null){
                         for ( userId in usersList){
                             if(userId.equals(user.id)){
-                                if(mUsers.size != 0){
-                                    for (users in mUsers){
-                                        if(!user.id.equals(users.id)){
-                                           mUsers.add(user)
-                                        }
+                                    if(!mUsers.contains(user)){
+                                        mUsers.add(user)
                                     }
-                                }else{
-                                    mUsers.add(user)
-                                }
                             }
                         }
                     }

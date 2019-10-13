@@ -67,7 +67,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:maxLines="1"
-                            android:text="Active 35 min ago"
+                            android:text=""
                             android:textSize="13sp" />
 
                     </LinearLayout>

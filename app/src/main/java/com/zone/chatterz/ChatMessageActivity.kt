@@ -19,7 +19,7 @@ class ChatMessageActivity : AppCompatActivity() {
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var databaseReference: DatabaseReference
     private lateinit var mChat: MutableList<Chat>
-    private lateinit var seenListener: ValueEventListener
+    private lateinit var isActive : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -126,12 +126,13 @@ class ChatMessageActivity : AppCompatActivity() {
                 Glide.with(applicationContext).load(user.imageUrl).into(profileImg_chatBar)
             }
             userNameChatBox.text = user.username
+            lastOnline.text = user.status
         }
     }
 
     private fun seenMessage(userId : String){
         databaseReference = FirebaseDatabase.getInstance().getReference("Chats")
-        seenListener = databaseReference.addValueEventListener(object : ValueEventListener{
+       databaseReference.addValueEventListener(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
             }
             override fun onDataChange(p0: DataSnapshot) {
@@ -140,20 +141,30 @@ class ChatMessageActivity : AppCompatActivity() {
                     val chat = dataSet.getValue(Chat::class.java)
                     if(chat!=null) {
                         if (chat.receiver.equals(firebaseUser.uid) && chat.sender.equals(userId)){
-                            val hashMap = HashMap<String, Any>()
-                            hashMap.put("isSeen",true)
-                            dataSet.ref.updateChildren(hashMap)
+                            if(isActive.equals("active")) {
+                                val hashMap = HashMap<String, Any>()
+                                hashMap.put("isSeen", true)
+                                dataSet.ref.updateChildren(hashMap)
+                            }
                         }
                     }
                 }
-                readMessage(userId,firebaseUser.uid)
             }
         })
     }
 
     override fun onPause() {
         super.onPause()
-        databaseReference.removeEventListener(seenListener)
+    }
+
+    override fun onStart() {
+        super.onStart()
+       isActive = "active"
+    }
+
+    override fun onStop() {
+        super.onStop()
+       isActive = "inactive"
     }
 
 }

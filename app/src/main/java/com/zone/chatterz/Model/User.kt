@@ -14,7 +14,9 @@ data class User (
     var imageUrl: String,
     @set:PropertyName("bio")
     @get:PropertyName("bio")
-    var bio: String
+    var bio: String,
+    var status : String
+
 ){
-    constructor():this("","","","")
+    constructor():this("","","","","offline")
 }

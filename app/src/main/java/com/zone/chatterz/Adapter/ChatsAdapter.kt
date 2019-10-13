@@ -8,10 +8,16 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.Model.Chat
+import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
 
 class ChatsAdapter(context: Context, list: List<Chat>) :
@@ -44,7 +50,7 @@ class ChatsAdapter(context: Context, list: List<Chat>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val chat: Chat = mChat.get(position)
         holder.textMessage.text = chat.message
-
+        showPhotoImage(chat.sender,holder.profileChatImage)
         if (position == mChat.size - 1) {
             holder.isSeen.visibility = View.VISIBLE
             if(chat.isSeen) {
@@ -60,6 +66,7 @@ class ChatsAdapter(context: Context, list: List<Chat>) :
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textMessage: TextView = itemView.findViewById(R.id.message)
         var isSeen : ImageView  = itemView.findViewById(R.id.isSeenMessage)
+        var profileChatImage = itemView.findViewById<CircularImageView>(R.id.chatProfileImgReceiving)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -70,5 +77,27 @@ class ChatsAdapter(context: Context, list: List<Chat>) :
             return MESSAGE_LEFT_RECEIVER
         }
 
+    }
+
+    private fun showPhotoImage(userid : String,imageView: CircularImageView){
+        val databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+        databaseReference.addValueEventListener(object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+            }
+            override fun onDataChange(p0: DataSnapshot) {
+                for (dataSet in p0.children){
+                    val user = dataSet.getValue(User::class.java)
+                    if(user!=null){
+                        if(user.id.equals(userid)){
+                            if(user.imageUrl.equals("null")){
+                                imageView.setImageResource(R.mipmap.ic_launcher_round)
+                            }else{
+                                Glide.with(mContext).load(user.imageUrl).into(imageView)
+                            }
+                        }
+                    }
+                }
+            }
+        })
     }
 }
