@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="6">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="4.8"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="8dp"
+            android:layout_gravity="center_vertical">
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/Group_profileImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:civ_border_color="#000000"
+                app:civ_border_width="2px"
+                android:src="@drawable/google_logo"
+                android:scaleType="centerCrop"/>
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/GroupName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginTop="10dp"
+                android:textSize="16sp"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:maxLines="1"/>
+
+            <TextView
+                android:id="@+id/messageGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="15sp"
+                android:maxLines="1"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="1.2"
+        android:layout_height="?attr/actionBarSize">
+
+        <TextView
+            android:id="@+id/statusLastMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yesterday"
+            android:textSize="14sp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:maxLines="1"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

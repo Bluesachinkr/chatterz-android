@@ -38,7 +38,7 @@ class ChatMessageActivity : AppCompatActivity() {
         linearLayoutManager.stackFromEnd = true
         chatsRecyclerview.layoutManager = linearLayoutManager
 
-        // databaseReference set the adapter of recycler vuew of chats
+        // databaseReference set the adapter of recycler view of chats
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
