@@ -1,5 +1,6 @@
 package com.zone.chatterz
 
+import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -29,7 +31,11 @@ open class GroupChat : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_group_chat, container, false)
-
+        val newGroupCreateButton = view.findViewById<FloatingActionButton>(R.id.createNewGroup)
+        newGroupCreateButton.setOnClickListener {
+            val intent= Intent(context,CreateNewGroup::class.java)
+            startActivity(intent)
+        }
         //Setting Recycler View in the frameLayout
         recyclerViewGroup = view.findViewById<RecyclerView>(R.id.RecyclerViewGroups)
         recyclerViewGroup.setHasFixedSize(true)

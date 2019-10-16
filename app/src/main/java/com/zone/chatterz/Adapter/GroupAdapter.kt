@@ -1,6 +1,7 @@
 package com.zone.chatterz.Adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mikhaellopez.circularimageview.CircularImageView
+import com.zone.chatterz.GroupChatActivity
 import com.zone.chatterz.Model.Group
 import com.zone.chatterz.R
 
@@ -20,13 +22,9 @@ class GroupAdapter(context: Context,list: List<Group>) : RecyclerView.Adapter<Gr
     private val remainingView = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        if(viewType.equals(remainingView)) {
             val view = LayoutInflater.from(mContext).inflate(R.layout.group_item, parent, false)
             return ViewHolder(view)
-        }else{
-            val view  = LayoutInflater.from(mContext).inflate(R.layout.new_group_item,parent,false)
-            return ViewHolder(view)
-        }
+
     }
 
     override fun getItemCount(): Int {
@@ -38,11 +36,10 @@ class GroupAdapter(context: Context,list: List<Group>) : RecyclerView.Adapter<Gr
         holder.groupName.text = group.groupName
         if(group.groupImgUrl.equals("default")){
             holder.groupImage.setImageResource(R.mipmap.ic_launcher_round)
-        }else if(group.groupImgUrl.equals("null")){
-           holder.groupImage.visibility = View.VISIBLE
-        }else{
+        } else{
             Glide.with(mContext).load(group.groupImgUrl).into(holder.groupImage)
         }
+
         numberViews--
     }
 
@@ -54,11 +51,4 @@ class GroupAdapter(context: Context,list: List<Group>) : RecyclerView.Adapter<Gr
         var lastMessageStatus = itemView.findViewById<TextView>(R.id.statusLastMessage)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        if(numberViews.equals(1)){
-            return lastView
-        }else{
-            return remainingView
-        }
-    }
 }

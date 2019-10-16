@@ -1,13 +1,9 @@
 package com.zone.chatterz
 
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toolbar
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.drawerlayout.widget.DrawerLayout
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -24,7 +20,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var drawerToggle : ActionBarDrawerToggle
 
-    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -76,12 +71,11 @@ class MainActivity : AppCompatActivity() {
         updateOnlineStatus()
     }
     private fun setNavigationInitially(){
-        bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.chats_light_icon)
         val chatsFragment = ChatActivity()
         supportFragmentManager.beginTransaction()
             .add(R.id.container_main,chatsFragment)
             .addToBackStack(null).commit()
-        bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.chat_dark_icon)
+        bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.chat_dark_icon)
     }
 
     private fun updateOnlineStatus(){
