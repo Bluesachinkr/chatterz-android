@@ -17,14 +17,10 @@ class GroupAdapter(context: Context,list: List<Group>) : RecyclerView.Adapter<Gr
 
     private val mContext = context
     private val mGroup = list
-    private var numberViews : Int = mGroup.size
-    private val lastView = 1
-    private val remainingView = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(mContext).inflate(R.layout.group_item, parent, false)
             return ViewHolder(view)
-
     }
 
     override fun getItemCount(): Int {
@@ -39,8 +35,6 @@ class GroupAdapter(context: Context,list: List<Group>) : RecyclerView.Adapter<Gr
         } else{
             Glide.with(mContext).load(group.groupImgUrl).into(holder.groupImage)
         }
-
-        numberViews--
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){

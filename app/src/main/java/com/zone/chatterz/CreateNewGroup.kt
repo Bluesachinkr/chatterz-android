@@ -17,5 +17,6 @@ class CreateNewGroup : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val supportManager = supportFragmentManager
     }
 }
