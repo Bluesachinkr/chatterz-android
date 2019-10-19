@@ -1,14 +1,19 @@
 package com.zone.chatterz
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Gravity
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.zone.chatterz.Model.User
+import com.zone.chatterz.PreActivities.WelcomeActivity
 import com.zone.chatterz.mainFragment.ChatActivity
 import com.zone.chatterz.mainFragment.ProfileActivity
 import com.zone.chatterz.mainFragment.SearchActivity
@@ -16,16 +21,32 @@ import com.zone.chatterz.mainFragment.StatusActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),DrawerLocker{
 
-    private lateinit var drawerToggle : ActionBarDrawerToggle
+    private lateinit var drawer : DrawerLayout
+    private lateinit var mAuth: FirebaseAuth
+    private lateinit var firebaseAuthListener : FirebaseAuth.AuthStateListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setNavigationInitially()
+        mAuth = FirebaseAuth.getInstance()
 
+        drawer = findViewById(R.id.drawerLayout)
+        val  NavigationDrawerMenu = findViewById<NavigationView>(R.id.NavigationDrawerMenu)
+
+        firebaseAuthListener = FirebaseAuth.AuthStateListener {firebaseAuth ->
+            val user= FirebaseAuth.getInstance().currentUser
+            if(user == null){
+                val i = Intent(this,WelcomeActivity::class.java)
+                startActivity(i)
+                finish()
+                return@AuthStateListener
+            }
+        }
+
+        setNavigationInitially()
         bottomNavigationBar.setOnNavigationItemSelectedListener { menuItem ->
             bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.chats_light_icon)
             bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.search_light_icon)
@@ -68,6 +89,19 @@ class MainActivity : AppCompatActivity() {
             return@setOnNavigationItemSelectedListener false
         }
 
+        NavigationDrawerMenu.setNavigationItemSelectedListener {menuItem ->
+
+            when(menuItem.itemId){
+                R.id.logout ->{
+                    val firebaseAuth = FirebaseAuth.getInstance().signOut()
+                    return@setNavigationItemSelectedListener true
+                }else->{
+                return@setNavigationItemSelectedListener false
+            }
+            }
+            return@setNavigationItemSelectedListener true
+        }
+
         updateOnlineStatus()
     }
     private fun setNavigationInitially(){
@@ -99,6 +133,24 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+
+    override fun setDrawerLockerEnabled(enabled: Boolean) {
+        if(enabled){
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        }else{
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        }
+    }
+
+    override fun openDrawer() {
+        drawer.openDrawer(Gravity.RIGHT)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mAuth.addAuthStateListener(firebaseAuthListener)
+    }
+
 }
 
 

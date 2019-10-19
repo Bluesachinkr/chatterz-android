@@ -61,9 +61,11 @@ open class FollowerActivity : Fragment() {
                         }
                     }
                 }
-                val getContext = context!!
-                followerAdapter = FollowerAdapter(getContext,mUsers)
-                followerRecyclerView.adapter = followerAdapter
+                val getContext = context
+                if(getContext!=null) {
+                    followerAdapter = FollowerAdapter(getContext, mUsers)
+                    followerRecyclerView.adapter = followerAdapter
+                }
             }
         })
 

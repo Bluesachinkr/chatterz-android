@@ -11,27 +11,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/container_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottomNavigationBar" />
+        <FrameLayout
+            android:id="@+id/container_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/bottomNavigationBar" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationBar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:background="#FFFFFF"
-        app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/bottombarmenu" />
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationBar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#FFFFFF"
+            app:labelVisibilityMode="unlabeled"
+            app:menu="@menu/bottombarmenu" />
 
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
+        android:id="@+id/NavigationDrawerMenu"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        app:menu="@menu/bottombarmenu"
+        app:menu="@menu/drawerbar_menu"
         android:layout_gravity="right">
 
     </com.google.android.material.navigation.NavigationView>

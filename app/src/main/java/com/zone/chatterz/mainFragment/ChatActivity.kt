@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_chat.*
@@ -22,6 +23,9 @@ open class ChatActivity : Fragment() {
     ): View? {
 
         var view :View = inflater.inflate(R.layout.fragment_chat, container, false)
+
+        (activity as DrawerLocker).setDrawerLockerEnabled(false)
+
         return view
     }
 
@@ -57,7 +61,7 @@ open class ChatActivity : Fragment() {
 
         viewpager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabBarLayout))
         viewpager.currentItem = firstPageIndex
-        
+
     }
 
     private fun addFramentToFragmentList(list: ArrayList<Fragment>) {
