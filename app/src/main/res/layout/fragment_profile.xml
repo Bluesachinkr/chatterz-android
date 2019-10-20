@@ -35,66 +35,35 @@
                     android:layout_height="400dp"
                     android:orientation="vertical">
 
-                    <com.mikhaellopez.circularimageview.CircularImageView
-                        android:id="@+id/ProfileImage"
-                        android:layout_width="140dp"
-                        android:layout_height="140dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="20dp"
-                        android:src="@drawable/new_group_icon"
-                        app:civ_border_color="#000000"
-                        app:civ_border_width="2dp" />
+                        <com.mikhaellopez.circularimageview.CircularImageView
+                            android:id="@+id/ProfileImage"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="48dp"
+                            android:src="@drawable/new_group_icon"
+                            app:civ_border_color="#01E6FF"
+                            app:civ_border_width="3dp" />
 
                     <TextView
                         android:id="@+id/userName_Profile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="16dp"
                         android:maxLines="1"
                         android:text="Sachin Kumar"
                         android:textColor="#000000"
-                        android:textSize="28sp" />
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:textSize="32sp" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:orientation="horizontal"
-                        android:weightSum="11">
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2" />
-
-                        <Button
-                            android:id="@+id/followButton_Profile"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_margin="5dp"
-                            android:layout_weight="5"
-                            android:background="@drawable/background_buttons"
-                            android:text="Follow"
-                            android:textColor="#ffffff"
-                            android:textSize="16sp" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2" />
-
-                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
+                        android:layout_marginTop="24dp"
                         android:orientation="horizontal"
                         android:weightSum="11">
 
@@ -226,6 +195,48 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="12dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16sp"
+                        android:layout_marginBottom="16dp"
+                        android:elevation="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000"
+                                android:textStyle="normal"
+                                android:textSize="18sp"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="8dp"
+                                android:text="Status"/>
+
+                            <TextView
+                                android:id="@+id/userProfileTextStatus"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:maxLines="6"
+                                android:textSize="16sp"
+                                android:text="@string/common"
+                                android:textAlignment="center"
+                                android:textColor="#000000"
+                                android:layout_margin="10dp"/>
+
+
+                        </LinearLayout>
+
+
+                    </androidx.cardview.widget.CardView>
 
                     <TextView
                         android:layout_width="wrap_content"

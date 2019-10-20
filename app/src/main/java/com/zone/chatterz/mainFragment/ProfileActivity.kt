@@ -27,6 +27,7 @@ open class ProfileActivity : Fragment() {
 
     private lateinit var profileImg : CircularImageView
     private lateinit var userName : TextView
+    private lateinit var textStatus : TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +40,7 @@ open class ProfileActivity : Fragment() {
 
         profileImg = view.findViewById(R.id.ProfileImage)
         userName = view.findViewById(R.id.userName_Profile)
+        textStatus = view.findViewById(R.id.userProfileTextStatus)
 
         val toolbar = view.findViewById<Toolbar>(R.id.toolbarProfile)
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
@@ -94,6 +96,7 @@ open class ProfileActivity : Fragment() {
     private fun setProfileLayout(user : User){
 
         userName.text = user.username
+        textStatus.text = user.bio
 
         if(!user.imageUrl.equals("null")){
             Glide.with(this).load(user.imageUrl).into(profileImg)
