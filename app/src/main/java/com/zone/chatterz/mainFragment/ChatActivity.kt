@@ -1,11 +1,11 @@
 package com.zone.chatterz.mainFragment
 
+import Interfaces.DrawerLocker
 import com.zone.chatterz.*
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_chat.*

@@ -1,10 +1,10 @@
 package com.zone.chatterz
 
+import Interfaces.DrawerLocker
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -19,13 +19,12 @@ import com.zone.chatterz.mainFragment.ProfileActivity
 import com.zone.chatterz.mainFragment.SearchActivity
 import com.zone.chatterz.mainFragment.StatusActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_chat.*
 
-class MainActivity : AppCompatActivity(),DrawerLocker{
+class MainActivity : AppCompatActivity(), DrawerLocker {
 
-    private lateinit var drawer : DrawerLayout
+    private lateinit var drawer: DrawerLayout
     private lateinit var mAuth: FirebaseAuth
-    private lateinit var firebaseAuthListener : FirebaseAuth.AuthStateListener
+    private lateinit var firebaseAuthListener: FirebaseAuth.AuthStateListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,12 +33,12 @@ class MainActivity : AppCompatActivity(),DrawerLocker{
         mAuth = FirebaseAuth.getInstance()
 
         drawer = findViewById(R.id.drawerLayout)
-        val  NavigationDrawerMenu = findViewById<NavigationView>(R.id.NavigationDrawerMenu)
+        val NavigationDrawerMenu = findViewById<NavigationView>(R.id.NavigationDrawerMenu)
 
-        firebaseAuthListener = FirebaseAuth.AuthStateListener {firebaseAuth ->
-            val user= FirebaseAuth.getInstance().currentUser
-            if(user == null){
-                val i = Intent(this,WelcomeActivity::class.java)
+        firebaseAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            val user = FirebaseAuth.getInstance().currentUser
+            if (user == null) {
+                val i = Intent(this, WelcomeActivity::class.java)
                 startActivity(i)
                 finish()
                 return@AuthStateListener
@@ -52,35 +51,35 @@ class MainActivity : AppCompatActivity(),DrawerLocker{
             bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.search_light_icon)
             bottomNavigationBar.menu.getItem(2).setIcon(R.drawable.icon_status)
             bottomNavigationBar.menu.getItem(3).setIcon(R.drawable.proifle_light_icon)
-            when(menuItem.itemId){
+            when (menuItem.itemId) {
 
-                R.id.chats ->{
+                R.id.chats -> {
                     val chatFragment = ChatActivity()
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container_main,chatFragment)
+                        .replace(R.id.container_main, chatFragment)
                         .addToBackStack(null).commit()
                     menuItem.setIcon(R.drawable.chat_dark_icon)
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.search_bottombar ->{
+                R.id.search_bottombar -> {
                     val searchActivity = SearchActivity()
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container_main,searchActivity)
+                        .replace(R.id.container_main, searchActivity)
                         .addToBackStack(null).commit()
                     menuItem.setIcon(R.drawable.search_dark_icon)
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.status_bottombar ->{
+                R.id.status_bottombar -> {
                     val statusActivity = StatusActivity()
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container_main,statusActivity)
+                        .replace(R.id.container_main, statusActivity)
                         .addToBackStack(null).commit()
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.profile_bottombar ->{
+                R.id.profile_bottombar -> {
                     val profileActivity = ProfileActivity()
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container_main,profileActivity)
+                        .replace(R.id.container_main, profileActivity)
                         .addToBackStack(null).commit()
                     menuItem.setIcon(R.drawable.profile_dark_icon)
                     return@setOnNavigationItemSelectedListener true
@@ -89,42 +88,50 @@ class MainActivity : AppCompatActivity(),DrawerLocker{
             return@setOnNavigationItemSelectedListener false
         }
 
-        NavigationDrawerMenu.setNavigationItemSelectedListener {menuItem ->
+        NavigationDrawerMenu.setNavigationItemSelectedListener { menuItem ->
 
-            when(menuItem.itemId){
-                R.id.logout ->{
+            when (menuItem.itemId) {
+                R.id.logout -> {
                     val firebaseAuth = FirebaseAuth.getInstance().signOut()
                     return@setNavigationItemSelectedListener true
-                }else->{
-                return@setNavigationItemSelectedListener false
-            }
+                }
+                R.id.settings_icon -> {
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    startActivity(intent)
+                    return@setNavigationItemSelectedListener true
+                }
+                else -> {
+                    return@setNavigationItemSelectedListener false
+                }
             }
             return@setNavigationItemSelectedListener true
         }
 
         updateOnlineStatus()
     }
-    private fun setNavigationInitially(){
+
+    private fun setNavigationInitially() {
         val chatsFragment = ChatActivity()
         supportFragmentManager.beginTransaction()
-            .add(R.id.container_main,chatsFragment)
+            .add(R.id.container_main, chatsFragment)
             .addToBackStack(null).commit()
         bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.chat_dark_icon)
     }
 
-    private fun updateOnlineStatus(){
+    private fun updateOnlineStatus() {
         val firebaseUser = FirebaseAuth.getInstance().currentUser!!
         val databaseReference = FirebaseDatabase.getInstance().getReference("Users")
-        databaseReference.addValueEventListener(object : ValueEventListener{
+        databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
+
             override fun onDataChange(p0: DataSnapshot) {
                 for (dataSet in p0.children) {
                     var user = dataSet.getValue(User::class.java)
                     if (user != null) {
-                        if (user.id.equals(firebaseUser.uid)){
-                            val hashMap =  HashMap<String,Any>()
-                            hashMap.put("status","online")
+                        if (user.id.equals(firebaseUser.uid)) {
+                            val hashMap = HashMap<String, Any>()
+                            hashMap.put("status", "online")
                             dataSet.ref.updateChildren(hashMap)
                             dataSet.ref.child("status").onDisconnect().setValue("offline")
                         }
@@ -135,9 +142,9 @@ class MainActivity : AppCompatActivity(),DrawerLocker{
     }
 
     override fun setDrawerLockerEnabled(enabled: Boolean) {
-        if(enabled){
+        if (enabled) {
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-        }else{
+        } else {
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
     }

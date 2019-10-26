@@ -1,6 +1,5 @@
 package com.zone.chatterz.mainFragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
@@ -12,28 +11,24 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.mikhaellopez.circularimageview.CircularImageView
-import com.zone.chatterz.DrawerLocker
-import com.zone.chatterz.MainActivity
+import Interfaces.DrawerLocker
 import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
-import com.zone.chatterz.SettingsActivity
-
 
 open class ProfileActivity : Fragment() {
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var databaseReference: DatabaseReference
-
     private lateinit var profileImg : CircularImageView
     private lateinit var userName : TextView
     private lateinit var textStatus : TextView
+    private lateinit var toolbar: Toolbar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
         mAuth = FirebaseAuth.getInstance()
@@ -41,8 +36,8 @@ open class ProfileActivity : Fragment() {
         profileImg = view.findViewById(R.id.ProfileImage)
         userName = view.findViewById(R.id.userName_Profile)
         textStatus = view.findViewById(R.id.userProfileTextStatus)
+        toolbar = view.findViewById(R.id.toolbarProfile)
 
-        val toolbar = view.findViewById<Toolbar>(R.id.toolbarProfile)
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
         (activity as AppCompatActivity).supportActionBar!!.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
