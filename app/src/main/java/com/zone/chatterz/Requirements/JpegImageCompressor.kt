@@ -12,16 +12,16 @@ open  class JpegImageCompressor {
 
     companion object {
 
-        private val compressedSize = 150
+        private val compressedSize = 150f
 
-        fun imageCompression(mContext : Context,originalImage: Bitmap): Uri {
-            val bitmap = BitmapFactory.decodeFile(originalImage.toString())
-            val width = bitmap.width
-            val height = bitmap.height
+        fun imageCompression(mContext : Context,originalImage: Bitmap): ByteArray {
+
+            val width = originalImage.width
+            val height = originalImage.height
 
             val matrix = Matrix()
-            val scaleHeight = (compressedSize as Float) / height as Float
-            val scaleWidth = (compressedSize as Float) / width as Float
+            val scaleHeight = (compressedSize / height)
+            val scaleWidth = (compressedSize  / width)
             matrix.postScale(scaleWidth, scaleHeight)
             matrix.postRotate(45F)
 
@@ -30,9 +30,8 @@ open  class JpegImageCompressor {
             val outputStream = ByteArrayOutputStream()
             compressedImage.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
 
-            val path = MediaStore.Images.Media.insertImage(mContext,compressedImage,"ProfileImage",null)
-            return compressedImage
-
+            var byteArray = outputStream.toByteArray()
+            return byteArray
         }
 
     }

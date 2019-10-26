@@ -14,6 +14,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.zone.chatterz.Model.User
 import com.zone.chatterz.PreActivities.WelcomeActivity
+import com.zone.chatterz.Settings.GeneralSettings
 import com.zone.chatterz.mainFragment.ChatActivity
 import com.zone.chatterz.mainFragment.ProfileActivity
 import com.zone.chatterz.mainFragment.SearchActivity
@@ -96,7 +97,7 @@ class MainActivity : AppCompatActivity(), DrawerLocker {
                     return@setNavigationItemSelectedListener true
                 }
                 R.id.settings_icon -> {
-                    val intent = Intent(this, SettingsActivity::class.java)
+                    val intent = Intent(this, GeneralSettings::class.java)
                     startActivity(intent)
                     return@setNavigationItemSelectedListener true
                 }
