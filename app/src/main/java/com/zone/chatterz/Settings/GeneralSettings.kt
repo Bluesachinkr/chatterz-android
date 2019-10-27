@@ -1,97 +1,181 @@
 package com.zone.chatterz.Settings
 
+import com.zone.chatterz.Interfaces.OnEditListener
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
-import com.google.firebase.storage.UploadTask.TaskSnapshot
 import com.mikhaellopez.circularimageview.CircularImageView
+import com.zone.chatterz.MainActivity
 import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
 import com.zone.chatterz.Requirements.JpegImageCompressor
-import java.io.File
 
-class GeneralSettings : AppCompatActivity() {
+class GeneralSettings : AppCompatActivity(),OnEditListener{
 
-    private lateinit var addAccountImage : ImageView
-    private lateinit var accountImage : CircularImageView
-    private val REQUESTCODE_PHOTO = 1
+    private lateinit var addAccountImage: ImageView
+    private lateinit var accountImage: CircularImageView
+    private lateinit var backArrow :  ImageView
+    private lateinit var editUserName : TextView
+    private lateinit var userName : TextView
+    private lateinit var changeUserName : EditText
+    private lateinit var editGender : TextView
+    private lateinit var gender : TextView
+    private lateinit var changeGender : EditText
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var storageReference: StorageReference
+    private lateinit var databaseReference: DatabaseReference
 
-    private lateinit var accountImgUrl : String
+    private val REQUESTCODE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_general_settings)
 
         mAuth = FirebaseAuth.getInstance()
+
         addAccountImage = findViewById(R.id.addProfilePhoto)
         accountImage = findViewById(R.id.accountImage)
+        backArrow = findViewById(R.id.backArrowGeneralSettings)
+
+        //settings findViewById
+        editUserName = findViewById(R.id.Edit_userName)
+        userName = findViewById(R.id.textView_userName)
+        changeUserName = findViewById(R.id.EditText_userName)
+        editGender = findViewById(R.id.Edit_gender)
+        gender = findViewById(R.id.textView_gender)
+        changeGender = findViewById(R.id.EditText_gender)
+
 
         addAccountImage.setOnClickListener {
 
-            val intent =  Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            startActivityForResult(intent,REQUESTCODE_PHOTO)
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(intent, REQUESTCODE)
 
         }
-        loadProfileImage()
+        backArrow.setOnClickListener {
+            val i = Intent(this,MainActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(i)
+        }
+        editUserName.setOnClickListener(this)
+        editGender.setOnClickListener(this)
+
+        loaduserData()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(resultCode== Activity.RESULT_OK && requestCode==REQUESTCODE_PHOTO && data!=null){
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUESTCODE && data != null) {
 
             val uri = data.data
 
-            val bitmap = BitmapFactory.decodeStream(uri?.let { contentResolver.openInputStream(it) })
-            val compressedImg = JpegImageCompressor.imageCompression(this,bitmap)
+            val bitmap =
+                BitmapFactory.decodeStream(uri?.let { contentResolver.openInputStream(it) })
+            val compressedImg = JpegImageCompressor.imageCompression(bitmap)
             firebaseUser = mAuth.currentUser!!
-            storageReference = FirebaseStorage.getInstance().getReference("profileImages/"+firebaseUser.uid+".jpg")
+            storageReference = FirebaseStorage.getInstance()
+                .getReference("profileImages/" + firebaseUser.uid + ".jpg")
 
-           storageReference.putBytes(compressedImg)
-            storageReference.downloadUrl.addOnSuccessListener {
-                uri ->
-                accountImgUrl = uri.toString()
-            }.addOnFailureListener {
-                exception ->
-                accountImgUrl = exception.toString()
+            val uploadTask = storageReference.putBytes(compressedImg)
+
+            uploadTask.addOnSuccessListener {
+                uploadTask.continueWithTask {
+                    if (!it.isSuccessful) {
+                        throw it.exception!!
+                    }
+                    return@continueWithTask storageReference.downloadUrl
+                }.addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        val uri = it.result
+                        val accountImgUrl = uri.toString()
+                        loadImgToDatabase(accountImgUrl)
+                    }
+                }
             }
-
-            loadImgToDatabase()
         }
     }
 
-    private fun loadImgToDatabase(){
-        storageReference = FirebaseStorage.getInstance().getReference("profileImages/"+firebaseUser.uid+".jpg")
-        val databaseReference =  FirebaseDatabase.getInstance().getReference("Users")
-        databaseReference.addValueEventListener(object:ValueEventListener{
+    override fun performEdit(edit: TextView, textView: TextView, editText: EditText,type : String) {
+        edit.text = "Done"
+        val name  = textView.text.toString()
+        textView.visibility = View.GONE
+        editText.setHint(name)
+        editText.visibility = View.VISIBLE
+        edit.setOnClickListener {
+            editDetails(edit,textView,editText.text.toString(),type,editText)
+        }
+    }
+
+    override fun onClick(v: View?) {
+        if (v != null) {
+            when(v.id){
+                R.id.Edit_userName->{
+                    performEdit(editUserName,userName,changeUserName,"username")
+                }
+                R.id.Edit_gender->{
+                    performEdit(editGender,gender,changeGender,"gender")
+                }
+            }
+        }
+    }
+
+    override fun editDetails(edit: TextView, textView: TextView, content: String,type: String,editText: EditText) {
+        firebaseUser = mAuth.currentUser!!
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+        databaseReference.addValueEventListener(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
             }
             override fun onDataChange(p0: DataSnapshot) {
-                for(data in p0.children){
-                    val user=data.getValue(User::class.java)
-                    if (user != null) {
+                for (data in p0.children){
+                    val user = data.getValue(User::class.java)
+                    if(user!=null){
                         if(user.id.equals(firebaseUser.uid)){
-
                             val hashMap = HashMap<String,Any>()
-                                hashMap.put("imageUrl",accountImgUrl)
-                            hashMap.put("bio","Iam not cool")
+                            hashMap.put(type,content)
+                            data.ref.updateChildren(hashMap)
+                            break
+                        }
+                    }
+                }
+                edit.text = "Edit"
+                editText.visibility = View.GONE
+                textView.visibility = View.VISIBLE
+            }
+        })
+    }
+
+    private fun loadImgToDatabase(imageUrl: String) {
+        storageReference = FirebaseStorage.getInstance().getReference("profileImages/")
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+        databaseReference.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                for (data in p0.children) {
+                    val user = data.getValue(User::class.java)
+                    if (user != null) {
+                        if (user.id.equals(firebaseUser.uid)) {
+
+                            val hashMap = HashMap<String, Any>()
+                            hashMap.put("imageUrl", imageUrl)
                             data.ref.updateChildren(hashMap)
                             break
                         }
@@ -100,28 +184,32 @@ class GeneralSettings : AppCompatActivity() {
             }
         })
     }
-    private fun loadProfileImage(){
-        val firebaseUser =  mAuth.currentUser!!
-        val databaseReference  = FirebaseDatabase.getInstance().getReference("Users")
-        databaseReference.addValueEventListener(object : ValueEventListener{
+
+    private fun loaduserData() {
+        val firebaseUser = mAuth.currentUser!!
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+        databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
             override fun onDataChange(p0: DataSnapshot) {
-              for(data in p0.children){
-                  val user=data.getValue(User::class.java)
-                  if(user!=null){
-                      if(user.id.equals(firebaseUser.uid)){
-                          if(user.imageUrl.equals("null")){
-                             accountImage.setImageResource(R.drawable.new_group_icon)
-                          }else {
-                              Glide.with(this@GeneralSettings).load(user.imageUrl).into(accountImage)
-                          }
-                          break
-                      }
-                  }
-              }
+                for (data in p0.children) {
+                    val user = data.getValue(User::class.java)
+                    if (user != null) {
+                        if (user.id.equals(firebaseUser.uid)) {
+                            userName.text = user.username
+                            gender.text = user.gender
+                            if (user.imageUrl.equals("null")) {
+                                accountImage.setImageResource(R.drawable.new_group_icon)
+                            } else {
+                                Glide.with(this@GeneralSettings).load(user.imageUrl).into(accountImage)
+                            }
+                            break
+                        }
+                    }
+                }
             }
 
         })
     }
+
 }

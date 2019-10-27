@@ -1,7 +1,10 @@
 package com.zone.chatterz.mainFragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
@@ -11,19 +14,24 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.mikhaellopez.circularimageview.CircularImageView
-import Interfaces.DrawerLocker
+import com.zone.chatterz.Interfaces.DrawerLocker
 import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
+import java.util.*
+import kotlin.collections.HashMap
 
 open class ProfileActivity : Fragment() {
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var databaseReference: DatabaseReference
-    private lateinit var profileImg : CircularImageView
-    private lateinit var userName : TextView
-    private lateinit var textStatus : TextView
+    private lateinit var profileImg: CircularImageView
+    private lateinit var userName: TextView
+    private lateinit var textStatus: TextView
     private lateinit var toolbar: Toolbar
+    private lateinit var editStatusButton: ImageView
+    private lateinit var editStatusDone: ImageView
+    private lateinit var statusEditBox: EditText
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,12 +45,32 @@ open class ProfileActivity : Fragment() {
         userName = view.findViewById(R.id.userName_Profile)
         textStatus = view.findViewById(R.id.userProfileTextStatus)
         toolbar = view.findViewById(R.id.toolbarProfile)
+        editStatusButton = view.findViewById(R.id.statusEdit)
+        editStatusDone = view.findViewById(R.id.statusDone)
+        statusEditBox = view.findViewById(R.id.userStatusEditBox)
 
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
         (activity as AppCompatActivity).supportActionBar!!.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
 
         (activity as DrawerLocker).setDrawerLockerEnabled(true)
+
+        editStatusButton.setOnClickListener {
+            val statustext = textStatus.text.toString()
+            textStatus.visibility = View.GONE
+            statusEditBox.visibility = View.VISIBLE
+            statusEditBox.setHint(statustext)
+            editStatusButton.visibility = View.GONE
+            editStatusDone.visibility = View.VISIBLE
+        }
+        editStatusDone.setOnClickListener {
+            val content = statusEditBox.text.toString()
+            editStatusButton.visibility = View.VISIBLE
+            editStatusDone.visibility = View.GONE
+            statusEditBox.visibility = View.GONE
+            textStatus.visibility = View.VISIBLE
+            setProfileBio(content)
+        }
 
         loadProfileData()
 
@@ -68,17 +96,18 @@ open class ProfileActivity : Fragment() {
         return false
     }
 
-    private fun loadProfileData(){
-       firebaseUser = mAuth.currentUser!!
-        databaseReference  = FirebaseDatabase.getInstance().getReference("Users")
-        databaseReference.addValueEventListener(object : ValueEventListener{
+    private fun loadProfileData() {
+        firebaseUser = mAuth.currentUser!!
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+        databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
+
             override fun onDataChange(p0: DataSnapshot) {
-                for (data in p0.children){
+                for (data in p0.children) {
                     val user = data.getValue(User::class.java)
-                    if(user!=null){
-                        if(user.id.equals(firebaseUser.uid)){
+                    if (user != null) {
+                        if (user.id.equals(firebaseUser.uid)) {
                             setProfileLayout(user)
                             break
                         }
@@ -88,12 +117,37 @@ open class ProfileActivity : Fragment() {
         })
     }
 
-    private fun setProfileLayout(user : User){
+    private fun setProfileBio(content: String) {
+        firebaseUser = mAuth.currentUser!!
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+        databaseReference.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                for (data in p0.children) {
+                    val user = data.getValue(User::class.java)
+                    if (user != null) {
+                        if (user.id.equals(firebaseUser.uid)) {
+                            val hashMap = HashMap<String, Any>()
+                            hashMap.put("bio", content)
+                            data.ref.updateChildren(hashMap)
+                            break
+                        }
+                    }
+                }
+            }
+
+        })
+
+    }
+
+    private fun setProfileLayout(user: User) {
 
         userName.text = user.username
         textStatus.text = user.bio
 
-        if(!user.imageUrl.equals("null")){
+        if (!user.imageUrl.equals("null")) {
             Glide.with(this).load(user.imageUrl).into(profileImg)
         }
     }

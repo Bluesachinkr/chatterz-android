@@ -14,7 +14,7 @@ open  class JpegImageCompressor {
 
         private val compressedSize = 150f
 
-        fun imageCompression(mContext : Context,originalImage: Bitmap): ByteArray {
+        fun imageCompression(originalImage: Bitmap): ByteArray {
 
             val width = originalImage.width
             val height = originalImage.height
@@ -23,7 +23,6 @@ open  class JpegImageCompressor {
             val scaleHeight = (compressedSize / height)
             val scaleWidth = (compressedSize  / width)
             matrix.postScale(scaleWidth, scaleHeight)
-            matrix.postRotate(45F)
 
             var compressedImage =
                 Bitmap.createBitmap(originalImage, 0, 0, width, height, matrix, true)
@@ -31,6 +30,7 @@ open  class JpegImageCompressor {
             compressedImage.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
 
             var byteArray = outputStream.toByteArray()
+
             return byteArray
         }
 

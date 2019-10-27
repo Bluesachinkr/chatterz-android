@@ -1,6 +1,6 @@
 package com.zone.chatterz
 
-import Interfaces.DrawerLocker
+import com.zone.chatterz.Interfaces.DrawerLocker
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

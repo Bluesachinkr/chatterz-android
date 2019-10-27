@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import Interfaces.DrawerLocker
+import com.zone.chatterz.Interfaces.DrawerLocker
 import com.zone.chatterz.R
 
 

@@ -15,8 +15,9 @@ data class User (
     @set:PropertyName("bio")
     @get:PropertyName("bio")
     var bio: String,
+    var gender : String,
     var status : String
 
 ){
-    constructor():this("","","","","offline")
+    constructor():this("","","","","","offline")
 }

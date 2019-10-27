@@ -1,6 +1,6 @@
 package com.zone.chatterz.mainFragment
 
-import Interfaces.DrawerLocker
+import com.zone.chatterz.Interfaces.DrawerLocker
 import com.zone.chatterz.*
 import android.os.Bundle
 import android.view.LayoutInflater
