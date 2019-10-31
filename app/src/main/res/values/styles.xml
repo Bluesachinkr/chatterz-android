@@ -9,4 +9,8 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
+    <style name="CustomTabs" parent="TextAppearance.Design.Tab">
+        <item name="android:textAllCaps">false</item>
+    </style>
+
 </resources>

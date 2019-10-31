@@ -73,6 +73,7 @@
                             android:layout_weight="1" />
 
                         <LinearLayout
+                            android:id="@+id/Followers"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="3"
@@ -103,6 +104,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/Following"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="3"
@@ -239,7 +241,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
-                                    android:src="@drawable/edit_status"
+                                    android:src="@drawable/status_done"
                                     android:visibility="gone"
                                     android:layout_margin="8dp"/>
 
@@ -256,7 +258,7 @@
                                     android:layout_height="wrap_content"
                                     android:maxLines="6"
                                     android:textSize="16sp"
-                                    android:text="@string/common"
+                                    android:text=""
                                     android:textAlignment="center"
                                     android:textColor="#000000" />
 
@@ -267,6 +269,7 @@
                                     android:visibility="gone"
                                     android:maxLines="10"
                                     android:textSize="16sp"
+                                    android:background="#FFFFFF"
                                     android:textColor="#000000"/>
 
                             </RelativeLayout>

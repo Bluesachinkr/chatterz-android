@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
@@ -14,13 +15,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.mikhaellopez.circularimageview.CircularImageView
+import com.zone.chatterz.Following_FollowersActivity
 import com.zone.chatterz.Interfaces.DrawerLocker
 import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
-import java.util.*
 import kotlin.collections.HashMap
 
-open class ProfileActivity : Fragment() {
+open class ProfileActivity : Fragment(), View.OnClickListener {
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseUser: FirebaseUser
@@ -32,6 +33,8 @@ open class ProfileActivity : Fragment() {
     private lateinit var editStatusButton: ImageView
     private lateinit var editStatusDone: ImageView
     private lateinit var statusEditBox: EditText
+    private lateinit var followersButton: LinearLayout
+    private lateinit var followingButton: LinearLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +51,8 @@ open class ProfileActivity : Fragment() {
         editStatusButton = view.findViewById(R.id.statusEdit)
         editStatusDone = view.findViewById(R.id.statusDone)
         statusEditBox = view.findViewById(R.id.userStatusEditBox)
+        followersButton = view.findViewById(R.id.Followers)
+        followingButton = view.findViewById(R.id.Following)
 
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
         (activity as AppCompatActivity).supportActionBar!!.setDisplayShowTitleEnabled(false)
@@ -55,22 +60,8 @@ open class ProfileActivity : Fragment() {
 
         (activity as DrawerLocker).setDrawerLockerEnabled(true)
 
-        editStatusButton.setOnClickListener {
-            val statustext = textStatus.text.toString()
-            textStatus.visibility = View.GONE
-            statusEditBox.visibility = View.VISIBLE
-            statusEditBox.setHint(statustext)
-            editStatusButton.visibility = View.GONE
-            editStatusDone.visibility = View.VISIBLE
-        }
-        editStatusDone.setOnClickListener {
-            val content = statusEditBox.text.toString()
-            editStatusButton.visibility = View.VISIBLE
-            editStatusDone.visibility = View.GONE
-            statusEditBox.visibility = View.GONE
-            textStatus.visibility = View.VISIBLE
-            setProfileBio(content)
-        }
+        followersButton.setOnClickListener(this)
+        followingButton.setOnClickListener(this)
 
         loadProfileData()
 
@@ -132,7 +123,6 @@ open class ProfileActivity : Fragment() {
                             val hashMap = HashMap<String, Any>()
                             hashMap.put("bio", content)
                             data.ref.updateChildren(hashMap)
-                            break
                         }
                     }
                 }
@@ -143,13 +133,35 @@ open class ProfileActivity : Fragment() {
     }
 
     private fun setProfileLayout(user: User) {
-
-        userName.text = user.username
-        textStatus.text = user.bio
+        if (userName.text.equals("")) {
+            userName.text = user.username
+        }
+        if (textStatus.text.equals("")) {
+            textStatus.text = user.bio
+        }
 
         if (!user.imageUrl.equals("null")) {
             Glide.with(this).load(user.imageUrl).into(profileImg)
         }
+    }
+
+    override fun onClick(v: View?) {
+        when (v) {
+            followersButton -> {
+                followingFollowersIntent()
+            }
+            followingButton -> {
+                followingFollowersIntent()
+            }
+            else -> {
+
+            }
+        }
+    }
+
+    private fun followingFollowersIntent() {
+        val i = Intent(context, Following_FollowersActivity::class.java)
+        startActivity(i)
     }
 
 }
