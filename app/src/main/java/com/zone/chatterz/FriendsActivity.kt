@@ -5,18 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.zone.chatterz.Adapter.FollowerAdapter
-import com.zone.chatterz.Adapter.RecentAdapter
+import com.zone.chatterz.Adapter.FriendsAdapter
 import com.zone.chatterz.Model.User
 
 
-open class FollowerActivity : Fragment() {
+open class FriendsActivity : Fragment() {
 
     private lateinit var followerRecyclerView: RecyclerView
 
@@ -24,7 +22,7 @@ open class FollowerActivity : Fragment() {
     private lateinit var firebaseUser: FirebaseUser
 
     private lateinit var mUsers: MutableList<User>
-    private lateinit var followerAdapter: FollowerAdapter
+    private lateinit var friendsAdapter: FriendsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,8 +61,8 @@ open class FollowerActivity : Fragment() {
                 }
                 val getContext = context
                 if(getContext!=null) {
-                    followerAdapter = FollowerAdapter(getContext, mUsers)
-                    followerRecyclerView.adapter = followerAdapter
+                    friendsAdapter = FriendsAdapter(getContext, mUsers)
+                    followerRecyclerView.adapter = friendsAdapter
                 }
             }
         })

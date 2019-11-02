@@ -8,23 +8,18 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.ChatMessageActivity
-import com.zone.chatterz.MainActivity
 import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
 
-class FollowerAdapter(context: Context,list: List<User>) : RecyclerView.Adapter<FollowerAdapter.Viewholder>() {
+class FriendsAdapter(context: Context, list: List<User>) : RecyclerView.Adapter<FriendsAdapter.Viewholder>() {
 
     private val mContext = context
     private val mUser = list
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Viewholder {
-       val view = LayoutInflater.from(mContext).inflate(R.layout.follower_item,parent,false)
+       val view = LayoutInflater.from(mContext).inflate(R.layout.friends_item,parent,false)
         val holder = Viewholder(view)
         return  holder
     }
@@ -55,9 +50,9 @@ class FollowerAdapter(context: Context,list: List<User>) : RecyclerView.Adapter<
 
     class Viewholder(itemView : View) : RecyclerView.ViewHolder(itemView) {
 
-        var profileImage : CircularImageView  = itemView.findViewById(R.id.profileImg_Follower)
-        var userName : TextView = itemView.findViewById(R.id.userNameFollower)
-        var status : CircularImageView = itemView.findViewById(R.id.statusFollower)
+        var profileImage : CircularImageView  = itemView.findViewById(R.id.profileImg_Friends)
+        var userName : TextView = itemView.findViewById(R.id.userNameFriends)
+        var status : CircularImageView = itemView.findViewById(R.id.statusFriends)
 
     }
 }

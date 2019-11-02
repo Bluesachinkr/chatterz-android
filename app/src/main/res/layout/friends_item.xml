@@ -14,7 +14,7 @@
         android:orientation="horizontal">
 
         <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/profileImg_Follower"
+            android:id="@+id/profileImg_Friends"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical"
@@ -29,7 +29,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/userNameFollower"
+                android:id="@+id/userNameFriends"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -50,7 +50,7 @@
         android:layout_height="?attr/actionBarSize">
 
         <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/statusFollower"
+            android:id="@+id/statusFriends"
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_centerVertical="true"

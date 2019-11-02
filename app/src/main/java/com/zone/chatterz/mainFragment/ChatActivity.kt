@@ -68,7 +68,7 @@ open class ChatActivity : Fragment() {
     private fun addFramentToFragmentList(list: ArrayList<Fragment>) {
         list.add(RecentActivity())
         list.add(GroupChat())
-        list.add(FollowerActivity())
+        list.add(FriendsActivity())
     }
 
     /* private fun TabLayout.setTabswithCustomWidth(tabPosition: Int) {
