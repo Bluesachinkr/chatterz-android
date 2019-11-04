@@ -47,7 +47,7 @@ class RecentAdapter(context: Context,list: List<User>) : RecyclerView.Adapter<Re
             holder.status.visibility = View.GONE
         }
         if(user.imageUrl.equals("null")) {
-            holder.profileImage.setImageResource(R.mipmap.ic_launcher_round)
+            holder.profileImage.setImageResource(R.drawable.google_logo)
         }else{
             Glide.with(mContext).load(user.imageUrl).into(holder.profileImage)
         }

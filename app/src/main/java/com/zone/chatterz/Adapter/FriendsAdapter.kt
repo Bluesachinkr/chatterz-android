@@ -31,7 +31,7 @@ class FriendsAdapter(context: Context, list: List<User>) : RecyclerView.Adapter<
     override fun onBindViewHolder(holder: Viewholder, position: Int) {
         val user  = mUser.get(position)
         if(user.imageUrl.equals("null")) {
-            holder.profileImage.setImageResource(R.mipmap.ic_launcher_round)
+            holder.profileImage.setImageResource(R.drawable.google_logo)
         }else{
             Glide.with(mContext).load(user.imageUrl).into(holder.profileImage)
         }

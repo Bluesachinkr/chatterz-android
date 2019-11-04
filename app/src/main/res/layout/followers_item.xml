@@ -1,79 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:weightSum="6">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_weight="4.6"
-        android:layout_height="?actionBarSize"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:orientation="horizontal">
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/friendsProfileImg"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:civ_border_color="#000000"
+        app:civ_border_width="2dp"
+        android:src="@drawable/google_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"/>
 
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/profileImg_Follower"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/google_logo"
-            android:layout_margin="8dp"
-            android:scaleType="centerCrop"/>
+    <TextView
+        android:id="@+id/friendsUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sachin kr"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:layout_below="@id/friendsProfileImg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"/>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="4dp"
-            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/userNameFollower"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:fontFamily="sans-serif"
-                android:maxLines="1"
-                android:text="UserName"
-                android:textColor="#000000"
-                android:textSize="20sp"
-                android:textStyle="normal" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_weight="1.4"
-        android:layout_margin="4dp"
-        android:layout_height="?attr/actionBarSize">
-
-        <RelativeLayout
-            android:id="@+id/followBox"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="14dp"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:visibility="visible"
-            android:background="@drawable/follow_drawable">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Follow"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:textSize="14sp"/>
-
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>

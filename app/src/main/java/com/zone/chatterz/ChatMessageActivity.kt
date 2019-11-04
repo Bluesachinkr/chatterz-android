@@ -121,7 +121,7 @@ class ChatMessageActivity : AppCompatActivity() {
         val user = dataSnapshot.getValue(User::class.java)
         if (user != null) {
             if (user.imageUrl.equals("null")) {
-                profileImg_chatBar.setImageResource(R.mipmap.ic_launcher_round)
+                profileImg_chatBar.setImageResource(R.drawable.google_logo)
             } else {
                 Glide.with(applicationContext).load(user.imageUrl).into(profileImg_chatBar)
             }

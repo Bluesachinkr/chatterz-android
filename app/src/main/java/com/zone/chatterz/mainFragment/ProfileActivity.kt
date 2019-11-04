@@ -142,6 +142,8 @@ open class ProfileActivity : Fragment(), View.OnClickListener {
 
         if (!user.imageUrl.equals("null")) {
             Glide.with(this).load(user.imageUrl).into(profileImg)
+        }else{
+            profileImg.setImageResource(R.drawable.google_logo)
         }
     }
 

@@ -90,7 +90,7 @@ class ChatsAdapter(context: Context, list: List<Chat>) :
                     if(user!=null){
                         if(user.id.equals(userid)){
                             if(user.imageUrl.equals("null")){
-                                imageView.setImageResource(R.mipmap.ic_launcher_round)
+                                imageView.setImageResource(R.drawable.google_logo)
                             }else{
                                 Glide.with(mContext).load(user.imageUrl).into(imageView)
                             }
