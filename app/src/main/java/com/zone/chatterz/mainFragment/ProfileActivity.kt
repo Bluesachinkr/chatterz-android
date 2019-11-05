@@ -1,5 +1,6 @@
 package com.zone.chatterz.mainFragment
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -10,11 +11,14 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.mikhaellopez.circularimageview.CircularImageView
+import com.zone.chatterz.Adapter.FollowersAdapter
 import com.zone.chatterz.FollowersActivity
 import com.zone.chatterz.Interfaces.DrawerLocker
 import com.zone.chatterz.Model.User
@@ -35,6 +39,8 @@ open class ProfileActivity : Fragment(), View.OnClickListener {
     private lateinit var statusEditBox: EditText
     private lateinit var followersButton: LinearLayout
     private lateinit var followingButton: LinearLayout
+    private lateinit var RecyclerFollowers: RecyclerView
+    private lateinit var mFrindList: MutableList<User>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +59,7 @@ open class ProfileActivity : Fragment(), View.OnClickListener {
         statusEditBox = view.findViewById(R.id.userStatusEditBox)
         followersButton = view.findViewById(R.id.Followers)
         followingButton = view.findViewById(R.id.Following)
+        RecyclerFollowers = view.findViewById(R.id.Recycler_followers)
 
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
         (activity as AppCompatActivity).supportActionBar!!.setDisplayShowTitleEnabled(false)
@@ -60,12 +67,54 @@ open class ProfileActivity : Fragment(), View.OnClickListener {
 
         (activity as DrawerLocker).setDrawerLockerEnabled(true)
 
+        val layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
+        RecyclerFollowers.layoutManager = layoutManager
+        mFrindList = mutableListOf()
+        setFriendView(this.context!!)
+
         followersButton.setOnClickListener(this)
         followingButton.setOnClickListener(this)
 
         loadProfileData()
 
         return view
+    }
+
+    private fun setFriendView(c: Context) {
+        val list = mutableListOf<String>()
+        val firebaseUser = mAuth.currentUser!!
+        val databaseReference =
+            FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                for (data in p0.children) {
+                    val friendId = data.key!!
+                    list.add(friendId)
+                }
+                val databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+                databaseReference.addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        for (data in p0.children) {
+                            val user = data.getValue(User::class.java)
+                            if (user != null && list.contains(user.id)) {
+                                mFrindList.add(user)
+                            }
+
+                        }
+                        val adapter = FollowersAdapter(c, mFrindList)
+                        RecyclerFollowers.adapter = adapter
+                    }
+
+                })
+            }
+
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -142,7 +191,7 @@ open class ProfileActivity : Fragment(), View.OnClickListener {
 
         if (!user.imageUrl.equals("null")) {
             Glide.with(this).load(user.imageUrl).into(profileImg)
-        }else{
+        } else {
             profileImg.setImageResource(R.drawable.google_logo)
         }
     }
