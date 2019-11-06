@@ -14,11 +14,11 @@ import com.zone.chatterz.Adapter.FriendsAdapter
 import com.zone.chatterz.Model.User
 
 
-open class FriendsActivity : Fragment() {
+open class FriendOnlineActivity : Fragment() {
 
     private lateinit var followerRecyclerView: RecyclerView
 
-    private lateinit var databaseReference : DatabaseReference
+    private lateinit var databaseReference: DatabaseReference
     private lateinit var firebaseUser: FirebaseUser
 
     private lateinit var mUsers: MutableList<User>
@@ -38,38 +38,46 @@ open class FriendsActivity : Fragment() {
         followerRecyclerView.layoutManager = linearLayoutManager
 
         mUsers = mutableListOf()
-        readFollowers()
+        readFriendsOnline()
+
         return view
     }
 
-    private fun readFollowers() {
-        firebaseUser  = FirebaseAuth.getInstance().currentUser!!
+    private fun readFriendsOnline() {
+        val list = mutableListOf<String>()
+        firebaseUser = FirebaseAuth.getInstance().currentUser!!
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+        databaseReference =
+            FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
+
             override fun onDataChange(p0: DataSnapshot) {
-                mUsers.clear()
-                for(dataSet in p0.children){
-                    val user = dataSet.getValue(User::class.java)
-                    if(user != null){
-                        if(!user.id.equals(firebaseUser.uid)){
-                            mUsers.add(user)
-                        }
+                for (data in p0.children) {
+                    val friends = data.key!!
+                    list.add(friends)
+                }
+                val dataRef = FirebaseDatabase.getInstance().getReference("Users")
+                dataRef.addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
                     }
-                }
-                val getContext = context
-                if(getContext!=null) {
-                    friendsAdapter = FriendsAdapter(getContext, mUsers)
-                    followerRecyclerView.adapter = friendsAdapter
-                }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        for (data in p0.children) {
+                            val user = data.getValue(User::class.java)
+                            if (user != null && list.contains(user.id) && user.status.equals("online")) {
+                                mUsers.add(user)
+                            }
+                        }
+                        val getContext = context!!
+                        friendsAdapter = FriendsAdapter(getContext, mUsers)
+                        followerRecyclerView.adapter = friendsAdapter
+                    }
+
+                })
             }
         })
-
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
 }

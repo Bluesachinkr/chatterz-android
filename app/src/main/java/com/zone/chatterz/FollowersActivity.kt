@@ -17,9 +17,9 @@ import com.zone.chatterz.Model.User
 class FollowersActivity : AppCompatActivity() {
 
     private lateinit var friendsView: RecyclerView
-    private lateinit var mAuth : FirebaseAuth
-    private lateinit var mFrindList : MutableList<User>
-    private lateinit var toolbar: Toolbar
+    private lateinit var mAuth: FirebaseAuth
+    private lateinit var mFrindList: MutableList<User>
+    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,39 +30,40 @@ class FollowersActivity : AppCompatActivity() {
         friendsView = findViewById(R.id.frndsView)
         toolbar = findViewById(R.id.toolbarFriend)
 
-        toolbar.setTitle("Friends")
-
-        val layoutManager= GridLayoutManager(this,2)
+        val layoutManager = GridLayoutManager(this, 2)
         friendsView.layoutManager = layoutManager
-        mFrindList  = mutableListOf()
+        mFrindList = mutableListOf()
         setFriendView(this)
 
     }
 
-    private fun setFriendView(c : Context){
+    private fun setFriendView(c: Context) {
         val list = mutableListOf<String>()
         val firebaseUser = mAuth.currentUser!!
-        val databaseReference = FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener{
+        val databaseReference =
+            FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
+
             override fun onDataChange(p0: DataSnapshot) {
-               for (data in p0.children){
-                   val friendId = data.key!!
-                   list.add(friendId)
-               }
+                for (data in p0.children) {
+                    val friendId = data.key!!
+                    list.add(friendId)
+                }
                 val databaseReference = FirebaseDatabase.getInstance().getReference("Users")
-                databaseReference.addValueEventListener(object :ValueEventListener{
+                databaseReference.addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                     }
+
                     override fun onDataChange(p0: DataSnapshot) {
-                        for (data in p0.children){
+                        for (data in p0.children) {
                             val user = data.getValue(User::class.java)
-                            if(user!=null && list.contains(user.id)){
+                            if (user != null && list.contains(user.id)) {
                                 mFrindList.add(user)
                             }
                         }
-                        val adapter = FollowersAdapter(c,mFrindList)
+                        val adapter = FollowersAdapter(c, mFrindList)
                         friendsView.adapter = adapter
                     }
 

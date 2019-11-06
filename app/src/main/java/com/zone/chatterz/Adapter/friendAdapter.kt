@@ -4,15 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
 
-class firnedAdapter(list : List<User>, context : Context) : RecyclerView.Adapter<firnedAdapter.Viewholder>(){
+class friendAdapter(list : List<User>, context : Context) : RecyclerView.Adapter<friendAdapter.Viewholder>(){
 
     private val list = list
     private val mContext = context

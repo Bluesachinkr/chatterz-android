@@ -14,7 +14,6 @@ import com.zone.chatterz.Adapter.RecentAdapter
 import com.zone.chatterz.Model.Chat
 import com.zone.chatterz.Model.User
 
-
 open class RecentActivity : Fragment() {
 
     private lateinit var status_recyclerView: RecyclerView
@@ -27,9 +26,6 @@ open class RecentActivity : Fragment() {
     private lateinit var recentAdapter: RecentAdapter
 
     private lateinit var usersList: MutableList<String>
-    private lateinit var lastMessages : MutableList<String>
-
-    private lateinit var lastMessagelistener : ValueEventListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

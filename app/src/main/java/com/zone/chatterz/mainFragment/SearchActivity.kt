@@ -5,13 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
-import com.zone.chatterz.Adapter.firnedAdapter
 import com.zone.chatterz.Interfaces.DrawerLocker
-import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
 
 

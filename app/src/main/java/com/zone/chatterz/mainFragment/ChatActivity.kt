@@ -24,7 +24,6 @@ open class ChatActivity : Fragment() {
     ): View? {
 
         var view :View = inflater.inflate(R.layout.fragment_chat, container, false)
-
         (activity as DrawerLocker).setDrawerLockerEnabled(false)
 
         return view
@@ -45,15 +44,10 @@ open class ChatActivity : Fragment() {
 
         tabBarLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(p0: TabLayout.Tab?) {
-
             }
-
             override fun onTabUnselected(p0: TabLayout.Tab?) {
-
             }
-
             override fun onTabSelected(p0: TabLayout.Tab?) {
-
                 if (p0 != null) {
                     viewpager.currentItem = p0.position
                 }
@@ -68,7 +62,7 @@ open class ChatActivity : Fragment() {
     private fun addFramentToFragmentList(list: ArrayList<Fragment>) {
         list.add(RecentActivity())
         list.add(GroupChat())
-        list.add(FriendsActivity())
+        list.add(FriendOnlineActivity())
     }
 
     /* private fun TabLayout.setTabswithCustomWidth(tabPosition: Int) {
