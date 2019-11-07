@@ -25,7 +25,7 @@ import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
 import kotlin.collections.HashMap
 
-open class ProfileActivity : Fragment(), View.OnClickListener {
+open class ProfileActivity : Fragment(){
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseUser: FirebaseUser
@@ -37,8 +37,6 @@ open class ProfileActivity : Fragment(), View.OnClickListener {
     private lateinit var editStatusButton: ImageView
     private lateinit var editStatusDone: ImageView
     private lateinit var statusEditBox: EditText
-    private lateinit var followersButton: LinearLayout
-    private lateinit var followingButton: LinearLayout
     private lateinit var RecyclerFollowers: RecyclerView
     private lateinit var mFrindList: MutableList<User>
 
@@ -57,8 +55,6 @@ open class ProfileActivity : Fragment(), View.OnClickListener {
         editStatusButton = view.findViewById(R.id.statusEdit)
         editStatusDone = view.findViewById(R.id.statusDone)
         statusEditBox = view.findViewById(R.id.userStatusEditBox)
-        followersButton = view.findViewById(R.id.Followers)
-        followingButton = view.findViewById(R.id.Following)
         RecyclerFollowers = view.findViewById(R.id.Recycler_followers)
 
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
@@ -71,9 +67,6 @@ open class ProfileActivity : Fragment(), View.OnClickListener {
         RecyclerFollowers.layoutManager = layoutManager
         mFrindList = mutableListOf()
         setFriendView(this.context!!)
-
-        followersButton.setOnClickListener(this)
-        followingButton.setOnClickListener(this)
 
         loadProfileData()
 
@@ -107,7 +100,7 @@ open class ProfileActivity : Fragment(), View.OnClickListener {
                             }
 
                         }
-                        val adapter = FollowersAdapter(c, mFrindList)
+                        val adapter = FollowersAdapter(c, mFrindList,"profile")
                         RecyclerFollowers.adapter = adapter
                     }
 
@@ -138,21 +131,13 @@ open class ProfileActivity : Fragment(), View.OnClickListener {
 
     private fun loadProfileData() {
         firebaseUser = mAuth.currentUser!!
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users")
-        databaseReference.addValueEventListener(object : ValueEventListener {
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.uid)
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
-
             override fun onDataChange(p0: DataSnapshot) {
-                for (data in p0.children) {
-                    val user = data.getValue(User::class.java)
-                    if (user != null) {
-                        if (user.id.equals(firebaseUser.uid)) {
-                            setProfileLayout(user)
-                            break
-                        }
-                    }
-                }
+                val user = p0.getValue(User::class.java)
+                user?.let {setProfileLayout(user)}
             }
         })
     }
@@ -193,20 +178,6 @@ open class ProfileActivity : Fragment(), View.OnClickListener {
             Glide.with(this).load(user.imageUrl).into(profileImg)
         } else {
             profileImg.setImageResource(R.drawable.google_logo)
-        }
-    }
-
-    override fun onClick(v: View?) {
-        when (v) {
-            followersButton -> {
-                followingFollowersIntent()
-            }
-            followingButton -> {
-                followingFollowersIntent()
-            }
-            else -> {
-
-            }
         }
     }
 

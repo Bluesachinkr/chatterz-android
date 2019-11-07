@@ -2,9 +2,13 @@ package com.zone.chatterz
 
 import com.zone.chatterz.Interfaces.DrawerLocker
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
+import android.widget.RelativeLayout
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -26,6 +30,7 @@ class MainActivity : AppCompatActivity(), DrawerLocker {
     private lateinit var drawer: DrawerLayout
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseAuthListener: FirebaseAuth.AuthStateListener
+    private lateinit var content : RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +39,18 @@ class MainActivity : AppCompatActivity(), DrawerLocker {
         mAuth = FirebaseAuth.getInstance()
 
         drawer = findViewById(R.id.drawerLayout)
+        content = findViewById(R.id.contentLayout)
         val NavigationDrawerMenu = findViewById<NavigationView>(R.id.NavigationDrawerMenu)
+
+        drawer.setScrimColor(Color.TRANSPARENT)
+
+       drawer.addDrawerListener(object : ActionBarDrawerToggle(this,drawer,R.string.openDrawer,R.string.closeDrawer) {
+           override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+               super.onDrawerSlide(drawerView, slideOffset)
+               val slidex = drawerView.width * slideOffset
+               content.translationX =  - slidex
+           }
+       })
 
         firebaseAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
             val user = FirebaseAuth.getInstance().currentUser
@@ -121,22 +137,18 @@ class MainActivity : AppCompatActivity(), DrawerLocker {
 
     private fun updateOnlineStatus() {
         val firebaseUser = FirebaseAuth.getInstance().currentUser!!
-        val databaseReference = FirebaseDatabase.getInstance().getReference("Users")
-        databaseReference.addValueEventListener(object : ValueEventListener {
+        val databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.uid)
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                for (dataSet in p0.children) {
-                    var user = dataSet.getValue(User::class.java)
-                    if (user != null) {
-                        if (user.id.equals(firebaseUser.uid)) {
-                            val hashMap = HashMap<String, Any>()
-                            hashMap.put("status", "online")
-                            dataSet.ref.updateChildren(hashMap)
-                            dataSet.ref.child("status").onDisconnect().setValue("offline")
-                        }
-                    }
+                var user = p0.getValue(User::class.java)
+                if(user!=null){
+                    val hashMap = HashMap<String, Any>()
+                    hashMap.put("status", "online")
+                    p0.ref.updateChildren(hashMap)
+                    p0.ref.child("status").onDisconnect().setValue("offline")
                 }
             }
         })

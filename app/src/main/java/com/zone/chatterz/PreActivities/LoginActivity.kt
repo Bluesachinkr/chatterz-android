@@ -45,6 +45,8 @@ class LoginActivity : AppCompatActivity() {
             login_signIn_button.visibility = View.INVISIBLE
             login_signIn_button.isEnabled = false
 
+            signUp_text_clickable.isEnabled = false
+
             val userEmailInput = email_edittext_login.text.toString()
             val userPasswordInput = password_edittext_login.text.toString()
 

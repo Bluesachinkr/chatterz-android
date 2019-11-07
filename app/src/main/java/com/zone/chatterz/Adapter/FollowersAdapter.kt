@@ -13,15 +13,21 @@ import com.zone.chatterz.R
 
 class FollowersAdapter(
     context: Context,
-    friendList : List<User>
+    friendList : List<User>,type : String
 ) : RecyclerView.Adapter<FollowersAdapter.ViewHolder>() {
 
     private val mContext = context
     private val frndList  = friendList
+    private val type = type
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(mContext).inflate(R.layout.follow_item, parent, false)
-        return ViewHolder(view)
+        if(type.equals("profile")) {
+            val view = LayoutInflater.from(mContext).inflate(R.layout.followers_item, parent, false)
+            return ViewHolder(view)
+        }else{
+            val view = LayoutInflater.from(mContext).inflate(R.layout.follow_item,parent,false)
+            return ViewHolder(view)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -30,7 +36,7 @@ class FollowersAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val user = frndList.get(position)
-        holder.frndProfileName.text = user.username
+            holder.frndProfileName.text = user.username
         if(user.imageUrl.equals("null")){
             holder.frndProfieImg.setImageResource(R.drawable.google_logo)
         }else{

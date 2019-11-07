@@ -36,6 +36,8 @@ class RegisterActivity : AppCompatActivity() {
             register_signup_button.visibility = View.INVISIBLE
             progressBar_register.visibility = View.VISIBLE
 
+            signIn_text_clickable.isEnabled = false
+
             val emailInput = email_edittext_register.text.toString()
             val passwordInput = password_edittext_register.text.toString()
             val confirmPasswordInput = confirm_password_edittext_register.text.toString()

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/search_profileImg"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/google_logo"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        app:civ_border_color="#CFCFCF"/>
+
+        <TextView
+            android:id="@+id/search_userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:layout_toEndOf="@id/search_profileImg"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:text="Search Name"
+            android:textSize="22sp"/>
+
+    <LinearLayout
+        android:id="@+id/friendButton"
+        android:layout_width="110dp"
+        android:layout_height="32dp"
+        android:orientation="horizontal"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/follow_drawable">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_gravity="center"
+            android:src="@drawable/friends_icon_search"/>
+
+        <TextView
+            android:id="@+id/friendButtonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Friend"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

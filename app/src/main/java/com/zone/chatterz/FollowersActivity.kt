@@ -55,7 +55,6 @@ class FollowersActivity : AppCompatActivity() {
                 databaseReference.addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                     }
-
                     override fun onDataChange(p0: DataSnapshot) {
                         for (data in p0.children) {
                             val user = data.getValue(User::class.java)
@@ -63,7 +62,7 @@ class FollowersActivity : AppCompatActivity() {
                                 mFrindList.add(user)
                             }
                         }
-                        val adapter = FollowersAdapter(c, mFrindList)
+                        val adapter = FollowersAdapter(c, mFrindList,"friends")
                         friendsView.adapter = adapter
                     }
 

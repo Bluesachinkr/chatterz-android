@@ -1,18 +1,14 @@
 package com.zone.chatterz.Requirements
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.net.Uri
-import android.provider.MediaStore
 import java.io.ByteArrayOutputStream
 
 open  class JpegImageCompressor {
 
     companion object {
 
-        private val compressedSize = 150f
+        private val compressedSize = 300f
 
         fun imageCompression(originalImage: Bitmap): ByteArray {
 
@@ -27,12 +23,11 @@ open  class JpegImageCompressor {
             var compressedImage =
                 Bitmap.createBitmap(originalImage, 0, 0, width, height, matrix, true)
             val outputStream = ByteArrayOutputStream()
-            compressedImage.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
+            compressedImage.compress(Bitmap.CompressFormat.JPEG, 70, outputStream)
 
             var byteArray = outputStream.toByteArray()
 
             return byteArray
         }
-
     }
 }

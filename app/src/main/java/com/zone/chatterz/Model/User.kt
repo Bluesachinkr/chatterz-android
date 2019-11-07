@@ -19,5 +19,5 @@ data class User (
     var status : String
 
 ){
-    constructor():this("","","","","","offline")
+    constructor():this("","","","","","")
 }
