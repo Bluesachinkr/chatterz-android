@@ -13,12 +13,26 @@
         android:orientation="horizontal"
         android:scrollbars="none"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recent_RecyclerView"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/userStatus_RecyclerView"
-        android:orientation="vertical"
-        android:scrollbars="vertical"/>
+        android:layout_below="@id/userStatus_RecyclerView">
+
+        <ProgressBar
+            android:id="@+id/recentProgressBar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recent_RecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:orientation="vertical"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

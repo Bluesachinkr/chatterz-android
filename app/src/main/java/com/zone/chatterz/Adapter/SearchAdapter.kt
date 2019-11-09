@@ -17,11 +17,14 @@ import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
 
-class SearchAdapter(context: Context, list: List<User>) :
+class SearchAdapter(context: Context, mlist: List<User>) :
     RecyclerView.Adapter<SearchAdapter.Viewholder>() {
 
-    private val mlist = list
+    private val mlist = mlist
     private val mContext = context
+    private val mFriends = mutableListOf<String>()
+    private val mAuth = FirebaseAuth.getInstance()
+    private val firebaseUser = mAuth.currentUser!!
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Viewholder {
         val view = LayoutInflater.from(mContext).inflate(R.layout.search_user_item, parent, false)
@@ -34,21 +37,39 @@ class SearchAdapter(context: Context, list: List<User>) :
 
     override fun onBindViewHolder(holder: Viewholder, position: Int) {
         val user = mlist.get(position)
+
+        val databaseReference = FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
+        databaseReference.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+            override fun onDataChange(p0: DataSnapshot) {
+                mFriends.clear()
+                for (data in p0.children){
+                    data.key?.let { mFriends.add(it) }
+                }
+            }
+        })
+
         holder.userName.text = user.username
+
         if (user.imageUrl.equals("null")) {
             holder.profileImg.setImageResource(R.drawable.google_logo)
         } else {
             Glide.with(mContext).load(user.imageUrl).into(holder.profileImg)
         }
-        isFollowing(user.id, holder)
+
+        if(mFriends.contains(user.id)){
+           setVisibility(holder.friendButton,holder.unfriendButton)
+        }else{
+            setVisibility(holder.unfriendButton,holder.friendButton)
+        }
+
         holder.friendButton.setOnClickListener {
-            if (holder.buttonText.equals("Friend")) {
-                setFollow(user.id)
-                holder.buttonText.text = "Unfriend"
-            } else {
-                removeFollow(user.id)
-                holder.buttonText.text = "Friend"
-            }
+            setFollow(user.id,holder)
+        }
+
+        holder.unfriendButton.setOnClickListener {
+            removeFollow(user.id,holder)
         }
 
     }
@@ -56,41 +77,41 @@ class SearchAdapter(context: Context, list: List<User>) :
     class Viewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val friendButton: LinearLayout = itemView.findViewById(R.id.friendButton)
-        val buttonText: TextView = itemView.findViewById(R.id.friendButtonText)
         val userName: TextView = itemView.findViewById(R.id.search_userName)
         val profileImg: CircularImageView = itemView.findViewById(R.id.search_profileImg)
+        val unfriendButton : LinearLayout = itemView.findViewById(R.id.unfriendButton)
 
     }
 
-    private fun setFollow(userId: String) {
-        val firbaseUser = FirebaseAuth.getInstance().currentUser!!
-        val databaseReference =
-            FirebaseDatabase.getInstance().getReference("Friends").child(firbaseUser.uid)
-        databaseReference.child(userId).push().setValue(true)
-    }
-
-    private fun removeFollow(userId: String) {
-        val firebaseUser = FirebaseAuth.getInstance().currentUser!!
+    private fun setFollow(userId: String,holder: Viewholder) {
         val databaseReference =
             FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
-        databaseReference.child(userId).removeValue()
+        if(!mFriends.contains(userId)){
+            databaseReference.child(userId).setValue(true)
+            setVisibility(holder.friendButton,holder.unfriendButton)
+        }
     }
 
-    private fun isFollowing(userId: String, holder: Viewholder) {
-        val firebaseUser = FirebaseAuth.getInstance().currentUser!!
-        val databaseReference =
-            FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+    private fun removeFollow(userId: String,holder: Viewholder) {
+        val databaseReference = FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
+        databaseReference.addValueEventListener(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
             }
-
             override fun onDataChange(p0: DataSnapshot) {
-                val friendsId = p0.key
-                if (friendsId.equals(userId)) {
-                    holder.buttonText.text = "Unfriend"
-                    return
-                }
+               for (data in p0.children){
+                 if(data.key.equals(userId)){
+                     data.ref.removeValue()
+                     setVisibility(holder.unfriendButton,holder.friendButton)
+                 }
+               }
             }
+
         })
     }
+
+    private fun setVisibility(l1 : LinearLayout,l2 : LinearLayout){
+        l1.visibility = View.GONE
+        l2.visibility = View.VISIBLE
+    }
+
 }

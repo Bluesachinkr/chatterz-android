@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -18,6 +19,7 @@ open class RecentActivity : Fragment() {
 
     private lateinit var status_recyclerView: RecyclerView
     private lateinit var message_recyclerView: RecyclerView
+    private lateinit var recentProgressBar : ProgressBar
 
     private lateinit var databaseReference : DatabaseReference
     private lateinit var firebaseUser: FirebaseUser
@@ -34,6 +36,7 @@ open class RecentActivity : Fragment() {
 
         val view: View = inflater.inflate(R.layout.fragment_recent, container, false)
 
+        recentProgressBar = view.findViewById(R.id.recentProgressBar)
         status_recyclerView = view.findViewById(R.id.userStatus_RecyclerView)
         message_recyclerView = view.findViewById(R.id.recent_RecyclerView)
         message_recyclerView.setHasFixedSize(true)
@@ -48,6 +51,7 @@ open class RecentActivity : Fragment() {
             override fun onCancelled(p0: DatabaseError) {
             }
             override fun onDataChange(p0: DataSnapshot) {
+                recentProgressBar.visibility = View.VISIBLE
                usersList.clear()
                 for (dataSet in p0.children) {
                     val chat = dataSet.getValue(Chat::class.java)
@@ -94,6 +98,8 @@ open class RecentActivity : Fragment() {
                     recentAdapter = RecentAdapter(getContext,mUsers)
                     message_recyclerView.adapter = recentAdapter
                 }
+                recentProgressBar.visibility = View.GONE
+                message_recyclerView.visibility = View.VISIBLE
             }
         })
     }

@@ -61,7 +61,7 @@ class ChatMessageActivity : AppCompatActivity() {
             }
         }
 
-        //set OnBackPressed on backArrow of ChatMessage Screen
+        //set backArrow of ChatMessage Screen
         backArrow.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -111,10 +111,6 @@ class ChatMessageActivity : AppCompatActivity() {
         })
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
-
     private fun setProfileNameAndImgAppBar(dataSnapshot: DataSnapshot) {
         //Set the Username and Profile image of the user on the appbar of the chatMessage Activity
         //It also shows the status of the user whom the cureent user is want to send message is Online/Offline as status
@@ -151,10 +147,6 @@ class ChatMessageActivity : AppCompatActivity() {
                 }
             }
         })
-    }
-
-    override fun onPause() {
-        super.onPause()
     }
 
     override fun onStart() {

@@ -4,26 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#C4F0FF"
     tools:context=".FollowersActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:background="#FFFFFF">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbarFriend"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentTop="true"
+            app:title="Friends" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/frndsView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="4dp"
             android:layout_below="@id/toolbarFriend"/>
 
     </RelativeLayout>

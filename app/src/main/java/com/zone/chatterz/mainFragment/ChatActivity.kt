@@ -24,6 +24,7 @@ open class ChatActivity : Fragment() {
     ): View? {
 
         var view :View = inflater.inflate(R.layout.fragment_chat, container, false)
+
         (activity as DrawerLocker).setDrawerLockerEnabled(false)
 
         return view

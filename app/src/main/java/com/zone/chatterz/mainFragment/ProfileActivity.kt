@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +24,7 @@ import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
 import kotlin.collections.HashMap
 
-open class ProfileActivity : Fragment(){
+open class ProfileActivity : Fragment(),View.OnClickListener{
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseUser: FirebaseUser
@@ -38,12 +37,11 @@ open class ProfileActivity : Fragment(){
     private lateinit var editStatusDone: ImageView
     private lateinit var statusEditBox: EditText
     private lateinit var RecyclerFollowers: RecyclerView
+    private lateinit var viewallFriends : TextView
     private lateinit var mFrindList: MutableList<User>
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
         mAuth = FirebaseAuth.getInstance()
@@ -56,6 +54,7 @@ open class ProfileActivity : Fragment(){
         editStatusDone = view.findViewById(R.id.statusDone)
         statusEditBox = view.findViewById(R.id.userStatusEditBox)
         RecyclerFollowers = view.findViewById(R.id.Recycler_followers)
+        viewallFriends = view.findViewById(R.id.friendViewall)
 
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
         (activity as AppCompatActivity).supportActionBar!!.setDisplayShowTitleEnabled(false)
@@ -69,6 +68,8 @@ open class ProfileActivity : Fragment(){
         setFriendView(this.context!!)
 
         loadProfileData()
+
+        viewallFriends.setOnClickListener(this)
 
         return view
     }
@@ -167,10 +168,8 @@ open class ProfileActivity : Fragment(){
     }
 
     private fun setProfileLayout(user: User) {
-        if (userName.text.equals("")) {
             userName.text = user.username
-        }
-        if (textStatus.text.equals("")) {
+        if (!textStatus.text.equals("null")) {
             textStatus.text = user.bio
         }
 
@@ -181,9 +180,13 @@ open class ProfileActivity : Fragment(){
         }
     }
 
-    private fun followingFollowersIntent() {
-        val i = Intent(context, FollowersActivity::class.java)
-        startActivity(i)
+    override fun onClick(v: View?) {
+        when(v){
+            viewallFriends->{
+                val intent = Intent(context,FollowersActivity::class.java)
+                startActivity(intent)
+            }
+        }
     }
 
 }

@@ -24,14 +24,19 @@
             android:text="Search Name"
             android:textSize="22sp"/>
 
-    <LinearLayout
-        android:id="@+id/friendButton"
+    <RelativeLayout
         android:layout_width="110dp"
         android:layout_height="32dp"
-        android:orientation="horizontal"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
         android:layout_marginRight="8dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true">
+
+    <LinearLayout
+        android:id="@+id/friendButton"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:visibility="gone"
         android:background="@drawable/follow_drawable">
 
         <ImageView
@@ -42,7 +47,6 @@
             android:src="@drawable/friends_icon_search"/>
 
         <TextView
-            android:id="@+id/friendButtonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Friend"
@@ -53,5 +57,34 @@
             android:layout_gravity="center"/>
 
     </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/unfriendButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:background="@drawable/follow_drawable">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_gravity="center"
+                android:src="@drawable/friends_icon_search"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unfriend"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

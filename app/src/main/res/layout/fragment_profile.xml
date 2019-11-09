@@ -76,8 +76,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+
             app:cardCornerRadius="18dp">
 
             <LinearLayout
@@ -170,19 +169,41 @@
 
                     </androidx.cardview.widget.CardView>
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1sp"
+                        android:background="#E7E5E5"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
-                        android:layout_marginTop="8dp"
-                        android:text="Followers"
-                        android:textColor="#000000"
-                        android:textSize="18sp" />
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Followers"
+                            android:textColor="#000000"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/friendViewall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp"
+                            android:layout_alignParentEnd="true"
+                            android:text="View all"
+                            android:textColor="#01E6FF"
+                            android:layout_marginRight="8dp"
+                            android:layout_centerVertical="true"/>
+
+                    </RelativeLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/Recycler_followers"
                         android:layout_width="match_parent"
-                        android:layout_height="76dp"
+                        android:layout_height="110dp"
                         android:layout_margin="8dp"
                         android:orientation="horizontal"/>
 
