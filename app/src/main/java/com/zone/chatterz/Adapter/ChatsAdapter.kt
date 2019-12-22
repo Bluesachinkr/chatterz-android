@@ -23,13 +23,11 @@ import com.zone.chatterz.R
 class ChatsAdapter(context: Context, list: List<Chat>) :
     RecyclerView.Adapter<ChatsAdapter.ViewHolder>() {
 
+    private lateinit var firebaseUser: FirebaseUser
     private val MESSAGE_LEFT_RECEIVER = 0
     private val MESSAGE_RIGHT_SENDER = 1
-
     private var mChat: List<Chat> = list
     private var mContext = context
-
-    private lateinit var firebaseUser: FirebaseUser
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         if (viewType.equals(MESSAGE_RIGHT_SENDER)) {
@@ -50,23 +48,23 @@ class ChatsAdapter(context: Context, list: List<Chat>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val chat: Chat = mChat.get(position)
         holder.textMessage.text = chat.message
-        showPhotoImage(chat.sender,holder.profileChatImage)
+        showPhotoImage(chat.sender, holder.profileChatImage)
         if (position == mChat.size - 1) {
             holder.isSeen.visibility = View.VISIBLE
-            if(chat.isSeen) {
-               holder.isSeen.setImageResource(R.drawable.seen_icon)
-            }else{
-               holder.isSeen.setImageResource(R.drawable.not_seen_icon)
+            if (chat.isSeen) {
+                holder.isSeen.setImageResource(R.drawable.seen_icon)
+            } else {
+                holder.isSeen.setImageResource(R.drawable.not_seen_icon)
             }
-        }else{
+        } else {
             holder.isSeen.visibility = View.GONE
         }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textMessage: TextView = itemView.findViewById(R.id.message)
-        var isSeen : ImageView  = itemView.findViewById(R.id.isSeenMessage)
-        var profileChatImage = itemView.findViewById<CircularImageView>(R.id.chatProfileImgReceiving)
+        var isSeen: ImageView = itemView.findViewById(R.id.isSeenMessage)
+        var profileChatImage : CircularImageView = itemView.findViewById(R.id.chatProfileImgReceiving)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -79,21 +77,20 @@ class ChatsAdapter(context: Context, list: List<Chat>) :
 
     }
 
-    private fun showPhotoImage(userid : String,imageView: CircularImageView){
-        val databaseReference = FirebaseDatabase.getInstance().getReference("Users")
-        databaseReference.addValueEventListener(object : ValueEventListener{
+    private fun showPhotoImage(userid: String, imageView: CircularImageView) {
+        val databaseReference = FirebaseDatabase.getInstance().getReference("Users" + userid)
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
+
             override fun onDataChange(p0: DataSnapshot) {
-                for (dataSet in p0.children){
-                    val user = dataSet.getValue(User::class.java)
-                    if(user!=null){
-                        if(user.id.equals(userid)){
-                            if(user.imageUrl.equals("null")){
-                                imageView.setImageResource(R.drawable.google_logo)
-                            }else{
-                                Glide.with(mContext).load(user.imageUrl).into(imageView)
-                            }
+                val user = p0.getValue(User::class.java)
+                if (user != null) {
+                    if (user.id.equals(userid)) {
+                        if (user.imageUrl.equals("null")) {
+                            imageView.setImageResource(R.drawable.google_logo)
+                        } else {
+                            Glide.with(mContext).load(user.imageUrl).into(imageView)
                         }
                     }
                 }

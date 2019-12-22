@@ -17,10 +17,8 @@ import com.zone.chatterz.Model.User
 open class FriendOnlineActivity : Fragment() {
 
     private lateinit var followerRecyclerView: RecyclerView
-
     private lateinit var databaseReference: DatabaseReference
     private lateinit var firebaseUser: FirebaseUser
-
     private lateinit var mUsers: MutableList<User>
     private lateinit var friendsAdapter: FriendsAdapter
 
@@ -30,23 +28,18 @@ open class FriendOnlineActivity : Fragment() {
     ): View? {
 
         val view = inflater.inflate(R.layout.fragment_followers, container, false)
-
         followerRecyclerView = view.findViewById(R.id.followerRecyclerView)
-
         followerRecyclerView.setHasFixedSize(true)
         val linearLayoutManager = LinearLayoutManager(this.context)
         followerRecyclerView.layoutManager = linearLayoutManager
-
         mUsers = mutableListOf()
         readFriendsOnline()
-
         return view
     }
 
     private fun readFriendsOnline() {
         val list = mutableListOf<String>()
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
-
         databaseReference =
             FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
         databaseReference.addValueEventListener(object : ValueEventListener {
@@ -74,10 +67,8 @@ open class FriendOnlineActivity : Fragment() {
                         friendsAdapter = FriendsAdapter(getContext, mUsers)
                         followerRecyclerView.adapter = friendsAdapter
                     }
-
                 })
             }
         })
     }
-
 }

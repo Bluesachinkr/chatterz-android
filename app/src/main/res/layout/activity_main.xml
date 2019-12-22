@@ -21,7 +21,7 @@
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationBar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:layout_alignParentBottom="true"
             android:background="#FFFFFF"
             app:labelVisibilityMode="unlabeled"

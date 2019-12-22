@@ -21,8 +21,6 @@ import com.zone.chatterz.PreActivities.WelcomeActivity
 import com.zone.chatterz.Settings.GeneralSettings
 import com.zone.chatterz.mainFragment.ChatActivity
 import com.zone.chatterz.mainFragment.ProfileActivity
-import com.zone.chatterz.mainFragment.SearchActivity
-import com.zone.chatterz.mainFragment.StatusActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), DrawerLocker {
@@ -30,27 +28,26 @@ class MainActivity : AppCompatActivity(), DrawerLocker {
     private lateinit var drawer: DrawerLayout
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseAuthListener: FirebaseAuth.AuthStateListener
-    private lateinit var content : RelativeLayout
+    private lateinit var content: RelativeLayout
+    private lateinit var navigationDrawerMenu : NavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         mAuth = FirebaseAuth.getInstance()
-
         drawer = findViewById(R.id.drawerLayout)
         content = findViewById(R.id.contentLayout)
-        val NavigationDrawerMenu = findViewById<NavigationView>(R.id.NavigationDrawerMenu)
-
+        navigationDrawerMenu = findViewById(R.id.NavigationDrawerMenu)
         drawer.setScrimColor(Color.TRANSPARENT)
-
-       drawer.addDrawerListener(object : ActionBarDrawerToggle(this,drawer,R.string.openDrawer,R.string.closeDrawer) {
-           override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-               super.onDrawerSlide(drawerView, slideOffset)
-               val slidex = drawerView.width * slideOffset
-               content.translationX =  - slidex
-           }
-       })
+        drawer.addDrawerListener(object :
+            ActionBarDrawerToggle(this, drawer, R.string.openDrawer, R.string.closeDrawer) {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                super.onDrawerSlide(drawerView, slideOffset)
+                val slidex = drawerView.width * slideOffset
+                content.translationX = -slidex
+            }
+        })
 
         firebaseAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
             val user = FirebaseAuth.getInstance().currentUser
@@ -63,11 +60,11 @@ class MainActivity : AppCompatActivity(), DrawerLocker {
         }
 
         setNavigationInitially()
+
         bottomNavigationBar.setOnNavigationItemSelectedListener { menuItem ->
-            bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.chats_light_icon)
-            bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.search_light_icon)
-            bottomNavigationBar.menu.getItem(2).setIcon(R.drawable.icon_status)
-            bottomNavigationBar.menu.getItem(3).setIcon(R.drawable.proifle_light_icon)
+            bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.ic_multiple_users_silhouette)
+            bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.chats_light_icon)
+            bottomNavigationBar.menu.getItem(2).setIcon(R.drawable.proifle_light_icon)
             when (menuItem.itemId) {
 
                 R.id.chats -> {
@@ -78,19 +75,10 @@ class MainActivity : AppCompatActivity(), DrawerLocker {
                     menuItem.setIcon(R.drawable.chat_dark_icon)
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.search_bottombar -> {
-                    val searchActivity = SearchActivity()
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container_main, searchActivity)
-                        .addToBackStack(null).commit()
-                    menuItem.setIcon(R.drawable.search_dark_icon)
-                    return@setOnNavigationItemSelectedListener true
-                }
-                R.id.status_bottombar -> {
-                    val statusActivity = StatusActivity()
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container_main, statusActivity)
-                        .addToBackStack(null).commit()
+                R.id.groups_bottombar -> {
+                    val intent = Intent(this, GroupChatActivity::class.java)
+                    startActivity(intent)
+                    menuItem.setIcon(R.drawable.ic_multiple_users_silhouette)
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.profile_bottombar -> {
@@ -128,23 +116,25 @@ class MainActivity : AppCompatActivity(), DrawerLocker {
     }
 
     private fun setNavigationInitially() {
+        bottomNavigationBar.selectedItemId = R.id.chats
         val chatsFragment = ChatActivity()
         supportFragmentManager.beginTransaction()
             .add(R.id.container_main, chatsFragment)
             .addToBackStack(null).commit()
-        bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.chat_dark_icon)
+        bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.chat_dark_icon)
     }
 
     private fun updateOnlineStatus() {
         val firebaseUser = FirebaseAuth.getInstance().currentUser!!
-        val databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.uid)
+        val databaseReference =
+            FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.uid)
         databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
                 var user = p0.getValue(User::class.java)
-                if(user!=null){
+                if (user != null) {
                     val hashMap = HashMap<String, Any>()
                     hashMap.put("status", "online")
                     p0.ref.updateChildren(hashMap)
