@@ -17,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".FollowersActivity"></activity>
+        <activity android:name=".FriendOnlineActivity"></activity>
         <activity android:name=".Settings.GeneralSettings" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".CreateNewGroup" />
