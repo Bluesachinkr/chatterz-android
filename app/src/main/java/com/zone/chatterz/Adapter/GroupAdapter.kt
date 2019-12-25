@@ -1,6 +1,7 @@
 package com.zone.chatterz.Adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mikhaellopez.circularimageview.CircularImageView
+import com.zone.chatterz.CreateNewGroup
 import com.zone.chatterz.Model.Group
 import com.zone.chatterz.R
 
@@ -36,13 +38,18 @@ class GroupAdapter(context: Context, list: List<Group>) :
         var group = mGroup.get(position)
         if (group.groupImgUrl.equals("default")) {
             holder.groupImage.setImageResource(R.mipmap.ic_launcher_round)
-        } else {
+        } else if(group.groupImgUrl.equals("add")){
+            holder.groupImage.setImageResource(R.drawable.new_group_icon)
+        }else {
             Glide.with(mContext).load(group.groupImgUrl).into(holder.groupImage)
         }
         holder.groupCard.visibility = View.GONE
-        /*holder.itemView.setOnClickListener{
-            LoadGroupData()
-        }*/
+        holder.itemView.setOnClickListener{
+            if(holder.groupImage.equals("add")){
+                val intent= Intent(mContext,CreateNewGroup::class.java)
+                mContext.startActivity(intent)
+            }
+        }
     }
 
     private fun LoadGroupData() {

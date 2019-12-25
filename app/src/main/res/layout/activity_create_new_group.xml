@@ -30,6 +30,7 @@
                     android:src="@drawable/back_arrow" />
 
                 <TextView
+                    android:id="@+id/nextBtn_create_new_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -64,20 +65,40 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Group Name"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="8dp"
-            android:textSize="20sp"/>
+        <RelativeLayout
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_centerHorizontal="true">
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/groupImage"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                app:civ_border_color="#000000"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/google_logo"
+                app:civ_border_width="2dp"/>
+
+            <ImageView
+                android:id="@+id/cameraEditBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/camera_icon"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
 
         <EditText
+            android:id="@+id/groupNameEdittext"
             android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="8dp"
-            android:hint="Group Name"/>
+            android:layout_height="54dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:padding="10dp"
+            android:hint="Group Name"
+            android:layout_marginTop="160dp"
+            android:background="@drawable/background_edittext_chatbox"/>
 
     </RelativeLayout>
 

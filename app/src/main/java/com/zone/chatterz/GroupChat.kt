@@ -50,7 +50,7 @@ open class GroupChat : Fragment() {
         mGroupList = mutableListOf()
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
-        databaseReference = FirebaseDatabase.getInstance().getReference("Group")
+        databaseReference = FirebaseDatabase.getInstance().getReference("Groups")
         databaseReference.addValueEventListener(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
             }
