@@ -2,7 +2,7 @@ package com.zone.chatterz.Model
 
 import com.google.firebase.database.PropertyName
 
-data class GroupChat(
+data class GroupChats(
 
     @set:PropertyName("sender")
     @get:PropertyName("sender")

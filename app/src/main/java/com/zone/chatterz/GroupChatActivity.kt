@@ -20,10 +20,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.zone.chatterz.Adapter.GroupAdapter
+import com.zone.chatterz.Adapter.GroupChatAdapter
 import com.zone.chatterz.FirebaseConnection.Connection
 import com.zone.chatterz.Interfaces.DrawerLocker
 import com.zone.chatterz.Model.Group
+import com.zone.chatterz.Model.GroupChats
 import kotlinx.android.synthetic.main.left_group_navigation_view.*
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 open class GroupChatActivity : Fragment(), View.OnClickListener {
 
@@ -43,6 +49,7 @@ open class GroupChatActivity : Fragment(), View.OnClickListener {
     private lateinit var sendMsgBtn : ImageView
     private lateinit var toolbar: Toolbar
     private lateinit var mGroupList : MutableList<String>
+    private lateinit var activeGroup : String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,6 +69,7 @@ open class GroupChatActivity : Fragment(), View.OnClickListener {
         groupName = view.findViewById(R.id.groupName)
         content = view.findViewById(R.id.contentGroupChats)
         toolbar = view.findViewById(R.id.groupToolbar)
+        chatsRecyclerview = view.findViewById(R)
 
         setHasOptionsMenu(true)
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
@@ -157,7 +165,42 @@ open class GroupChatActivity : Fragment(), View.OnClickListener {
 
     private fun sendMessageGroup(message : String){
         firebaseUser = mAuth.currentUser!!
+        databaseReference = FirebaseDatabase.getInstance().getReference(Connection.groupChats).child(activeGroup)
+        val hashMap = HashMap<String,Any>()
+        hashMap.put("sender",firebaseUser.uid)
+        hashMap.put("message",message)
+        hashMap.put("dateTime",getTime())
+        databaseReference.push().setValue(hashMap)
+    }
 
+    private fun readMessage(){
+        val mGroupChat = mutableListOf<GroupChats>()
+        databaseReference = FirebaseDatabase.getInstance().getReference(Connection.groupChats).child(activeGroup)
+        databaseReference.addValueEventListener(object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+               for (data in p0.children){
+                   val values = data.getValue(GroupChats::class.java)
+                   if(values!=null){
+                       mGroupChat.add(values)
+                   }
+               }
+                context?.let {
+                    val adapter = GroupChatAdapter(context!!,mGroupChat,firebaseUser.uid)
+                    chatsRecyclerview.adapter = adapter
+                }
+            }
+        })
+    }
+
+    private fun getTime() : String{
+        val sd = SimpleDateFormat()
+        val date  = Date()
+        sd.timeZone = TimeZone.getTimeZone("Asia/Kolkata")
+        val cur_date = sd.format(date)
+        return cur_date
     }
 
     private fun loadGroupChats(){

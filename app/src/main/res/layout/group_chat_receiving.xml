@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
+
+    <RelativeLayout
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp">
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/groupChatImgReceiving"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_launcher_background"
+            app:civ_border_color="#000000"
+            app:civ_border_width="2px" />
+
+        <TextView
+            android:id="@+id/message_groupChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toEndOf="@id/groupChatImgReceiving"
+            android:background="@drawable/receiving_chat_background"
+            android:fontFamily="serif"
+            android:maxLines="30"
+            android:paddingTop="6dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:text="Hello Bro"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/time_sending_groupChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:text="17:30"
+           android:layout_toEndOf="@id/groupChatImgReceiving"
+            android:layout_below="@id/message_groupChat"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="-16dp"/>
+
+       <!-- <ImageView
+            android:id="@+id/isSeenMessage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_below="@id/message"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:visibility="gone" />-->
+
+    </RelativeLayout>
+
+</RelativeLayout>
