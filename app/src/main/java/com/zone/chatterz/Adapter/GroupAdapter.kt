@@ -5,7 +5,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mikhaellopez.circularimageview.CircularImageView
@@ -21,7 +20,6 @@ class GroupAdapter(context: Context, list: List<Group>) :
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var groupCard: CardView = itemView.findViewById(R.id.GroupCard)
         var groupImage: CircularImageView = itemView.findViewById(R.id.Group_profileImage)
     }
 
@@ -43,7 +41,6 @@ class GroupAdapter(context: Context, list: List<Group>) :
         }else {
             Glide.with(mContext).load(group.groupImgUrl).into(holder.groupImage)
         }
-        holder.groupCard.visibility = View.GONE
         holder.itemView.setOnClickListener{
             if(holder.groupImage.equals("add")){
                 val intent= Intent(mContext,CreateNewGroup::class.java)

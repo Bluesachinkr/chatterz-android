@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -22,6 +23,7 @@ import com.zone.chatterz.Adapter.GroupAdapter
 import com.zone.chatterz.FirebaseConnection.Connection
 import com.zone.chatterz.Interfaces.DrawerLocker
 import com.zone.chatterz.Model.Group
+import kotlinx.android.synthetic.main.left_group_navigation_view.*
 
 open class GroupChatActivity : Fragment(), View.OnClickListener {
 
@@ -36,8 +38,10 @@ open class GroupChatActivity : Fragment(), View.OnClickListener {
     private lateinit var content: RelativeLayout
     private lateinit var rightNavigationView: NavigationView
     private lateinit var groupListView: RecyclerView
+    private lateinit var chatsRecyclerview : RecyclerView
+    private lateinit var messageEditText: EditText
+    private lateinit var sendMsgBtn : ImageView
     private lateinit var toolbar: Toolbar
-
     private lateinit var mGroupList : MutableList<String>
 
     override fun onCreateView(
@@ -85,6 +89,10 @@ open class GroupChatActivity : Fragment(), View.OnClickListener {
 
         openDrawerBtn.setOnClickListener(this)
         openMembersDrawer.setOnClickListener(this)
+
+        if(drawer.isDrawerOpen(leftNavigationView)){
+            showGroups()
+        }
         return view
     }
 
@@ -133,7 +141,7 @@ open class GroupChatActivity : Fragment(), View.OnClickListener {
             }
             override fun onDataChange(p0: DataSnapshot) {
                for ( values in p0.children){
-                   if(mGroupList.contains(values.ref.toString())){
+                   if(mGroupList.contains(values.ref.key.toString())){
                        val data = values.getValue(Group::class.java)
                       data?.let { grpList.add(data) }
                    }
@@ -147,10 +155,29 @@ open class GroupChatActivity : Fragment(), View.OnClickListener {
         })
     }
 
+    private fun sendMessageGroup(message : String){
+        firebaseUser = mAuth.currentUser!!
+
+    }
+
+    private fun loadGroupChats(){
+        firebaseUser = mAuth.currentUser!!
+        val mChats = mutableListOf<GroupChat>()
+        databaseReference  = FirebaseDatabase.getInstance().getReference(Connection.groupChats).child(mGroupList.get(0))
+        databaseReference.addValueEventListener(object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+
+            }
+        })
+    }
+
     private fun createGroupList(){
         mGroupList = mutableListOf()
         firebaseUser = mAuth.currentUser!!
-        databaseReference = FirebaseDatabase.getInstance().getReference("GroupsJoined").child(firebaseUser.uid)
+        databaseReference = FirebaseDatabase.getInstance().getReference(Connection.groupJoinedRef).child(firebaseUser.uid)
         databaseReference.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
             }
@@ -165,7 +192,7 @@ open class GroupChatActivity : Fragment(), View.OnClickListener {
     }
 
     private fun setDrawerWidth() {
-        val width = resources.displayMetrics.widthPixels / 4
+        val width = 160
         var params = leftNavigationView.layoutParams as DrawerLayout.LayoutParams
         params.width = width
         leftNavigationView.layoutParams = params

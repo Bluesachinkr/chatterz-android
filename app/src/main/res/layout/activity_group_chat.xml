@@ -53,11 +53,53 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-        <androidx.recyclerview.widget.RecyclerView
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/groupToolbar"
-            />
+            android:layout_below="@id/groupToolbar">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/groupChatsRecyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#F0F0F0"
+                android:layout_above="@id/messageAreaChatGroup"/>
+
+            <LinearLayout
+                android:id="@+id/messageAreaChatGroup"
+                android:layout_width="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_height="?attr/actionBarSize"
+                android:orientation="horizontal"
+                android:weightSum="6">
+
+                <EditText
+                    android:id="@+id/editextGrpMessage"
+                    android:layout_width="0dp"
+                    android:layout_weight="4.6"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:padding="12dp"
+                    android:hint="Enter a message"
+                    android:background="@drawable/background_edittext_chatbox"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".4" />
+
+                <ImageView
+                    android:id="@+id/sendMessageGrpButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/send_button" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

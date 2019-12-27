@@ -10,8 +10,9 @@ data class Group(
     @set:PropertyName("groupImgUrl")
     @get:PropertyName("groupImgUrl")
     var groupImgUrl : String,
-    var groupMaker : String
+    var groupMaker : String,
+    var id : String
 
 ){
-    constructor():this("","","")
+    constructor():this("","","","")
 }

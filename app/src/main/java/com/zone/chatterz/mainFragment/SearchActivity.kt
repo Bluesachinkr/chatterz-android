@@ -80,10 +80,6 @@ open class SearchActivity : Fragment(){
         return view
     }
 
-    interface DatabaseChanged{
-
-    }
-
     private fun searchUser(text: String?) {
 
         val query = FirebaseDatabase.getInstance().getReference("Users").orderByChild("username")
