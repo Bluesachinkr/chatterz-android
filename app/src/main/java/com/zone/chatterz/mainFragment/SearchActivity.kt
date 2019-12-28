@@ -18,15 +18,15 @@ import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
 
 
-open class SearchActivity : Fragment(){
+open class SearchActivity : Fragment() {
 
     private lateinit var searchBar: SearchView
-    private lateinit var searchProgressBar : ProgressBar
+    private lateinit var searchProgressBar: ProgressBar
     private lateinit var searchedView: RecyclerView
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mSearchUser: MutableList<User>
-    private var currentSearchtext : String = ""
+    private var currentSearchtext: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,13 +49,13 @@ open class SearchActivity : Fragment(){
         val layoutManager = LinearLayoutManager(this.context)
         searchedView.layoutManager = layoutManager
 
-        searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 currentSearchtext = query!!
-                if(query!!.isEmpty()){
+                if (query!!.isEmpty()) {
                     emptySearchedView()
                     return false
-                }else{
+                } else {
                     searchProgressBar.visibility = View.VISIBLE
                     searchUser(query)
                     return true
@@ -64,10 +64,10 @@ open class SearchActivity : Fragment(){
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 currentSearchtext = newText!!
-                if(newText!!.isEmpty()){
+                if (newText!!.isEmpty()) {
                     emptySearchedView()
                     return false
-                }else{
+                } else {
                     searchProgressBar.visibility = View.VISIBLE
                     searchUser(newText)
                     return true
@@ -107,10 +107,10 @@ open class SearchActivity : Fragment(){
         })
     }
 
-    private fun emptySearchedView(){
+    private fun emptySearchedView() {
         mSearchUser.clear()
         val getContext = context!!
-        val  adapter = SearchAdapter(getContext,mSearchUser)
+        val adapter = SearchAdapter(getContext, mSearchUser)
         searchedView.adapter = adapter
     }
 }

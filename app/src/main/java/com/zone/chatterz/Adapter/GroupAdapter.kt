@@ -9,14 +9,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.CreateNewGroup
+import com.zone.chatterz.Interfaces.GroupchatControl
 import com.zone.chatterz.Model.Group
 import com.zone.chatterz.R
 
-class GroupAdapter(context: Context, list: List<Group>) :
+class GroupAdapter(context: Context, list: List<Group>,interfaceChats : GroupchatControl) :
     RecyclerView.Adapter<GroupAdapter.ViewHolder>() {
 
     private val mContext = context
     private val mGroup = list
+    private val interfaceChats  = interfaceChats
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -45,6 +47,8 @@ class GroupAdapter(context: Context, list: List<Group>) :
             if(holder.groupImage.equals("add")){
                 val intent= Intent(mContext,CreateNewGroup::class.java)
                 mContext.startActivity(intent)
+            }else{
+                interfaceChats.loadGroupChats(group.id)
             }
         }
     }

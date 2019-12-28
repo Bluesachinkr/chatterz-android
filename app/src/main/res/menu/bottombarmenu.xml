@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/groups_bottombar"
         android:icon="@drawable/ic_multiple_users_silhouette"
-        android:title="Groups"
-        android:id="@+id/groups_bottombar"/>
+        android:title="Groups" />
 
     <item
         android:id="@+id/chats"
-        android:title="Chats"
-        android:icon="@drawable/chats_light_icon"/>
+        android:icon="@drawable/chats_light_icon"
+        android:title="Chats" />
 
     <item
-        android:title="Profile"
+        android:id="@+id/profile_bottombar"
         android:icon="@drawable/proifle_light_icon"
-        android:id="@+id/profile_bottombar"/>
-    
+        android:title="Profile" />
+
 </menu>

@@ -64,7 +64,8 @@ class ChatsAdapter(context: Context, list: List<Chat>) :
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textMessage: TextView = itemView.findViewById(R.id.message)
         var isSeen: ImageView = itemView.findViewById(R.id.isSeenMessage)
-        var profileChatImage : CircularImageView = itemView.findViewById(R.id.chatProfileImgReceiving)
+        var profileChatImage: CircularImageView =
+            itemView.findViewById(R.id.chatProfileImgReceiving)
     }
 
     override fun getItemViewType(position: Int): Int {

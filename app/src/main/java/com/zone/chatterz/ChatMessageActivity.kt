@@ -19,7 +19,7 @@ class ChatMessageActivity : AppCompatActivity() {
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var databaseReference: DatabaseReference
     private lateinit var mChat: MutableList<Chat>
-    private lateinit var isActive : String
+    private lateinit var isActive: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +42,7 @@ class ChatMessageActivity : AppCompatActivity() {
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
+
             override fun onDataChange(p0: DataSnapshot) {
                 setProfileNameAndImgAppBar(p0)
                 readMessage(id, firebaseUser.uid)
@@ -68,7 +69,7 @@ class ChatMessageActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-       seenMessage(id)
+        seenMessage(id)
     }
 
     private fun sendMessage(message: String, sender: String, reciever: String) {
@@ -77,7 +78,7 @@ class ChatMessageActivity : AppCompatActivity() {
         hashMap.put("message", message)
         hashMap.put("sender", sender)
         hashMap.put("receiver", reciever)
-        hashMap.put("isSeen",false)
+        hashMap.put("isSeen", false)
 
         //Clear Edittext and make ready to take next chat
         editextMessage.setText("")
@@ -92,6 +93,7 @@ class ChatMessageActivity : AppCompatActivity() {
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
+
             override fun onDataChange(p0: DataSnapshot) {
                 mChat.clear()
                 for (dataset in p0.children) {
@@ -126,18 +128,19 @@ class ChatMessageActivity : AppCompatActivity() {
         }
     }
 
-    private fun seenMessage(userId : String){
+    private fun seenMessage(userId: String) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Chats")
-       databaseReference.addValueEventListener(object : ValueEventListener{
+        databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
+
             override fun onDataChange(p0: DataSnapshot) {
                 mChat.clear()
-                for (dataSet in p0.children){
+                for (dataSet in p0.children) {
                     val chat = dataSet.getValue(Chat::class.java)
-                    if(chat!=null) {
-                        if (chat.receiver.equals(firebaseUser.uid) && chat.sender.equals(userId)){
-                            if(isActive.equals("active")) {
+                    if (chat != null) {
+                        if (chat.receiver.equals(firebaseUser.uid) && chat.sender.equals(userId)) {
+                            if (isActive.equals("active")) {
                                 val hashMap = HashMap<String, Any>()
                                 hashMap.put("isSeen", true)
                                 dataSet.ref.updateChildren(hashMap)
@@ -151,12 +154,12 @@ class ChatMessageActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-       isActive = "active"
+        isActive = "active"
     }
 
     override fun onStop() {
         super.onStop()
-       isActive = "inactive"
+        isActive = "inactive"
     }
 
 }

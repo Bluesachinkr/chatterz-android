@@ -38,13 +38,15 @@ class SearchAdapter(context: Context, mlist: List<User>) :
     override fun onBindViewHolder(holder: Viewholder, position: Int) {
         val user = mlist.get(position)
 
-        val databaseReference = FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
+        val databaseReference =
+            FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
+
             override fun onDataChange(p0: DataSnapshot) {
                 mFriends.clear()
-                for (data in p0.children){
+                for (data in p0.children) {
                     data.key?.let { mFriends.add(it) }
                 }
             }
@@ -58,18 +60,18 @@ class SearchAdapter(context: Context, mlist: List<User>) :
             Glide.with(mContext).load(user.imageUrl).into(holder.profileImg)
         }
 
-        if(mFriends.contains(user.id)){
-           setVisibility(holder.friendButton,holder.unfriendButton)
-        }else{
-            setVisibility(holder.unfriendButton,holder.friendButton)
+        if (mFriends.contains(user.id)) {
+            setVisibility(holder.friendButton, holder.unfriendButton)
+        } else {
+            setVisibility(holder.unfriendButton, holder.friendButton)
         }
 
         holder.friendButton.setOnClickListener {
-            setFollow(user.id,holder)
+            setFollow(user.id, holder)
         }
 
         holder.unfriendButton.setOnClickListener {
-            removeFollow(user.id,holder)
+            removeFollow(user.id, holder)
         }
 
     }
@@ -79,37 +81,39 @@ class SearchAdapter(context: Context, mlist: List<User>) :
         val friendButton: LinearLayout = itemView.findViewById(R.id.friendButton)
         val userName: TextView = itemView.findViewById(R.id.search_userName)
         val profileImg: CircularImageView = itemView.findViewById(R.id.search_profileImg)
-        val unfriendButton : LinearLayout = itemView.findViewById(R.id.unfriendButton)
+        val unfriendButton: LinearLayout = itemView.findViewById(R.id.unfriendButton)
 
     }
 
-    private fun setFollow(userId: String,holder: Viewholder) {
+    private fun setFollow(userId: String, holder: Viewholder) {
         val databaseReference =
             FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
-        if(!mFriends.contains(userId)){
+        if (!mFriends.contains(userId)) {
             databaseReference.child(userId).setValue(true)
-            setVisibility(holder.friendButton,holder.unfriendButton)
+            setVisibility(holder.friendButton, holder.unfriendButton)
         }
     }
 
-    private fun removeFollow(userId: String,holder: Viewholder) {
-        val databaseReference = FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
-        databaseReference.addValueEventListener(object : ValueEventListener{
+    private fun removeFollow(userId: String, holder: Viewholder) {
+        val databaseReference =
+            FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
+        databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
+
             override fun onDataChange(p0: DataSnapshot) {
-               for (data in p0.children){
-                 if(data.key.equals(userId)){
-                     data.ref.removeValue()
-                     setVisibility(holder.unfriendButton,holder.friendButton)
-                 }
-               }
+                for (data in p0.children) {
+                    if (data.key.equals(userId)) {
+                        data.ref.removeValue()
+                        setVisibility(holder.unfriendButton, holder.friendButton)
+                    }
+                }
             }
 
         })
     }
 
-    private fun setVisibility(l1 : LinearLayout,l2 : LinearLayout){
+    private fun setVisibility(l1: LinearLayout, l2: LinearLayout) {
         l1.visibility = View.GONE
         l2.visibility = View.VISIBLE
     }

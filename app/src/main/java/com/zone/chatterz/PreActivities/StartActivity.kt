@@ -8,7 +8,7 @@ import com.zone.chatterz.R
 
 class StartActivity : AppCompatActivity() {
 
-    private val SPLASH_DELAY_LENGTH : Long =2500
+    private val SPLASH_DELAY_LENGTH: Long = 2500
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -23,18 +23,17 @@ import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
 import com.zone.chatterz.Requirements.JpegImageCompressor
 
-class GeneralSettings : AppCompatActivity(),OnEditListener{
+class GeneralSettings : AppCompatActivity(), OnEditListener {
 
     private lateinit var addAccountImage: ImageView
     private lateinit var accountImage: CircularImageView
-    private lateinit var backArrow :  ImageView
-    private lateinit var editUserName : TextView
-    private lateinit var userName : TextView
-    private lateinit var changeUserName : EditText
-    private lateinit var editGender : TextView
-    private lateinit var gender : TextView
-    private lateinit var changeGender : EditText
-
+    private lateinit var backArrow: ImageView
+    private lateinit var editUserName: TextView
+    private lateinit var userName: TextView
+    private lateinit var changeUserName: EditText
+    private lateinit var editGender: TextView
+    private lateinit var gender: TextView
+    private lateinit var changeGender: EditText
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var storageReference: StorageReference
@@ -68,7 +67,7 @@ class GeneralSettings : AppCompatActivity(),OnEditListener{
 
         }
         backArrow.setOnClickListener {
-            val i = Intent(this,MainActivity::class.java)
+            val i = Intent(this, MainActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(i)
         }
@@ -111,44 +110,51 @@ class GeneralSettings : AppCompatActivity(),OnEditListener{
         }
     }
 
-    override fun performEdit(edit: TextView, textView: TextView, editText: EditText,type : String) {
+    override fun performEdit(edit: TextView, textView: TextView, editText: EditText, type: String) {
         edit.text = "Done"
-        val name  = textView.text.toString()
+        val name = textView.text.toString()
         textView.visibility = View.GONE
         editText.setHint(name)
         editText.visibility = View.VISIBLE
         edit.setOnClickListener {
-            editDetails(edit,textView,editText.text.toString(),type,editText)
+            editDetails(edit, textView, editText.text.toString(), type, editText)
         }
     }
 
     override fun onClick(v: View?) {
         if (v != null) {
-            when(v.id){
-                R.id.Edit_userName->{
-                    performEdit(editUserName,userName,changeUserName,"username")
+            when (v.id) {
+                R.id.Edit_userName -> {
+                    performEdit(editUserName, userName, changeUserName, "username")
                 }
-                R.id.Edit_gender->{
-                    performEdit(editGender,gender,changeGender,"gender")
+                R.id.Edit_gender -> {
+                    performEdit(editGender, gender, changeGender, "gender")
                 }
             }
         }
     }
 
-    override fun editDetails(edit: TextView, textView: TextView, content: String,type: String,editText: EditText) {
+    override fun editDetails(
+        edit: TextView,
+        textView: TextView,
+        content: String,
+        type: String,
+        editText: EditText
+    ) {
         firebaseUser = mAuth.currentUser!!
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Users")
-        databaseReference.addValueEventListener(object : ValueEventListener{
+        databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
+
             override fun onDataChange(p0: DataSnapshot) {
-                for (data in p0.children){
+                for (data in p0.children) {
                     val user = data.getValue(User::class.java)
-                    if(user!=null){
-                        if(user.id.equals(firebaseUser.uid)){
-                            val hashMap = HashMap<String,Any>()
-                            hashMap.put(type,content)
+                    if (user != null) {
+                        if (user.id.equals(firebaseUser.uid)) {
+                            val hashMap = HashMap<String, Any>()
+                            hashMap.put(type, content)
                             data.ref.updateChildren(hashMap)
                             break
                         }
@@ -191,6 +197,7 @@ class GeneralSettings : AppCompatActivity(),OnEditListener{
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
+
             override fun onDataChange(p0: DataSnapshot) {
                 for (data in p0.children) {
                     val user = data.getValue(User::class.java)
@@ -201,7 +208,8 @@ class GeneralSettings : AppCompatActivity(),OnEditListener{
                             if (user.imageUrl.equals("null")) {
                                 accountImage.setImageResource(R.drawable.new_group_icon)
                             } else {
-                                Glide.with(this@GeneralSettings).load(user.imageUrl).into(accountImage)
+                                Glide.with(this@GeneralSettings).load(user.imageUrl)
+                                    .into(accountImage)
                             }
                             break
                         }

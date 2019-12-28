@@ -21,7 +21,7 @@
         <activity android:name=".Settings.GeneralSettings" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".CreateNewGroup" />
-        <activity android:name=".GroupChatActivity" />
+        <activity android:name=".GroupChatMessageActivity" />
         <activity android:name=".mainFragment.ChatActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".ChatMessageActivity" />

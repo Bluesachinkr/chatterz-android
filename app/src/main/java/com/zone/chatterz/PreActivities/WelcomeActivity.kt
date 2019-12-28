@@ -16,7 +16,7 @@ class WelcomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
 
-        mAuth=FirebaseAuth.getInstance()
+        mAuth = FirebaseAuth.getInstance()
 
         loginButton.setOnClickListener {
 
@@ -38,11 +38,11 @@ class WelcomeActivity : AppCompatActivity() {
 
         val firebaseUser = mAuth.currentUser
 
-        if(firebaseUser!=null){
+        if (firebaseUser != null) {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
 
         }
     }
- }
+}

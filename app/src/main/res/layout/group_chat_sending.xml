@@ -11,13 +11,17 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true">
 
-        <TextView
-            android:id="@+id/message_groupChat"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:background="@drawable/sending_chat_backround"
+            android:background="@drawable/sending_chat_backround">
+
+        <TextView
+            android:id="@+id/message_groupChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:fontFamily="serif"
             android:maxLines="30"
             android:paddingTop="6dp"
@@ -36,11 +40,11 @@
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:text="17:30"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:layout_below="@id/message_groupChat"
-            android:layout_marginRight="6dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="-16dp"/>
+
+        </RelativeLayout>
 
        <!-- <ImageView
             android:id="@+id/isSeenMessage"

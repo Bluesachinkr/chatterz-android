@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/settings_icon"
-        android:icon="@drawable/proifle_light_icon"
-        android:title="Account"/>
     <item
-        android:icon="@drawable/logout_icon"
+        android:id="@+id/settings_icon"
+        android:icon="@drawable/proifle_light_icon"
+        android:title="Account" />
+    <item
         android:id="@+id/logout"
-        android:title="LogOut"/>
-
+        android:icon="@drawable/logout_icon"
+        android:title="LogOut" />
 
 </menu>

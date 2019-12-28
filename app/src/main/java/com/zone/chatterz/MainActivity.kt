@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity(), DrawerLocker {
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.groups_bottombar -> {
-                    val groupActivity = GroupChatActivity()
+                    val groupActivity = GroupChatsActivity()
                     supportFragmentManager.beginTransaction().replace(R.id.container_main,groupActivity).addToBackStack(null).commit()
                     menuItem.setIcon(R.drawable.ic_multiple_users_silhouette)
                     return@setOnNavigationItemSelectedListener true

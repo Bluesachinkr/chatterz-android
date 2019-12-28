@@ -24,7 +24,7 @@ import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
 import kotlin.collections.HashMap
 
-open class ProfileActivity : Fragment(),View.OnClickListener{
+open class ProfileActivity : Fragment(), View.OnClickListener {
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseUser: FirebaseUser
@@ -37,10 +37,14 @@ open class ProfileActivity : Fragment(),View.OnClickListener{
     private lateinit var editStatusDone: ImageView
     private lateinit var statusEditBox: EditText
     private lateinit var RecyclerFollowers: RecyclerView
-    private lateinit var viewallFriends : TextView
+    private lateinit var viewallFriends: TextView
     private lateinit var mFrindList: MutableList<User>
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
@@ -101,7 +105,7 @@ open class ProfileActivity : Fragment(),View.OnClickListener{
                             }
 
                         }
-                        val adapter = FollowersAdapter(c, mFrindList,"profile")
+                        val adapter = FollowersAdapter(c, mFrindList, "profile")
                         RecyclerFollowers.adapter = adapter
                     }
 
@@ -132,13 +136,15 @@ open class ProfileActivity : Fragment(),View.OnClickListener{
 
     private fun loadProfileData() {
         firebaseUser = mAuth.currentUser!!
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.uid)
+        databaseReference =
+            FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.uid)
         databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
+
             override fun onDataChange(p0: DataSnapshot) {
                 val user = p0.getValue(User::class.java)
-                user?.let {setProfileLayout(user)}
+                user?.let { setProfileLayout(user) }
             }
         })
     }
@@ -168,7 +174,7 @@ open class ProfileActivity : Fragment(),View.OnClickListener{
     }
 
     private fun setProfileLayout(user: User) {
-            userName.text = user.username
+        userName.text = user.username
         if (!textStatus.text.equals("null")) {
             textStatus.text = user.bio
         }
@@ -181,9 +187,9 @@ open class ProfileActivity : Fragment(),View.OnClickListener{
     }
 
     override fun onClick(v: View?) {
-        when(v){
-            viewallFriends->{
-                val intent = Intent(context,FollowersActivity::class.java)
+        when (v) {
+            viewallFriends -> {
+                val intent = Intent(context, FollowersActivity::class.java)
                 startActivity(intent)
             }
         }

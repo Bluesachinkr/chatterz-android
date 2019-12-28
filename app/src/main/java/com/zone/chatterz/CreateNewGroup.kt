@@ -77,24 +77,24 @@ class CreateNewGroup : AppCompatActivity(), View.OnClickListener {
         hashMap.put("groupName", grpName)
         hashMap.put("groupImgUrl", "null")
         hashMap.put("groupMaker", mAuth.currentUser?.uid.toString())
-        hashMap.put("id",user.uid+grpName)
+        hashMap.put("id", user.uid + grpName)
         databaseReference = FirebaseDatabase.getInstance().reference
         databaseReference.child("Groups").push().setValue(hashMap)
-        val q= FirebaseDatabase.getInstance().getReference("Groups")
-        q.addValueEventListener(object : ValueEventListener{
+        val q = FirebaseDatabase.getInstance().getReference("Groups")
+        q.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                for (data in p0.children){
-                 val v = data.getValue(Group::class.java)
-                    if(v!=null && v.id.equals(user.uid+grpName)){
+                for (data in p0.children) {
+                    val v = data.getValue(Group::class.java)
+                    if (v != null && v.id.equals(user.uid + grpName)) {
                         val reference = data.ref.key.toString()
                         uploadImage(reference)
                         addGroupMembers(reference)
                         joinInGroup(reference)
-                        val hashMap = HashMap<String,Any>()
-                        hashMap.put("id",data.ref.key.toString())
+                        val hashMap = HashMap<String, Any>()
+                        hashMap.put("id", data.ref.key.toString())
                         data.ref.updateChildren(hashMap)
                         break
                     }
@@ -132,7 +132,7 @@ class CreateNewGroup : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun loadImageGroup(url: String,reference:String) {
+    private fun loadImageGroup(url: String, reference: String) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Groups/" + reference)
         databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -149,7 +149,7 @@ class CreateNewGroup : AppCompatActivity(), View.OnClickListener {
         })
     }
 
-    private fun uploadImage(ref:String) {
+    private fun uploadImage(ref: String) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Groups")
         storageReference =
             FirebaseStorage.getInstance().getReference("groupImages/" + ref + ".jpg")
@@ -164,7 +164,7 @@ class CreateNewGroup : AppCompatActivity(), View.OnClickListener {
                 if (it.isSuccessful) {
                     val uri = it.result
                     val imageUrl = uri.toString()
-                    loadImageGroup(imageUrl,ref)
+                    loadImageGroup(imageUrl, ref)
                 }
             }
         }

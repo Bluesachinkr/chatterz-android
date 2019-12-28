@@ -86,7 +86,7 @@ open class ChatActivity : Fragment() {
         return view
     }
 
-    private fun readRecentChats(){
+    private fun readRecentChats() {
         usersList = mutableListOf()
         message_recyclerView.setHasFixedSize(true)
         val linearLayoutManager = LinearLayoutManager(this.context)

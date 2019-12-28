@@ -87,7 +87,7 @@ class RegisterActivity : AppCompatActivity() {
                         hashMap.put("username", usernameInput)
                         hashMap.put("imageUrl", "null")
                         hashMap.put("bio", "null")
-                        hashMap.put("status","offline")
+                        hashMap.put("status", "offline")
                     }
 
                     database.setValue(hashMap).addOnCompleteListener(this) { task ->

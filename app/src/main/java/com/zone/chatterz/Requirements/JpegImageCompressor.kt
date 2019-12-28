@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Matrix
 import java.io.ByteArrayOutputStream
 
-open  class JpegImageCompressor {
+open class JpegImageCompressor {
 
     companion object {
 
@@ -17,7 +17,7 @@ open  class JpegImageCompressor {
 
             val matrix = Matrix()
             val scaleHeight = (compressedSize / height)
-            val scaleWidth = (compressedSize  / width)
+            val scaleWidth = (compressedSize / width)
             matrix.postScale(scaleWidth, scaleHeight)
 
             var compressedImage =
