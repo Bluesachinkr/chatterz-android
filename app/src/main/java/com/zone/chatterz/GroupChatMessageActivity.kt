@@ -28,11 +28,12 @@ import com.zone.chatterz.Model.Group
 import com.zone.chatterz.Model.GroupChats
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-open class GroupChatMessageActivity : AppCompatActivity(), View.OnClickListener,GroupchatControl{
+open class GroupChatMessageActivity : AppCompatActivity(), View.OnClickListener, GroupchatControl {
 
-    private lateinit var mAuth : FirebaseAuth
+    private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var databaseReference: DatabaseReference
     private lateinit var drawer: DrawerLayout
@@ -43,23 +44,25 @@ open class GroupChatMessageActivity : AppCompatActivity(), View.OnClickListener,
     private lateinit var content: RelativeLayout
     private lateinit var rightNavigationView: NavigationView
     private lateinit var groupListView: RecyclerView
-    private lateinit var chatsRecyclerview : RecyclerView
+    private lateinit var chatsRecyclerview: RecyclerView
     private lateinit var messageEditText: EditText
-    private lateinit var sendMsgBtn : ImageView
+    private lateinit var sendMsgBtn: ImageView
     private lateinit var toolbar: Toolbar
-    private lateinit var mGroupList : MutableList<String>
-    private lateinit var activeGroup : String
+    private lateinit var mGroupList: MutableList<String>
+    private lateinit var activeGroup: String
 
     override fun onCreate(
         savedInstanceState: Bundle?
-    ){
+    ) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_chat_message)
+        val intent = intent
+        val arr  = intent.getStringArrayListExtra("groupInfo")
+        activeGroup = arr.get(0)
         mAuth = FirebaseAuth.getInstance()
-
         drawer = findViewById(R.id.drawerGroups)
-        leftNavigationView =findViewById(R.id.drawerOpen)
-        rightNavigationView =findViewById(R.id.drawerMembers)
+        leftNavigationView = findViewById(R.id.drawerOpen)
+        rightNavigationView = findViewById(R.id.drawerMembers)
         openDrawerBtn = findViewById(R.id.drawerOpenBtn)
         openMembersDrawer = findViewById(R.id.membersBtn)
         groupName = findViewById(R.id.groupName)
@@ -70,6 +73,7 @@ open class GroupChatMessageActivity : AppCompatActivity(), View.OnClickListener,
         sendMsgBtn = findViewById(R.id.sendMessageGrpButton)
 
         setSupportActionBar(toolbar)
+        groupName.text = arr.get(2)
         mGroupList = mutableListOf()
         createGroupList()
 
@@ -95,16 +99,15 @@ open class GroupChatMessageActivity : AppCompatActivity(), View.OnClickListener,
         openMembersDrawer.setOnClickListener(this)
         sendMsgBtn.setOnClickListener(this)
 
-        if(drawer.isDrawerOpen(leftNavigationView)){
+        if (drawer.isDrawerOpen(leftNavigationView)) {
             showGroups()
         }
-
-        //loadChatsInitially()
+        loadGroupChats(activeGroup)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflator = MenuInflater(this)
-        inflator.inflate(R.menu.group_menu_appbar,menu)
+        inflator.inflate(R.menu.group_menu_appbar, menu)
         return true
     }
 
@@ -135,8 +138,8 @@ open class GroupChatMessageActivity : AppCompatActivity(), View.OnClickListener,
                 drawer.openDrawer(rightNavigationView)
                 //showMembers()
             }
-            sendMsgBtn->{
-                val message : String = messageEditText.text.toString()
+            sendMsgBtn -> {
+                val message: String = messageEditText.text.toString()
                 sendMessageGroup(message)
             }
         }
@@ -146,113 +149,94 @@ open class GroupChatMessageActivity : AppCompatActivity(), View.OnClickListener,
         firebaseUser = mAuth.currentUser!!
         val grpList = mutableListOf<Group>()
         val addgrp = Group()
-        addgrp.groupImgUrl="add"
+        addgrp.groupImgUrl = "add"
         databaseReference = FirebaseDatabase.getInstance().getReference(Connection.groupsRef)
-        databaseReference.addValueEventListener(object : ValueEventListener{
+        databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
+
             override fun onDataChange(p0: DataSnapshot) {
-               for ( values in p0.children){
-                   if(mGroupList.contains(values.ref.key.toString())){
-                       val data = values.getValue(Group::class.java)
-                      data?.let { grpList.add(data) }
-                   }
-               }
-                grpList.add(addgrp)
-                this@GroupChatMessageActivity?.let {
-                    val adapter = GroupAdapter(it,grpList,this@GroupChatMessageActivity)
-                    groupListView.adapter = adapter
+                for (values in p0.children) {
+                    if (mGroupList.contains(values.ref.key.toString())) {
+                        val data = values.getValue(Group::class.java)
+                        data?.let { grpList.add(data) }
+                    }
                 }
+                grpList.add(addgrp)
+
+                val adapter = GroupAdapter(
+                    this@GroupChatMessageActivity,
+                    grpList,
+                    this@GroupChatMessageActivity
+                )
+                groupListView.adapter = adapter
+
             }
         })
     }
 
-    private fun sendMessageGroup(message : String){
+    private fun sendMessageGroup(message: String) {
         firebaseUser = mAuth.currentUser!!
-        databaseReference = FirebaseDatabase.getInstance().getReference(Connection.groupChats).child(mGroupList.get(0))
-        val hashMap = HashMap<String,Any>()
-        hashMap.put("sender",firebaseUser.uid)
-        hashMap.put("message",message)
-        hashMap.put("dateTime",getTime())
+        databaseReference = FirebaseDatabase.getInstance().getReference(Connection.groupChats)
+            .child(activeGroup)
+        val hashMap = HashMap<String, Any>()
+        hashMap.put("sender", firebaseUser.uid)
+        hashMap.put("message", message)
+        hashMap.put("dateTime", getTime())
         databaseReference.push().setValue(hashMap)
     }
 
-    private fun getTime() : String{
+    private fun getTime(): String {
         val sd = SimpleDateFormat("hh:mm yyyy-MM-dd z")
         sd.timeZone = TimeZone.getTimeZone("Asia/Kolkata")
-        val date  = Date()
+        val date = Date()
         val cur_date = sd.format(date)
         return cur_date
     }
 
-    override fun loadGroupChats(groudId : String){
+    override fun loadGroupChats(id: String) {
         val layoutManager = LinearLayoutManager(this)
         layoutManager.stackFromEnd = true
         chatsRecyclerview.layoutManager = layoutManager
         val mGroupChat = mutableListOf<GroupChats>()
-        databaseReference = FirebaseDatabase.getInstance().getReference(Connection.groupChats).child(groudId)
-        databaseReference.addValueEventListener(object : ValueEventListener{
+        databaseReference =
+            FirebaseDatabase.getInstance().getReference(Connection.groupChats).child(id)
+        databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                for (data in p0.children){
+                for (data in p0.children) {
                     val values = data.getValue(GroupChats::class.java)
-                    if(values!=null){
+                    if (values != null) {
                         mGroupChat.add(values)
                     }
                 }
-                this@GroupChatMessageActivity?.let {
-                    val adapter = GroupChatAdapter(it,mGroupChat)
-                    chatsRecyclerview.adapter = adapter
-                }
-            }
-        })
-    }
-    private fun loadChatsInitially(id : String){
-        val layoutManager = LinearLayoutManager(this)
-        layoutManager.stackFromEnd =true
-        chatsRecyclerview.layoutManager = layoutManager
-        val mGroupChat = mutableListOf<GroupChats>()
-        databaseReference = FirebaseDatabase.getInstance().getReference(Connection.groupChats).child(id)
-        databaseReference.addValueEventListener(object : ValueEventListener{
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                for (data in p0.children){
-                    val values = data.getValue(GroupChats::class.java)
-                    if(values!=null){
-                        mGroupChat.add(values)
-                    }
-                }
-                this@GroupChatMessageActivity?.let {
-                    val adapter = GroupChatAdapter(it,mGroupChat)
-                    chatsRecyclerview.adapter = adapter
-                }
+                val adapter = GroupChatAdapter(this@GroupChatMessageActivity, mGroupChat)
+                chatsRecyclerview.adapter = adapter
             }
         })
     }
 
-    private fun createGroupList(){
+    private fun createGroupList() {
         firebaseUser = mAuth.currentUser!!
-        databaseReference = FirebaseDatabase.getInstance().getReference(Connection.groupJoinedRef).child(firebaseUser.uid)
-        databaseReference.addListenerForSingleValueEvent(object: ValueEventListener{
+        databaseReference = FirebaseDatabase.getInstance().getReference(Connection.groupJoinedRef)
+            .child(firebaseUser.uid)
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                for ( values in p0.children){
+                for (values in p0.children) {
                     val groupId = values.key.toString()
                     mGroupList.add(groupId)
                 }
-                loadChatsInitially(mGroupList.get(0))
             }
         })
     }
 
     private fun setDrawerWidth() {
-        val width = 160
+        val width = resources.displayMetrics.widthPixels/4
         var params = leftNavigationView.layoutParams as DrawerLayout.LayoutParams
         params.width = width
         leftNavigationView.layoutParams = params
@@ -262,14 +246,8 @@ open class GroupChatMessageActivity : AppCompatActivity(), View.OnClickListener,
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    /* private fun showGroupChats(groupId : String){
-         databaseReference = FirebaseDatabase.getInstance().getReference(Connection.groupChats).child(groupId)
-         databaseReference.addListenerForSingleValueEvent(object : ValueEventListener{
-             override fun onCancelled(p0: DatabaseError) {
-             }
-             override fun onDataChange(p0: DataSnapshot) {
+    override fun setActive(id: String) {
+        this.activeGroup = id
+    }
 
-             }
-         })
-     }*/
 }

@@ -56,7 +56,7 @@ class GroupRecentAdapter(mContext: Context, mGroupRecent: List<Group>) :
             list.add(recent.id)
             list.add(recent.groupImgUrl)
             list.add(recent.groupName)
-            intent.putExtra("groupInfo",list)
+            intent.putStringArrayListExtra("groupInfo",list)
             mContext.startActivity(intent)
         }
     }
@@ -79,15 +79,14 @@ class GroupRecentAdapter(mContext: Context, mGroupRecent: List<Group>) :
                         time = values.dateTime
                     }
                 }
+                holder.lastMessage.text = lastMsg
+                if(!time.isBlank()){
+                    holder.lastMessageTime.text = giveTime(time)
+                }else{
+                    holder.lastMessageTime.text = time
+                }
             }
         })
-        if(!lastMsg.isEmpty() && !time.isEmpty()) {
-            holder.lastMessage.text = lastMsg
-            holder.lastMessageTime.text = giveTime(time)
-        }else{
-            holder.lastMessage.text=lastMsg
-            holder.lastMessageTime.text=time
-        }
     }
 
     private fun giveTime(time : String) : String{

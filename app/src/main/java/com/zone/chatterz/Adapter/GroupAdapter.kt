@@ -48,6 +48,7 @@ class GroupAdapter(context: Context, list: List<Group>,interfaceChats : Groupcha
                 val intent= Intent(mContext,CreateNewGroup::class.java)
                 mContext.startActivity(intent)
             }else{
+                interfaceChats.setActive(group.id)
                 interfaceChats.loadGroupChats(group.id)
             }
         }
