@@ -117,6 +117,7 @@
                             android:layout_gravity="center_horizontal"
                             android:indeterminateTint="@color/colorLoginTheme"
                             android:transitionName="Change_Button_to_Progress"
+                            android:backgroundTintMode="screen"
                             android:visibility="invisible" />
 
                         <Button

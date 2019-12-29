@@ -42,7 +42,7 @@ class GroupChatAdapter(context: Context, mGroupChat: List<GroupChats>) :
         return mGrpChat.size
     }
 
-    override fun onBindViewHolder(holder: GroupChatAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val chat = mGrpChat.get(position)
         holder.messageView.text = chat.message
         val time = time(chat.dateTime)
