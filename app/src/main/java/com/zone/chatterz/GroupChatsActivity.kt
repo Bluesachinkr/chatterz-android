@@ -1,10 +1,9 @@
 package com.zone.chatterz
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -26,26 +25,49 @@ class GroupChatsActivity : Fragment() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var mGroupList: MutableList<Group>
-    private lateinit var toolbarGroup : Toolbar
+    private lateinit var toolbarGroup: Toolbar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.activity_group_chats_view, container, false)
-        mAuth = FirebaseAuth.getInstance()
         groupChatView = view.findViewById(R.id.groupChatRecent_RecyclerView)
         progressBar = view.findViewById(R.id.groupChatRecentProgressBar)
         toolbarGroup = view.findViewById(R.id.toolbarGroupChatsView)
+        //setiing mAuth as FirebaseAuth instance in the activity
+        mAuth = FirebaseAuth.getInstance()
+        //toolbar as actionBar
         (activity as AppCompatActivity).setSupportActionBar(toolbarGroup)
+        toolbarGroup.setTitle("")
+        setHasOptionsMenu(true)
+        //Showing list view of all recent group chats
         mGroupList = mutableListOf()
         val layoutManager = LinearLayoutManager(context)
         groupChatView.layoutManager = layoutManager
         createGroupList()
+
         return view
     }
 
-    private fun createGroupList(){
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.let { it.inflate(R.menu.appbar_group_chats_view,menu) }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.addNewgroup -> {
+                val intetnt = Intent(this.activity, CreateNewGroup::class.java)
+                startActivity(intetnt)
+                return true
+            }
+            else -> {
+                return super.onOptionsItemSelected(item)
+            }
+        }
+    }
+
+    private fun createGroupList() {
         firebaseUser = mAuth.currentUser!!
         val groupList = mutableListOf<String>()
         databaseReference = FirebaseDatabase.getInstance().getReference(Connection.groupJoinedRef)
@@ -66,7 +88,7 @@ class GroupChatsActivity : Fragment() {
 
     private fun loadGroupChatView(groupList: List<String>) {
         progressBar.visibility = View.VISIBLE
-        if(groupList.size!=0) {
+        if (groupList.size != 0) {
             databaseReference = FirebaseDatabase.getInstance().getReference(Connection.groupsRef)
             databaseReference.addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
@@ -87,9 +109,9 @@ class GroupChatsActivity : Fragment() {
                     }
                 }
             })
-        }else{
+        } else {
             progressBar.visibility = View.GONE
-            Toast.makeText(this.context,"No Groups Joined",Toast.LENGTH_LONG).show()
+            Toast.makeText(this.context, "No Groups Joined", Toast.LENGTH_LONG).show()
         }
     }
 

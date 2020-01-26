@@ -7,5 +7,6 @@ open class Connection {
         val groupMemRef: String = "GroupMembers"
         val groupJoinedRef: String = "GroupJoined"
         val groupChats: String = "GroupChats"
+        val userChats : String = "Chats"
     }
 }

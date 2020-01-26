@@ -3,69 +3,68 @@ package com.zone.chatterz.PreActivities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.InputType
 import android.view.View
-import android.widget.Toast
+import android.widget.*
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
 import com.zone.chatterz.MainActivity
 import com.zone.chatterz.ManualAuthentication
 import com.zone.chatterz.R
-import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
 
+    private lateinit var emailInput: EditText
+    private lateinit var passwordInput: TextInputEditText
+    private lateinit var loginBtn: Button
+    private lateinit var signUp: TextView
+    private lateinit var progressBar: ProgressBar
     private lateinit var mAuth: FirebaseAuth
+    private var signInState = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        emailInput = findViewById(R.id.email_edittext_login)
+        passwordInput = findViewById(R.id.password_edittext_login)
+        loginBtn = findViewById(R.id.login_signIn_button)
+        signUp = findViewById(R.id.signUp_text_clickable)
+        progressBar = findViewById(R.id.progressBar_login)
+
         mAuth = FirebaseAuth.getInstance()
 
-        signUp_text_clickable.setOnClickListener {
-
+        signUp.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
-
         }
 
-        checkbox_showpassword_login.setOnCheckedChangeListener { compoundButton, b ->
-            if (b) {
-                password_edittext_login.inputType =
-                    InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT
-            } else {
-                password_edittext_login.inputType = 129
-            }
+        loginBtn.setOnClickListener {
+            progressBar.visibility = View.VISIBLE
+            loginBtn.visibility = View.INVISIBLE
+            resistTouch()
+            loginUser()
         }
+    }
 
-        login_signIn_button.setOnClickListener {
+    private fun loginUser() {
+        val userEmailInput = emailInput.text.toString()
+        val userPasswordInput = passwordInput.text.toString()
 
-            progressBar_login.visibility = View.VISIBLE
-            login_signIn_button.visibility = View.INVISIBLE
-            login_signIn_button.isEnabled = false
+        val isValidEmail =
+            ManualAuthentication.validateEmail(userEmailInput)
+        val isValidPassword =
+            ManualAuthentication.validatePassword(userPasswordInput)
 
-            signUp_text_clickable.isEnabled = false
-
-            val userEmailInput = email_edittext_login.text.toString()
-            val userPasswordInput = password_edittext_login.text.toString()
-
-            val isValidEmail =
-                ManualAuthentication.validateEmail(userEmailInput)
-            val isValidPassword =
-                ManualAuthentication.validatePassword(userPasswordInput)
-
-            if (isValidEmail.equals("Valid")) {
-                if (isValidPassword.equals("Valid")) {
-                    signIn(userEmailInput, userPasswordInput)
-                } else {
-                    password_edittext_login.setText("")
-                    password_edittext_login.setError(isValidPassword)
-                }
+        if (isValidEmail.equals("Valid")) {
+            if (isValidPassword.equals("Valid")) {
+                signIn(userEmailInput, userPasswordInput)
             } else {
-                email_edittext_login.setText("")
-                email_edittext_login.setError(isValidEmail)
+                passwordInput.setText("")
+                passwordInput.setError(isValidPassword)
             }
+        } else {
+            emailInput.setText("")
+            emailInput.setError(isValidEmail)
         }
     }
 
@@ -74,21 +73,9 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     //Success move to Main Screen
-                    val databaseReference = FirebaseDatabase.getInstance().getReference("Users")
-                        .child(mAuth.currentUser!!.uid)
-
-                    databaseReference.addValueEventListener(object : ValueEventListener {
-                        override fun onCancelled(p0: DatabaseError) {
-                            dismissLogin()
-                        }
-
-                        override fun onDataChange(p0: DataSnapshot) {
-                            dismissLogin()
                             val intent = Intent(this@LoginActivity, MainActivity::class.java)
                             startActivity(intent)
                             finish()
-                        }
-                    })
                 } else {
                     //if failed then display a message to the user
                     dismissLogin()
@@ -97,9 +84,29 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
+    private fun resistTouch() {
+        loginBtn.isEnabled = false
+        signUp.isEnabled = false
+        emailInput.isEnabled = false
+        passwordInput.isEnabled = false
+        signInState = true
+    }
+
     private fun dismissLogin() {
-        login_signIn_button.visibility = View.VISIBLE
-        login_signIn_button.isEnabled = true
-        progressBar_login.visibility = View.INVISIBLE
+        loginBtn.visibility = View.VISIBLE
+        progressBar.visibility = View.INVISIBLE
+        loginBtn.isEnabled = true
+        signUp.isEnabled = true
+        emailInput.isEnabled = true
+        passwordInput.isEnabled = true
+        signInState = false
+    }
+
+    override fun onBackPressed() {
+        if (!signInState) {
+            val intent =Intent(this,WelcomeActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 }

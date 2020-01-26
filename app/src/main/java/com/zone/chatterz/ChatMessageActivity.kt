@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.zone.chatterz.Adapter.ChatsAdapter
+import com.zone.chatterz.FirebaseConnection.Connection
 import com.zone.chatterz.Model.Chat
 import com.zone.chatterz.Model.User
 import kotlinx.android.synthetic.main.activity_chatmessage.*
@@ -45,7 +46,7 @@ class ChatMessageActivity : AppCompatActivity() {
 
             override fun onDataChange(p0: DataSnapshot) {
                 setProfileNameAndImgAppBar(p0)
-                readMessage(id, firebaseUser.uid)
+                readMessage()
             }
         })
 
@@ -76,20 +77,21 @@ class ChatMessageActivity : AppCompatActivity() {
         databaseReference = FirebaseDatabase.getInstance().reference
         val hashMap = hashMapOf<String, Any>()
         hashMap.put("message", message)
-        hashMap.put("sender", sender)
-        hashMap.put("receiver", reciever)
+        hashMap.put("sender",sender)
+        hashMap.put("receiver",reciever)
         hashMap.put("isSeen", false)
 
         //Clear Edittext and make ready to take next chat
         editextMessage.setText("")
-        databaseReference.child("Chats").push().setValue(hashMap)
+        databaseReference.child("Chats").child(sender).push().setValue(hashMap)
+        databaseReference.child("Chats").child(reciever).push().setValue(hashMap)
     }
 
-    private fun readMessage(id: String, userId: String) {
+    private fun readMessage() {
 
         mChat = mutableListOf()
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Chats")
+        databaseReference = FirebaseDatabase.getInstance().getReference(Connection.userChats).child(firebaseUser.uid)
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
@@ -99,12 +101,7 @@ class ChatMessageActivity : AppCompatActivity() {
                 for (dataset in p0.children) {
                     val chat = dataset.getValue(Chat::class.java)
                     if (chat != null) {
-                        if ((chat.sender.equals(id) && chat.receiver.equals(userId)) || (chat.receiver.equals(
-                                id
-                            ) && chat.sender.equals(userId))
-                        ) {
                             mChat.add(chat)
-                        }
                     }
                 }
                 val chatsAdapter = ChatsAdapter(applicationContext, mChat)
@@ -130,26 +127,12 @@ class ChatMessageActivity : AppCompatActivity() {
 
     private fun seenMessage(userId: String) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Chats")
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                mChat.clear()
-                for (dataSet in p0.children) {
-                    val chat = dataSet.getValue(Chat::class.java)
-                    if (chat != null) {
-                        if (chat.receiver.equals(firebaseUser.uid) && chat.sender.equals(userId)) {
-                            if (isActive.equals("active")) {
-                                val hashMap = HashMap<String, Any>()
-                                hashMap.put("isSeen", true)
-                                dataSet.ref.updateChildren(hashMap)
-                            }
-                        }
-                    }
-                }
-            }
-        })
+        if (isActive.equals("active")) {
+            val hashMap = HashMap<String, Any>()
+            hashMap.put("isSeen", true)
+            databaseReference.child(userId).updateChildren(hashMap)
+            databaseReference.child(firebaseUser.uid).updateChildren(hashMap)
+        }
     }
 
     override fun onStart() {

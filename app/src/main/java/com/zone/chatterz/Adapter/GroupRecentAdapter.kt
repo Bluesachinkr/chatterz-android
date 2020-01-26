@@ -17,8 +17,7 @@ import com.zone.chatterz.GroupChatMessageActivity
 import com.zone.chatterz.Model.Group
 import com.zone.chatterz.Model.GroupChats
 import com.zone.chatterz.R
-import java.text.SimpleDateFormat
-import java.util.*
+import com.zone.chatterz.Requirements.Timings
 
 class GroupRecentAdapter(mContext: Context, mGroupRecent: List<Group>) :
     RecyclerView.Adapter<GroupRecentAdapter.ViewHolder>() {
@@ -54,7 +53,6 @@ class GroupRecentAdapter(mContext: Context, mGroupRecent: List<Group>) :
             val intent = Intent(mContext,GroupChatMessageActivity::class.java)
             val list = arrayListOf<String>()
             list.add(recent.id)
-            list.add(recent.groupImgUrl)
             list.add(recent.groupName)
             intent.putStringArrayListExtra("groupInfo",list)
             mContext.startActivity(intent)
@@ -81,19 +79,12 @@ class GroupRecentAdapter(mContext: Context, mGroupRecent: List<Group>) :
                 }
                 holder.lastMessage.text = lastMsg
                 if(!time.isBlank()){
-                    holder.lastMessageTime.text = giveTime(time)
+                    holder.lastMessageTime.text = Timings.showTime(time)
                 }else{
                     holder.lastMessageTime.text = time
                 }
             }
         })
-    }
-
-    private fun giveTime(time : String) : String{
-        val sd = SimpleDateFormat("hh:mm yyyy-MM-dd")
-        val date : Date = sd.parse(time)
-        val sd1 = SimpleDateFormat("hh:mm")
-        return sd1.format(date)
     }
 
 }

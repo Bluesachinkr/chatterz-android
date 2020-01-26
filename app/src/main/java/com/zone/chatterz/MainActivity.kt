@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity(), DrawerLocker {
 
             when (menuItem.itemId) {
                 R.id.logout -> {
-                    val firebaseAuth = FirebaseAuth.getInstance().signOut()
+                    mAuth.signOut()
                     return@setNavigationItemSelectedListener true
                 }
                 R.id.settings_icon -> {

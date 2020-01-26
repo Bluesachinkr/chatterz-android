@@ -71,31 +71,51 @@
                         android:inputType="textEmailAddress"
                         android:padding="12dp" />
 
-                    <EditText
-                        android:id="@+id/password_edittext_register"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/password_edittext_register_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginRight="20dp"
-                        android:background="@drawable/background_edittext_loginscreen"
-                        android:drawableLeft="@drawable/password_icon_login"
-                        android:hint="Password"
-                        android:inputType="textPassword"
-                        android:padding="12dp" />
+                        app:hintEnabled="false"
+                        app:passwordToggleEnabled="true"
+                        app:passwordToggleTint="@color/colorLightGrey">
 
-                    <EditText
-                        android:id="@+id/confirm_password_edittext_register"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/password_edittext_register"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/background_edittext_loginscreen"
+                            android:drawableStart="@drawable/password_icon_login"
+                            android:hint="Password"
+                            android:inputType="textPassword"
+                            android:padding="12dp"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/confirm_password_edittext_register_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginRight="20dp"
-                        android:background="@drawable/background_edittext_loginscreen"
-                        android:drawableLeft="@drawable/password_icon_login"
-                        android:hint="Confirm Password"
-                        android:inputType="textPassword"
-                        android:padding="12dp" />
+                        app:hintEnabled="false"
+                        app:passwordToggleEnabled="true"
+                        app:passwordToggleTint="@color/colorLightGrey">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/confirm_password_edittext_register"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/background_edittext_loginscreen"
+                            android:drawableStart="@drawable/password_icon_login"
+                            android:hint="Confirm Password"
+                            android:inputType="textPassword"
+                            android:padding="12dp"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"

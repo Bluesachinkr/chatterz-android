@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="Members"
+        android:id="@+id/addNewgroup"
+        android:title="Add New Group"
         app:showAsAction="always"
-        android:id="@+id/MembersGroup"
-        android:icon="@drawable/ic_multiple_users_silhouette"/>
+        android:icon="@drawable/add_new_group_icon"/>
 
 </menu>

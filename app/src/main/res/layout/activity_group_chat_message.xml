@@ -16,6 +16,7 @@
         android:id="@+id/groupToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:layout_marginRight="10dp"
         tools:ignore="MissingConstraints">
 
         <RelativeLayout
@@ -39,15 +40,6 @@
             android:layout_toEndOf="@id/drawerOpenBtn"
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"/>
-
-        <ImageView
-            android:id="@+id/membersBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_multiple_users_silhouette"/>
 
     </RelativeLayout>
 

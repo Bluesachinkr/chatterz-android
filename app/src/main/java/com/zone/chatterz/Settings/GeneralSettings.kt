@@ -23,7 +23,7 @@ import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
 import com.zone.chatterz.Requirements.JpegImageCompressor
 
-class GeneralSettings : AppCompatActivity(), OnEditListener {
+class GeneralSettings : AppCompatActivity(), OnEditListener,View.OnClickListener {
 
     private lateinit var addAccountImage: ImageView
     private lateinit var accountImage: CircularImageView
@@ -66,11 +66,7 @@ class GeneralSettings : AppCompatActivity(), OnEditListener {
             startActivityForResult(intent, REQUESTCODE)
 
         }
-        backArrow.setOnClickListener {
-            val i = Intent(this, MainActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(i)
-        }
+        backArrow.setOnClickListener(this)
         editUserName.setOnClickListener(this)
         editGender.setOnClickListener(this)
 
@@ -122,14 +118,15 @@ class GeneralSettings : AppCompatActivity(), OnEditListener {
     }
 
     override fun onClick(v: View?) {
-        if (v != null) {
-            when (v.id) {
-                R.id.Edit_userName -> {
-                    performEdit(editUserName, userName, changeUserName, "username")
-                }
-                R.id.Edit_gender -> {
-                    performEdit(editGender, gender, changeGender, "gender")
-                }
+        when (v) {
+            backArrow->{
+                onBackPressed()
+            }
+            editUserName -> {
+                performEdit(editUserName, userName, changeUserName, "username")
+            }
+            editGender -> {
+                performEdit(editGender, gender, changeGender, "gender")
             }
         }
     }
@@ -192,7 +189,7 @@ class GeneralSettings : AppCompatActivity(), OnEditListener {
     }
 
     private fun loaduserData() {
-        val firebaseUser = mAuth.currentUser!!
+        firebaseUser = mAuth.currentUser!!
         databaseReference = FirebaseDatabase.getInstance().getReference("Users")
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -218,6 +215,12 @@ class GeneralSettings : AppCompatActivity(), OnEditListener {
             }
 
         })
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 
 }

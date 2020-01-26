@@ -7,12 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
-import com.mikhaellopez.circularimageview.CircularImageView
-import com.zone.chatterz.Interfaces.GroupchatControl
 import com.zone.chatterz.Model.GroupChats
 import com.zone.chatterz.R
-import java.text.SimpleDateFormat
-import java.util.*
+import com.zone.chatterz.Requirements.Timings
 
 class GroupChatAdapter(context: Context, mGroupChat: List<GroupChats>) :
     RecyclerView.Adapter<GroupChatAdapter.ViewHolder>() {
@@ -28,7 +25,7 @@ class GroupChatAdapter(context: Context, mGroupChat: List<GroupChats>) :
         var timeView: TextView = itemView.findViewById(R.id.time_sending_groupChat)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupChatAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         if (viewType == MESSAGE_SENDER) {
             val view = LayoutInflater.from(mContext).inflate(R.layout.group_chat_sending, parent,false)
             return ViewHolder(view)
@@ -45,7 +42,7 @@ class GroupChatAdapter(context: Context, mGroupChat: List<GroupChats>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val chat = mGrpChat.get(position)
         holder.messageView.text = chat.message
-        val time = time(chat.dateTime)
+        val time = Timings.showTime(chat.dateTime)
         holder.timeView.text = time
     }
 
@@ -57,12 +54,4 @@ class GroupChatAdapter(context: Context, mGroupChat: List<GroupChats>) :
             return MESSAGE_RECEIVER
         }
     }
-
-    private fun time(time : String) : String{
-        val sd = SimpleDateFormat("hh:mm yyyy-MM-dd")
-        val date : Date = sd.parse(time)
-        val sd1 = SimpleDateFormat("hh:mm")
-        return sd1.format(date)
-    }
-
 }

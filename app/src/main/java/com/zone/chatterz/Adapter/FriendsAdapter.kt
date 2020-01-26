@@ -20,9 +20,8 @@ class FriendsAdapter(context: Context, list: List<User>) :
     private val mUser = list
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Viewholder {
-        val view = LayoutInflater.from(mContext).inflate(R.layout.friends_item, parent, false)
-        val holder = Viewholder(view)
-        return holder
+        val view = LayoutInflater.from(mContext).inflate(R.layout.group_members_item, parent, false)
+        return Viewholder(view)
     }
 
     override fun getItemCount(): Int {
@@ -37,11 +36,6 @@ class FriendsAdapter(context: Context, list: List<User>) :
             Glide.with(mContext).load(user.imageUrl).into(holder.profileImage)
         }
         holder.userName.text = user.username
-        if (user.status.equals("online")) {
-            holder.status.visibility = View.VISIBLE
-        } else {
-            holder.status.visibility = View.INVISIBLE
-        }
         holder.itemView.setOnClickListener {
             val intent = Intent(mContext, ChatMessageActivity::class.java)
             intent.putExtra("UserId", user.id)
@@ -53,7 +47,6 @@ class FriendsAdapter(context: Context, list: List<User>) :
 
         var profileImage: CircularImageView = itemView.findViewById(R.id.profileImg_Friends)
         var userName: TextView = itemView.findViewById(R.id.userNameFriends)
-        var status: CircularImageView = itemView.findViewById(R.id.statusFriends)
 
     }
 }
