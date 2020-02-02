@@ -13,12 +13,12 @@ import com.zone.chatterz.Interfaces.GroupchatControl
 import com.zone.chatterz.Model.Group
 import com.zone.chatterz.R
 
-class GroupAdapter(context: Context, list: List<Group>,interfaceChats : GroupchatControl) :
+class GroupAdapter(context: Context, list: List<Group>, interfaceChats: GroupchatControl) :
     RecyclerView.Adapter<GroupAdapter.ViewHolder>() {
 
     private val mContext = context
     private val mGroup = list
-    private val interfaceChats  = interfaceChats
+    private val interfaceChats = interfaceChats
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -38,16 +38,16 @@ class GroupAdapter(context: Context, list: List<Group>,interfaceChats : Groupcha
         var group = mGroup.get(position)
         if (group.groupImgUrl.equals("default")) {
             holder.groupImage.setImageResource(R.mipmap.ic_launcher_round)
-        } else if(group.groupImgUrl.equals("add")){
+        } else if (group.groupImgUrl.equals("add")) {
             holder.groupImage.setImageResource(R.drawable.new_group_icon)
-        }else {
+        } else {
             Glide.with(mContext).load(group.groupImgUrl).into(holder.groupImage)
         }
-        holder.itemView.setOnClickListener{
-            if(holder.groupImage.equals("add")){
-                val intent= Intent(mContext,CreateNewGroup::class.java)
+        holder.itemView.setOnClickListener {
+            if (holder.groupImage.equals("add")) {
+                val intent = Intent(mContext, CreateNewGroup::class.java)
                 mContext.startActivity(intent)
-            }else{
+            } else {
                 interfaceChats.setActive(group.id)
                 interfaceChats.loadGroupChats(group.id)
             }

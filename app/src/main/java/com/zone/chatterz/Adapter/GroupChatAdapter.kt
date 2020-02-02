@@ -27,10 +27,12 @@ class GroupChatAdapter(context: Context, mGroupChat: List<GroupChats>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         if (viewType == MESSAGE_SENDER) {
-            val view = LayoutInflater.from(mContext).inflate(R.layout.group_chat_sending, parent,false)
+            val view =
+                LayoutInflater.from(mContext).inflate(R.layout.group_chat_sending, parent, false)
             return ViewHolder(view)
         } else {
-            val view = LayoutInflater.from(mContext).inflate(R.layout.group_chat_receiving, parent,false)
+            val view =
+                LayoutInflater.from(mContext).inflate(R.layout.group_chat_receiving, parent, false)
             return ViewHolder(view)
         }
     }

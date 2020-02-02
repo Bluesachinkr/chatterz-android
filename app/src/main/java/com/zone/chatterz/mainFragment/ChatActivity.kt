@@ -19,10 +19,12 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.google.firebase.iid.FirebaseInstanceId
 import com.zone.chatterz.Adapter.FriendsAdapter
 import com.zone.chatterz.Adapter.RecentAdapter
 import com.zone.chatterz.Model.Chat
 import com.zone.chatterz.Model.User
+import com.zone.chatterz.Notification.Token
 import com.zone.chatterz.R
 
 open class ChatActivity : Fragment() {
@@ -83,6 +85,9 @@ open class ChatActivity : Fragment() {
 
         }
         readRecentChats()
+
+        FirebaseInstanceId.getInstance().getToken()?.let { updateToken(it) }
+
         return view
     }
 
@@ -198,6 +203,13 @@ open class ChatActivity : Fragment() {
                 })
             }
         })
+    }
+
+    private fun updateToken(token : String){
+        firebaseUser = FirebaseAuth.getInstance().currentUser!!
+        databaseReference = FirebaseDatabase.getInstance().getReference("Tokens")
+        val updateToken = Token(token)
+        databaseReference.child(firebaseUser.uid).setValue(updateToken)
     }
 
     /* private fun TabLayout.setTabswithCustomWidth(tabPosition: Int) {

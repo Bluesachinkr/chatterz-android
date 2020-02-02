@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1070154015539-2m343nh9knrcv8thlu1t9m47klmvlu4l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zone.chatterz",
+            "certificate_hash": "4f74f9de1e0405f0e010a2a35f08cc9321668f72"
+          }
+        },
+        {
           "client_id": "1070154015539-eon9l55ug816nekg504bnhtm18fiu3sl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

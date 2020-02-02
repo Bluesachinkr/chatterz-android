@@ -50,11 +50,11 @@ class GroupRecentAdapter(mContext: Context, mGroupRecent: List<Group>) :
         }
         lastMessage(recent.id, holder)
         holder.itemView.setOnClickListener {
-            val intent = Intent(mContext,GroupChatMessageActivity::class.java)
+            val intent = Intent(mContext, GroupChatMessageActivity::class.java)
             val list = arrayListOf<String>()
             list.add(recent.id)
             list.add(recent.groupName)
-            intent.putStringArrayListExtra("groupInfo",list)
+            intent.putStringArrayListExtra("groupInfo", list)
             mContext.startActivity(intent)
         }
     }
@@ -78,9 +78,9 @@ class GroupRecentAdapter(mContext: Context, mGroupRecent: List<Group>) :
                     }
                 }
                 holder.lastMessage.text = lastMsg
-                if(!time.isBlank()){
+                if (!time.isBlank()) {
                     holder.lastMessageTime.text = Timings.showTime(time)
-                }else{
+                } else {
                     holder.lastMessageTime.text = time
                 }
             }
