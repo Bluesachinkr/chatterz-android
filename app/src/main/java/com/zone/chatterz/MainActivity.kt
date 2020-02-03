@@ -21,6 +21,7 @@ import com.zone.chatterz.PreActivities.WelcomeActivity
 import com.zone.chatterz.Settings.GeneralSettings
 import com.zone.chatterz.mainFragment.ChatActivity
 import com.zone.chatterz.mainFragment.ProfileActivity
+import com.zone.chatterz.mainFragment.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), DrawerLocker {
@@ -82,7 +83,7 @@ class MainActivity : AppCompatActivity(), DrawerLocker {
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.profile_bottombar -> {
-                    val profileActivity = ProfileActivity()
+                    val profileActivity = SearchActivity()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container_main, profileActivity)
                         .addToBackStack(null).commit()

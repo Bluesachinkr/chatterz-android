@@ -12,7 +12,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.zone.chatterz.ChatMessageActivity
 
-class FIrebaseMessage : FirebaseMessagingService(){
+class FIrebaseMessage : FirebaseMessagingService() {
 
     override fun onMessageReceived(p0: RemoteMessage?) {
         super.onMessageReceived(p0)
@@ -21,27 +21,28 @@ class FIrebaseMessage : FirebaseMessagingService(){
 
         val firebaseUser = FirebaseAuth.getInstance().currentUser!!
 
-        if(firebaseUser!=null && sented.equals(firebaseUser.uid)){
+        if (firebaseUser != null && sented.equals(firebaseUser.uid)) {
             sendNotifcation(p0)
         }
     }
 
-    private fun sendNotifcation(remoteMessage : RemoteMessage?) {
-        if(remoteMessage!=null){
+    private fun sendNotifcation(remoteMessage: RemoteMessage?) {
+        if (remoteMessage != null) {
 
-            val user : String = remoteMessage.data.get("user").toString()
+            val user: String = remoteMessage.data.get("user").toString()
             val icon = remoteMessage.data.get("icon")
             val body = remoteMessage.data.get("body")
             val title = remoteMessage.data.get("title")
 
-            val  notification = remoteMessage.notification as RemoteMessage.Notification
-            val j = Integer.parseInt(user.replace("\\D".toRegex(),""))
+            val notification = remoteMessage.notification as RemoteMessage.Notification
+            val j = Integer.parseInt(user.replace("\\D".toRegex(), ""))
             val bundle = Bundle()
-            bundle.putString("userId",user)
-            val intent = Intent(this,ChatMessageActivity::class.java)
+            bundle.putString("userId", user)
+            val intent = Intent(this, ChatMessageActivity::class.java)
             intent.putExtras(bundle)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            val pendingIntent = PendingIntent.getActivity(this,j,intent,PendingIntent.FLAG_ONE_SHOT)
+            val pendingIntent =
+                PendingIntent.getActivity(this, j, intent, PendingIntent.FLAG_ONE_SHOT)
 
             val defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             val builder = NotificationCompat.Builder(this)
@@ -54,12 +55,12 @@ class FIrebaseMessage : FirebaseMessagingService(){
 
             val notificate = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-            var i =0
-            if(j > 0){
-                i=j
+            var i = 0
+            if (j > 0) {
+                i = j
             }
 
-            notificate.notify(i,builder.build())
+            notificate.notify(i, builder.build())
         }
     }
 }

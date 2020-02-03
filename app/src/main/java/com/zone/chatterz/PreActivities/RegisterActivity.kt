@@ -56,7 +56,6 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun createNewUser(username: String, emailInput: String, passwordInput: String) {
-        firebaseUser = mAuth.currentUser!!
 
         mAuth.createUserWithEmailAndPassword(emailInput, passwordInput)
             .addOnCompleteListener(this) { task ->
@@ -64,7 +63,6 @@ class RegisterActivity : AppCompatActivity() {
                     //SignUp Sucess ,Update UI with userObject
                     database =
                         FirebaseDatabase.getInstance().getReference().child("Users")
-                            .child(firebaseUser.uid)
                     var hashMap = java.util.HashMap<String, Any>()
                     hashMap.put("id", firebaseUser.uid)
                     hashMap.put("username", username)
@@ -72,7 +70,7 @@ class RegisterActivity : AppCompatActivity() {
                     hashMap.put("bio", "null")
                     hashMap.put("status", "offline")
 
-                    database.setValue(hashMap).addOnCompleteListener(this) { task ->
+                    database.push().setValue(hashMap).addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             //task sucessfull so its moves to next screen: Main Screen of app
                             val intent = Intent(this, MainActivity::class.java)

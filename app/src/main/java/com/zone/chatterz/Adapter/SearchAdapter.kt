@@ -1,6 +1,7 @@
 package com.zone.chatterz.Adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.mikhaellopez.circularimageview.CircularImageView
+import com.zone.chatterz.ChatMessageActivity
 import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
 
@@ -67,11 +69,15 @@ class SearchAdapter(context: Context, mlist: List<User>) :
         }
 
         holder.friendButton.setOnClickListener {
-            setFollow(user.id, holder)
+            val  intent = Intent(mContext,ChatMessageActivity::class.java)
+            intent.putExtra("UserId", user.id)
+            mContext.startActivity(intent)
         }
 
         holder.unfriendButton.setOnClickListener {
-            removeFollow(user.id, holder)
+            val  intent = Intent(mContext,ChatMessageActivity::class.java)
+            intent.putExtra("UserId", user.id)
+            mContext.startActivity(intent)
         }
 
     }
