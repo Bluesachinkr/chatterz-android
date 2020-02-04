@@ -97,7 +97,7 @@ open class ChatActivity : Fragment() {
         val linearLayoutManager = LinearLayoutManager(this.context)
         message_recyclerView.layoutManager = linearLayoutManager
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
-        databaseReference = FirebaseDatabase.getInstance().getReference("Chats")
+        databaseReference = FirebaseDatabase.getInstance().getReference("Chats").child(firebaseUser.uid)
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }

@@ -63,6 +63,7 @@ class RegisterActivity : AppCompatActivity() {
                     //SignUp Sucess ,Update UI with userObject
                     database =
                         FirebaseDatabase.getInstance().getReference().child("Users")
+                    firebaseUser = mAuth.currentUser!!
                     var hashMap = java.util.HashMap<String, Any>()
                     hashMap.put("id", firebaseUser.uid)
                     hashMap.put("username", username)
