@@ -71,7 +71,7 @@ class RegisterActivity : AppCompatActivity() {
                     hashMap.put("bio", "null")
                     hashMap.put("status", "offline")
 
-                    database.push().setValue(hashMap).addOnCompleteListener(this) { task ->
+                    database.child(firebaseUser.uid).setValue(hashMap).addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             //task sucessfull so its moves to next screen: Main Screen of app
                             val intent = Intent(this, MainActivity::class.java)

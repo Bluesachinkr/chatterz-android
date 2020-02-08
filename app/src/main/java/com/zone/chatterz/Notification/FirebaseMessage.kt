@@ -1,6 +1,5 @@
 package com.zone.chatterz.Notification
 
-import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -9,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
-import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -21,6 +19,7 @@ class FirebaseMessage : FirebaseMessagingService() {
 
     private val CHANNEL_ID = "com.zone.Chatterz"
     private val CHANNEL_NAME = "Chatterz"
+
     private lateinit var notificationManager: NotificationManager
 
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
@@ -87,12 +86,13 @@ class FirebaseMessage : FirebaseMessagingService() {
 
                 val defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
                 val builder = NotificationCompat.Builder(this)
-                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                    .setSmallIcon(R.drawable.blur)
                     .setContentText(body)
                     .setContentTitle(title)
                     .setAutoCancel(true)
                     .setSound(defaultSound)
                     .setContentIntent(pendingIntent)
+
                 var i = 0
                 if (j > 0) {
                     i = j

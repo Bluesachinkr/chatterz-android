@@ -78,7 +78,7 @@ class ChatMessageActivity : AppCompatActivity() {
         seenMessage(id)
     }
 
-    private fun readAllChats(id : String){
+    private fun readAllChats(id: String) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(id)
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -144,7 +144,7 @@ class ChatMessageActivity : AppCompatActivity() {
                             userId
                         )
                         val sender = Sender(data, token.token)
-                        Log.d("SAchin","Successfully notification send by using retrofit.")
+                        Log.d("SAchin", "Successfully notification send by using retrofit.")
                         apiService.sendNotification(sender)
                             .enqueue(object : retrofit2.Callback<Response> {
                                 override fun onFailure(call: Call<Response>, t: Throwable) {
@@ -164,7 +164,6 @@ class ChatMessageActivity : AppCompatActivity() {
                                         }
                                     }
                                 }
-
                             })
                     }
                 }
