@@ -22,6 +22,7 @@ import com.google.firebase.database.*
 import com.google.firebase.iid.FirebaseInstanceId
 import com.zone.chatterz.Adapter.FriendsAdapter
 import com.zone.chatterz.Adapter.RecentAdapter
+import com.zone.chatterz.FirebaseConnection.Connection
 import com.zone.chatterz.Model.Chat
 import com.zone.chatterz.Model.User
 import com.zone.chatterz.Notification.Token
@@ -63,6 +64,8 @@ open class ChatActivity : Fragment() {
         content = view.findViewById(R.id.contentOnline)
         onlineBtn = view.findViewById(R.id.onlinestatus)
 
+        firebaseUser = FirebaseAuth.getInstance().currentUser!!
+
         headerView = naviagtionOnline.getHeaderView(0)
         onlineRecyclerView = headerView.findViewById(R.id.followerRecyclerView)
 
@@ -86,8 +89,6 @@ open class ChatActivity : Fragment() {
         }
         readRecentChats()
 
-        FirebaseInstanceId.getInstance().getToken()?.let { updateToken(it) }
-
         return view
     }
 
@@ -96,8 +97,7 @@ open class ChatActivity : Fragment() {
         message_recyclerView.setHasFixedSize(true)
         val linearLayoutManager = LinearLayoutManager(this.context)
         message_recyclerView.layoutManager = linearLayoutManager
-        firebaseUser = FirebaseAuth.getInstance().currentUser!!
-        databaseReference = FirebaseDatabase.getInstance().getReference("Chats").child(firebaseUser.uid)
+        databaseReference = FirebaseDatabase.getInstance().getReference("Chats").child(Connection.user)
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
@@ -117,6 +117,7 @@ open class ChatActivity : Fragment() {
                     }
                 }
                 readUser()
+                FirebaseInstanceId.getInstance().getToken()?.let { updateToken(it) }
             }
         })
     }
@@ -172,9 +173,8 @@ open class ChatActivity : Fragment() {
 
     private fun readFriendsOnline() {
         val list = mutableListOf<String>()
-        firebaseUser = FirebaseAuth.getInstance().currentUser!!
         databaseReference =
-            FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
+            FirebaseDatabase.getInstance().getReference("Friends").child(Connection.user)
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
@@ -206,10 +206,9 @@ open class ChatActivity : Fragment() {
     }
 
     private fun updateToken(token : String){
-        firebaseUser = FirebaseAuth.getInstance().currentUser!!
         databaseReference = FirebaseDatabase.getInstance().getReference("Tokens")
         val updateToken = Token(token)
-        databaseReference.child(firebaseUser.uid).setValue(updateToken)
+        databaseReference.child(Connection.user).setValue(updateToken)
     }
 
     /* private fun TabLayout.setTabswithCustomWidth(tabPosition: Int) {
