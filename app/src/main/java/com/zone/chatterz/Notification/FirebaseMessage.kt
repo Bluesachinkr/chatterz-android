@@ -34,7 +34,7 @@ class FirebaseMessage : FirebaseMessagingService() {
             val body = remoteMessage.data.get("body")
             val title = remoteMessage.data.get("title")
 
-            val notification = remoteMessage.notification as RemoteMessage.Notification
+           // val notification = remoteMessage.notification as RemoteMessage.Notification
             val j = Integer.parseInt(user.replace("\\D".toRegex(), ""))
             val bundle = Bundle()
             bundle.putString("userId", user)

@@ -3,6 +3,7 @@ package com.zone.chatterz
 import android.content.Intent
 import android.net.DnsResolver
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,7 @@ import com.zone.chatterz.Notification.*
 import kotlinx.android.synthetic.main.activity_chatmessage.*
 import retrofit2.Call
 import javax.security.auth.callback.Callback
+import kotlin.math.log
 
 class ChatMessageActivity : AppCompatActivity() {
 
@@ -37,12 +39,11 @@ class ChatMessageActivity : AppCompatActivity() {
         //getIntent to getUserid of userchats
         val intent = intent
         val id: String = intent.getStringExtra("UserId")
-        userId = id;
+        userId = id
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
 
-        apiService =
-            (Client.getClient("https://fcm.googleapis.com/")?.create(APIService::class.java)) as APIService
+        apiService = Client.getClient()?.create(APIService::class.java)!!
 
         //RecyclerView for Chats setting linearlayoutManager
         chatsRecyclerview.setHasFixedSize(true)
@@ -115,8 +116,8 @@ class ChatMessageActivity : AppCompatActivity() {
                 if (user != null) {
                     if (notify) {
                         sendNotification(mes, reciever, user.username)
-                        notify = false
                     }
+                    notify = false
                 }
             }
 
@@ -143,7 +144,7 @@ class ChatMessageActivity : AppCompatActivity() {
                             userId
                         )
                         val sender = Sender(data, token.token)
-
+                        Log.d("SACHIN_NOTIFICATION","Successfully notification send by using retrofit.")
                         apiService.sendNotification(sender)
                             .enqueue(object : retrofit2.Callback<Response> {
                                 override fun onFailure(call: Call<Response>, t: Throwable) {
