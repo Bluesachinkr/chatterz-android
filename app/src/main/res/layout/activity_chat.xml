@@ -5,12 +5,14 @@
     android:id="@+id/drawerChats"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".mainFragment.ChatActivity">
+    android:background="@color/AppBackground"
+    tools:context=".ChatActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/contentOnline"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbarMain"
@@ -23,47 +25,34 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="16dp">
 
-                <TextView
+                <ImageView
+                    android:id="@+id/back_chat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/back_arrow"
+                    android:layout_centerVertical="true"/>
+
+                <ImageView
+                    android:id="@+id/onlinestatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:fontFamily="@font/carter_one"
-                    android:text="@string/app_name"
-                    android:textColor="#000000"
-                    android:textSize="26sp" />
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true">
-
-                    <ImageView
-                        android:id="@+id/onlinestatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/online_icon" />
-
-                </RelativeLayout>
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/online_icon" />
 
             </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/userStatus_RecyclerView"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:layout_below="@id/toolbarMain"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:orientation="horizontal"
-            android:scrollbars="none" />
+            android:layout_height="?actionBarSize">
+
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/userStatus_RecyclerView">
+            android:layout_height="match_parent">
 
             <ProgressBar
                 android:id="@+id/recentProgressBar"
@@ -81,7 +70,7 @@
                 android:visibility="gone" />
 
         </RelativeLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/activeOnlineMenu"

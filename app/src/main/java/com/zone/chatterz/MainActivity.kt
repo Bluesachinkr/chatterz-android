@@ -13,33 +13,32 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.zone.chatterz.FirebaseConnection.Connection
+import com.zone.chatterz.FirebaseConnection.FirebaseMethods
+import com.zone.chatterz.FirebaseConnection.RequestCallback
 import com.zone.chatterz.Model.User
 import com.zone.chatterz.PreActivities.WelcomeActivity
 import com.zone.chatterz.Settings.GeneralSettings
-import com.zone.chatterz.mainFragment.ChatActivity
-import com.zone.chatterz.mainFragment.ProfileActivity
+import com.zone.chatterz.mainFragment.HomeFragment
 import com.zone.chatterz.mainFragment.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), DrawerLocker {
+class MainActivity : AppCompatActivity(), DrawerLocker{
 
     private lateinit var drawer: DrawerLayout
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseAuthListener: FirebaseAuth.AuthStateListener
     private lateinit var content: RelativeLayout
-    private lateinit var navigationDrawerMenu : NavigationView
+    private lateinit var navigationDrawerMenu: NavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mAuth = FirebaseAuth.getInstance()
-        drawer = findViewById(R.id.drawerLayout)
-        content = findViewById(R.id.contentLayout)
-        navigationDrawerMenu = findViewById(R.id.NavigationDrawerMenu)
+        this.mAuth = FirebaseAuth.getInstance()
+        this.drawer = findViewById(R.id.drawerLayout)
+        this.content = findViewById(R.id.contentLayout)
+        this.navigationDrawerMenu = findViewById(R.id.NavigationDrawerMenu)
         drawer.setScrimColor(Color.TRANSPARENT)
         drawer.addDrawerListener(object :
             ActionBarDrawerToggle(this, drawer, R.string.openDrawer, R.string.closeDrawer) {
@@ -64,21 +63,22 @@ class MainActivity : AppCompatActivity(), DrawerLocker {
 
         bottomNavigationBar.setOnNavigationItemSelectedListener { menuItem ->
             bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.ic_multiple_users_silhouette)
-            bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.chats_light_icon)
+            bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.ic_outline_home_bottom_nav)
             bottomNavigationBar.menu.getItem(2).setIcon(R.drawable.proifle_light_icon)
             when (menuItem.itemId) {
 
-                R.id.chats -> {
-                    val chatFragment = ChatActivity()
+                R.id.home -> {
+                    val homeFragment = HomeFragment()
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container_main, chatFragment)
+                        .replace(R.id.container_main,homeFragment)
                         .addToBackStack(null).commit()
-                    menuItem.setIcon(R.drawable.chat_dark_icon)
+                    menuItem.setIcon(R.drawable.ic_home_bottom_nav)
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.groups_bottombar -> {
                     val groupActivity = GroupChatsActivity()
-                    supportFragmentManager.beginTransaction().replace(R.id.container_main,groupActivity).addToBackStack(null).commit()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container_main, groupActivity).addToBackStack(null).commit()
                     menuItem.setIcon(R.drawable.ic_multiple_users_silhouette)
                     return@setOnNavigationItemSelectedListener true
                 }
@@ -117,29 +117,21 @@ class MainActivity : AppCompatActivity(), DrawerLocker {
     }
 
     private fun setNavigationInitially() {
-        bottomNavigationBar.selectedItemId = R.id.chats
-        val chatsFragment = ChatActivity()
-        supportFragmentManager.beginTransaction()
-            .add(R.id.container_main, chatsFragment)
-            .addToBackStack(null).commit()
-        bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.chat_dark_icon)
+        bottomNavigationBar.selectedItemId = R.id.home
+        val homeFragment = HomeFragment()
+        supportFragmentManager.beginTransaction().add(R.id.container_main,homeFragment).commit()
+        bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.ic_home_bottom_nav)
     }
 
     private fun updateOnlineStatus() {
-        val firebaseUser = FirebaseAuth.getInstance().currentUser!!
-        val databaseReference =
-            FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.uid)
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                var user = p0.getValue(User::class.java)
-                if (user != null) {
+        FirebaseMethods.singleValueEventChild(Connection.userRef,object : RequestCallback() {
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                var user = dataSnapshot.getValue(User::class.java)
+                user.let {
                     val hashMap = HashMap<String, Any>()
                     hashMap.put("status", "online")
-                    p0.ref.updateChildren(hashMap)
-                    p0.ref.child("status").onDisconnect().setValue("offline")
+                    dataSnapshot.ref.updateChildren(hashMap)
+                    dataSnapshot.ref.child("status").onDisconnect().setValue("offline")
                 }
             }
         })
@@ -161,7 +153,6 @@ class MainActivity : AppCompatActivity(), DrawerLocker {
         super.onStart()
         mAuth.addAuthStateListener(firebaseAuthListener)
     }
-
 }
 
 

@@ -1,9 +1,9 @@
 package com.zone.chatterz
 
 import android.content.Intent
-import android.net.DnsResolver
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,23 +13,24 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.zone.chatterz.Adapter.ChatsAdapter
 import com.zone.chatterz.FirebaseConnection.Connection
+import com.zone.chatterz.FirebaseConnection.FirebaseMethods
+import com.zone.chatterz.FirebaseConnection.RequestCallback
 import com.zone.chatterz.Interfaces.APIService
 import com.zone.chatterz.Model.Chat
 import com.zone.chatterz.Model.User
 import com.zone.chatterz.Notification.*
 import kotlinx.android.synthetic.main.activity_chatmessage.*
 import retrofit2.Call
-import javax.security.auth.callback.Callback
-import kotlin.math.log
 
-class ChatMessageActivity : AppCompatActivity() {
+class ChatMessageActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var databaseReference: DatabaseReference
     private lateinit var mChat: MutableList<Chat>
-    private var isActive: String = "active"
     private lateinit var userId: String
     private lateinit var apiService: APIService
+
+    private var isActive: String = "active"
     private var notify = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,10 +53,10 @@ class ChatMessageActivity : AppCompatActivity() {
         chatsRecyclerview.layoutManager = linearLayoutManager
 
         // databaseReference set the adapter of recycler view of chats
-        readAllChats(id)
+        readAllChats()
 
         //OnClick of send Message button calls the method sendMessage()
-        //sendMessage() sends the load the message on data with sendser and receiver info
+        //sendMessage() sends the load the message on data with sender and receiver info
         sendMessageButton.setOnClickListener {
             notify = true
             val message = editextMessage.text.toString()
@@ -69,23 +70,31 @@ class ChatMessageActivity : AppCompatActivity() {
         }
 
         //set backArrow of ChatMessage Screen
-        backArrow.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-        }
+        backArrow.setOnClickListener(this)
 
         seenMessage(id)
     }
 
-    private fun readAllChats(id: String) {
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(id)
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
+    override fun onStart() {
+        super.onStart()
+        isActive = "active"
+    }
 
-            override fun onDataChange(p0: DataSnapshot) {
-                setProfileNameAndImgAppBar(p0)
+    override fun onStop() {
+        super.onStop()
+        isActive = "inactive"
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent(this, ChatActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+    }
+
+    private fun readAllChats() {
+        FirebaseMethods.addValueEventChild(Connection.userRef, object : RequestCallback() {
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                setProfileNameAndImgAppBar(dataSnapshot)
                 readMessage()
             }
         })
@@ -105,14 +114,9 @@ class ChatMessageActivity : AppCompatActivity() {
         databaseReference.child("Chats").child(reciever).push().setValue(hashMap)
 
         val mes = message
-
-        val reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.uid)
-        reference.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                val user = p0.getValue(User::class.java)
+        FirebaseMethods.addValueEventChild(Connection.userRef, object : RequestCallback() {
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                val user = dataSnapshot.getValue(User::class.java)
                 if (user != null) {
                     if (notify) {
                         sendNotification(mes, reciever, user.username)
@@ -120,12 +124,10 @@ class ChatMessageActivity : AppCompatActivity() {
                     notify = false
                 }
             }
-
         })
     }
 
     private fun sendNotification(mes: String, reciever: String, username: String) {
-
         databaseReference = FirebaseDatabase.getInstance().getReference("Tokens")
         val query = databaseReference.orderByKey().equalTo(reciever)
         query.addValueEventListener(object : ValueEventListener {
@@ -174,16 +176,10 @@ class ChatMessageActivity : AppCompatActivity() {
     private fun readMessage() {
 
         mChat = mutableListOf()
-
-        databaseReference = FirebaseDatabase.getInstance().getReference(Connection.userChats)
-            .child(firebaseUser.uid)
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
+        FirebaseMethods.addValueEventChild(Connection.userChats, object : RequestCallback() {
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
                 mChat.clear()
-                for (dataset in p0.children) {
+                for (dataset in dataSnapshot.children) {
                     val chat = dataset.getValue(Chat::class.java)
                     if (chat != null) {
                         mChat.add(chat)
@@ -211,13 +207,9 @@ class ChatMessageActivity : AppCompatActivity() {
     }
 
     private fun seenMessage(userId: String) {
-        databaseReference = FirebaseDatabase.getInstance().getReference("Chats").child(userId)
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                for (data in p0.children) {
+        FirebaseMethods.addValueEventChild(Connection.userChats, object : RequestCallback() {
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                for (data in dataSnapshot.children) {
                     val chat = data.getValue(Chat::class.java)
                     if (chat != null && (chat.receiver.equals(firebaseUser.uid) && chat.sender.equals(
                             userId
@@ -232,42 +224,28 @@ class ChatMessageActivity : AppCompatActivity() {
 
                 }
             }
-
         })
-        databaseReference =
-            FirebaseDatabase.getInstance().getReference("Chats").child(firebaseUser.uid)
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
+    }
+
+    override fun onClick(v: View?) {
+        when (v) {
+            backArrow -> {
+                onBackPressed()
             }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                for (data in p0.children) {
-                    val chat = data.getValue(Chat::class.java)
-                    if (chat != null && (chat.receiver.equals(firebaseUser.uid) && chat.sender.equals(
-                            userId
-                        )) && !chat.isSeen
-                    ) {
-                        if (isActive.equals("active")) {
-                            val hashMap = HashMap<String, Any>()
-                            hashMap.put("isSeen", true)
-                            data.ref.updateChildren(hashMap)
-                        }
-                    }
-
+            sendMessageButton->{
+                notify = true
+                val message = editextMessage.text.toString()
+                if (!message.equals("")) {
+                    val sender = firebaseUser.uid
+                    val reciever = userId
+                    sendMessage(message, sender, reciever)
+                } else {
+                    Toast.makeText(this, "Can't send empty Message", Toast.LENGTH_SHORT).show()
                 }
             }
-
-        })
+            else -> {
+                return
+            }
+        }
     }
-
-    override fun onStart() {
-        super.onStart()
-        isActive = "active"
-    }
-
-    override fun onStop() {
-        super.onStop()
-        isActive = "inactive"
-    }
-
 }

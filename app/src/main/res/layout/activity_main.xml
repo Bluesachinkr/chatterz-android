@@ -21,10 +21,11 @@
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationBar"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="?actionBarSize"
             android:layout_alignParentBottom="true"
-            android:background="#FFFFFF"
+            android:background="@color/AppBackground"
             app:labelVisibilityMode="unlabeled"
+            app:itemIconTint="@color/appColor"
             app:menu="@menu/bottombarmenu" />
 
     </RelativeLayout>

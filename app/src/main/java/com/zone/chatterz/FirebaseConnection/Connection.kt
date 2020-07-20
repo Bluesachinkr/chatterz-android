@@ -13,5 +13,7 @@ open class Connection {
         val groupJoinedRef: String = "GroupJoined"
         val groupChats: String = "GroupChats"
         val userChats : String = "Chats"
+        val tokens : String = "Tokens"
+
     }
 }

@@ -16,6 +16,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.ChatMessageActivity
+import com.zone.chatterz.FirebaseConnection.Connection
+import com.zone.chatterz.FirebaseConnection.FirebaseMethods
+import com.zone.chatterz.FirebaseConnection.RequestCallback
 import com.zone.chatterz.Model.Chat
 import com.zone.chatterz.Model.User
 import com.zone.chatterz.R
@@ -74,18 +77,15 @@ class RecentAdapter(context: Context, list: List<User>) :
 
     private fun lastMessage(userId: String, lastMessage: TextView) {
         var message: String = "nothing"
-        val firebaseUser = FirebaseAuth.getInstance().currentUser!!
-        val databaseReference = FirebaseDatabase.getInstance().getReference("Chats")
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                for (dataSet in p0.children) {
+        FirebaseMethods.addValueEventChild(Connection.userChats, object : RequestCallback() {
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                for (dataSet in dataSnapshot.children) {
                     val chat = dataSet.getValue(Chat::class.java)
                     if (chat != null) {
-                        if (chat.sender.equals(firebaseUser.uid) && chat.receiver.equals(userId) ||
-                            chat.sender.equals(userId) && chat.receiver.equals(firebaseUser.uid)
+                        if (chat.sender.equals(FirebaseMethods.firebaseUser.uid) && chat.receiver.equals(
+                                userId
+                            ) ||
+                            chat.sender.equals(userId) && chat.receiver.equals(FirebaseMethods.firebaseUser.uid)
                         ) {
                             message = chat.message
                         }

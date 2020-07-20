@@ -1,17 +1,17 @@
 package com.zone.chatterz.PreActivities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.zone.chatterz.MainActivity
 import com.zone.chatterz.ManualAuthentication
 import com.zone.chatterz.R
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var emailInput: EditText
     private lateinit var passwordInput: TextInputEditText
@@ -28,22 +28,13 @@ class LoginActivity : AppCompatActivity() {
         emailInput = findViewById(R.id.email_edittext_login)
         passwordInput = findViewById(R.id.password_edittext_login)
         loginBtn = findViewById(R.id.login_signIn_button)
-        signUp = findViewById(R.id.signUp_text_clickable)
+        signUp = findViewById(R.id.signUp_button)
         progressBar = findViewById(R.id.progressBar_login)
 
         mAuth = FirebaseAuth.getInstance()
 
-        signUp.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-        }
-
-        loginBtn.setOnClickListener {
-            progressBar.visibility = View.VISIBLE
-            loginBtn.visibility = View.INVISIBLE
-            resistTouch()
-            loginUser()
-        }
+        loginBtn.setOnClickListener(this)
+        signUp.setOnClickListener(this)
     }
 
     private fun loginUser() {
@@ -73,9 +64,9 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     //Success move to Main Screen
-                            val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                            startActivity(intent)
-                            finish()
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 } else {
                     //if failed then display a message to the user
                     dismissLogin()
@@ -104,9 +95,28 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (!signInState) {
-            val intent =Intent(this,WelcomeActivity::class.java)
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.addCategory(Intent.CATEGORY_HOME)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
-            finish()
+        }
+    }
+
+    override fun onClick(v: View?) {
+        when (v) {
+            loginBtn -> {
+                progressBar.visibility = View.VISIBLE
+                loginBtn.visibility = View.INVISIBLE
+                resistTouch()
+                loginUser()
+            }
+            signUp -> {
+                val intent = Intent(this, RegisterActivity::class.java)
+                startActivity(intent)
+            }
+            else -> {
+                return
+            }
         }
     }
 }

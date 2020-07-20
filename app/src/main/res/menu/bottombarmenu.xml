@@ -7,9 +7,10 @@
         android:title="Groups" />
 
     <item
-        android:id="@+id/chats"
-        android:icon="@drawable/chats_light_icon"
-        android:title="Chats" />
+        android:id="@+id/home"
+        android:icon="@drawable/ic_outline_home_bottom_nav"
+        android:iconTint="@color/appColor"
+        android:title="Home" />
 
     <item
         android:id="@+id/profile_bottombar"

@@ -1,18 +1,15 @@
-package com.zone.chatterz.mainFragment
+package com.zone.chatterz
 
 import android.graphics.Color
-import com.zone.chatterz.Interfaces.DrawerLocker
 import android.os.Bundle
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.RelativeLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
@@ -23,14 +20,14 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.zone.chatterz.Adapter.FriendsAdapter
 import com.zone.chatterz.Adapter.RecentAdapter
 import com.zone.chatterz.FirebaseConnection.Connection
+import com.zone.chatterz.FirebaseConnection.FirebaseMethods
+import com.zone.chatterz.FirebaseConnection.RequestCallback
 import com.zone.chatterz.Model.Chat
 import com.zone.chatterz.Model.User
 import com.zone.chatterz.Notification.Token
-import com.zone.chatterz.R
 
-open class ChatActivity : Fragment() {
+open class ChatActivity : AppCompatActivity() {
 
-    private lateinit var status_recyclerView: RecyclerView
     private lateinit var message_recyclerView: RecyclerView
     private lateinit var recentProgressBar: ProgressBar
     private lateinit var databaseReference: DatabaseReference
@@ -40,29 +37,23 @@ open class ChatActivity : Fragment() {
     private lateinit var usersList: MutableList<String>
     private lateinit var drawerOnline: DrawerLayout
     private lateinit var naviagtionOnline: NavigationView
-    private lateinit var content: RelativeLayout
+    private lateinit var content: LinearLayout
     private lateinit var onlineBtn: ImageView
     private lateinit var onlineRecyclerView: RecyclerView
     private lateinit var headerView: View
     private lateinit var mOnlineUser: MutableList<User>
     private lateinit var friendsAdapter: FriendsAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_chat)
 
-        var view: View = inflater.inflate(R.layout.fragment_chat, container, false)
-
-        (activity as DrawerLocker).setDrawerLockerEnabled(false)
-
-        recentProgressBar = view.findViewById(R.id.recentProgressBar)
-        status_recyclerView = view.findViewById(R.id.userStatus_RecyclerView)
-        message_recyclerView = view.findViewById(R.id.recent_RecyclerView)
-        drawerOnline = view.findViewById(R.id.drawerChats)
-        naviagtionOnline = view.findViewById(R.id.activeOnlineMenu)
-        content = view.findViewById(R.id.contentOnline)
-        onlineBtn = view.findViewById(R.id.onlinestatus)
+        recentProgressBar = findViewById(R.id.recentProgressBar)
+        message_recyclerView = findViewById(R.id.recent_RecyclerView)
+        drawerOnline = findViewById(R.id.drawerChats)
+        naviagtionOnline = findViewById(R.id.activeOnlineMenu)
+        content = findViewById(R.id.contentOnline)
+        onlineBtn = findViewById(R.id.onlinestatus)
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
 
@@ -73,7 +64,7 @@ open class ChatActivity : Fragment() {
 
         drawerOnline.setScrimColor(Color.TRANSPARENT)
         drawerOnline.addDrawerListener(object : ActionBarDrawerToggle(
-            this.activity
+            this
             , drawerOnline, R.string.openDrawer, R.string.closeDrawer
         ) {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
@@ -82,30 +73,24 @@ open class ChatActivity : Fragment() {
                 content.translationX = -slidex
             }
         })
-        onlineBtn.setOnClickListener {
+        /*onlineBtn.setOnClickListener {
             drawerOnline.openDrawer(Gravity.RIGHT)
             startOnlineView()
 
-        }
+        }*/
         readRecentChats()
-
-        return view
     }
 
     private fun readRecentChats() {
-        usersList = mutableListOf()
+        this.usersList = mutableListOf()
         message_recyclerView.setHasFixedSize(true)
-        val linearLayoutManager = LinearLayoutManager(this.context)
+        val linearLayoutManager = LinearLayoutManager(this)
         message_recyclerView.layoutManager = linearLayoutManager
-        databaseReference = FirebaseDatabase.getInstance().getReference("Chats").child(Connection.user)
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
+        FirebaseMethods.addValueEventChild(Connection.userChats,object : RequestCallback(){
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
                 recentProgressBar.visibility = View.VISIBLE
                 usersList.clear()
-                for (dataSet in p0.children) {
+                for (dataSet in dataSnapshot.children) {
                     val chat = dataSet.getValue(Chat::class.java)
                     if (chat != null) {
                         if (chat.sender.equals(firebaseUser.uid)) {
@@ -122,13 +107,13 @@ open class ChatActivity : Fragment() {
         })
     }
 
-    private fun startOnlineView() {
+   /* private fun startOnlineView() {
         onlineRecyclerView.setHasFixedSize(true)
-        val linearLayoutManager = LinearLayoutManager(this.context)
+        val linearLayoutManager = LinearLayoutManager(this)
         onlineRecyclerView.layoutManager = linearLayoutManager
         mOnlineUser = mutableListOf()
         readFriendsOnline()
-    }
+    }*/
 
     private fun setDrawerHalf() {
         val width = resources.displayMetrics.widthPixels / 2
@@ -140,15 +125,10 @@ open class ChatActivity : Fragment() {
 
     private fun readUser() {
         mUsers = mutableListOf()
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users")
-
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
+        FirebaseMethods.addValueEvent(Connection.userRef,object : RequestCallback(){
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
                 mUsers.clear()
-                for (dataSet in p0.children) {
+                for (dataSet in dataSnapshot.children) {
                     val user = dataSet.getValue(User::class.java)
                     if (user != null) {
                         for (userId in usersList) {
@@ -160,7 +140,7 @@ open class ChatActivity : Fragment() {
                         }
                     }
                 }
-                val getContext = context
+                val getContext = this@ChatActivity
                 if (getContext != null) {
                     recentAdapter = RecentAdapter(getContext, mUsers)
                     message_recyclerView.adapter = recentAdapter
@@ -171,7 +151,7 @@ open class ChatActivity : Fragment() {
         })
     }
 
-    private fun readFriendsOnline() {
+   /* private fun readFriendsOnline() {
         val list = mutableListOf<String>()
         databaseReference =
             FirebaseDatabase.getInstance().getReference("Friends").child(Connection.user)
@@ -196,14 +176,14 @@ open class ChatActivity : Fragment() {
                                 mUsers.add(user)
                             }
                         }
-                        val getContext = context!!
+                        val getContext = this@ChatActivity
                         friendsAdapter = FriendsAdapter(getContext, mUsers)
                         onlineRecyclerView.adapter = friendsAdapter
                     }
                 })
             }
         })
-    }
+    }*/
 
     private fun updateToken(token : String){
         databaseReference = FirebaseDatabase.getInstance().getReference("Tokens")

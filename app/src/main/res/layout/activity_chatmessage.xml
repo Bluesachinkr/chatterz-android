@@ -4,13 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/AppBackground"
     tools:context=".ChatMessageActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF">
+        android:background="@color/AppBackground">
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
@@ -44,6 +45,8 @@
                         android:layout_gravity="center_vertical"
                         android:layout_margin="8dp"
                         android:scaleType="centerCrop"
+                        app:civ_border_width="3px"
+                        app:civ_border_color="@color/appColor"
                         android:src="@drawable/google_logo" />
 
                     <LinearLayout
@@ -59,7 +62,8 @@
                             android:layout_marginTop="7dp"
                             android:maxLines="1"
                             android:text="UserName"
-                            android:textColor="#000000"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/aclonica"
                             android:textSize="15sp"
                             android:textStyle="bold" />
 
@@ -68,7 +72,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:maxLines="1"
-                            android:text=""
+                            android:fontFamily="@font/aclonica"
+                            android:text="offline"
+                            android:textColor="@color/appColor"
                             android:textSize="13sp" />
 
                     </LinearLayout>
@@ -90,36 +96,41 @@
             android:id="@+id/chatsRecyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#F0F0F0"
+            android:background="@color/AppBackground"
             android:layout_above="@id/messageAreaChat"/>
 
         <LinearLayout
             android:id="@+id/messageAreaChat"
             android:layout_width="match_parent"
             android:layout_alignParentBottom="true"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="6">
+            android:weightSum="10">
+
+            <ImageView
+                android:id="@+id/emojo_btn_chat_message"
+                android:layout_width="0dp"
+                android:layout_weight="1.2"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_outline_emoji_chat_message"
+                android:layout_gravity="center_vertical"/>
 
             <EditText
                 android:id="@+id/editextMessage"
                 android:layout_width="0dp"
-                android:layout_weight="4.6"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
+                android:layout_weight="7.6"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 android:padding="12dp"
+                android:textColor="@color/white"
                 android:hint="Enter a message"
+                android:textColorHint="@color/white"
                 android:background="@drawable/background_edittext_chatbox"/>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".4" />
 
             <ImageView
                 android:id="@+id/sendMessageButton"
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="1.2"
                 android:layout_height="45dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="5dp"

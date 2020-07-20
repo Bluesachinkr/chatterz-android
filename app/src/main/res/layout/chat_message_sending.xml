@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:orientation="horizontal"
+    android:weightSum="10">
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3" />
 
     <RelativeLayout
-        android:layout_width="290dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true">
+        android:layout_weight="7">
 
         <TextView
             android:id="@+id/message"
@@ -20,9 +26,8 @@
             android:background="@drawable/sending_chat_backround"
             android:fontFamily="serif"
             android:maxLines="30"
-            android:padding="6dp"
-            android:text="Hello"
-            android:textColor="#FFFFFF"
+            android:padding="8dp"
+            android:textColor="@color/AppBackground"
             android:textSize="18sp" />
 
         <ImageView
@@ -41,8 +46,6 @@
             app:civ_border_color="#000000"
             app:civ_border_width="2px" />
 
-
     </RelativeLayout>
 
-
-</RelativeLayout>
+</LinearLayout>

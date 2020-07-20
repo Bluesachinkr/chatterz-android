@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Chatterz</string>
+    <string name="loginName">login</string>
+    <string name="signUpName">Sign Up</string>
 
     <string name="starting_time_in_ms">2500</string>
 
