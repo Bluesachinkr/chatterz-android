@@ -20,17 +20,17 @@
         android:theme="@style/AppTheme">
         <activity android:name=".mainFragment.CreatePostActivity"></activity>
         <activity android:name=".FollowersActivity" />
-        <activity android:name=".Settings.GeneralSettings" />
+        <activity android:name=".settings.GeneralSettings" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".CreateNewGroup" />
-        <activity android:name=".GroupChatMessageActivity" />
-        <activity android:name=".ChatActivity" />
+        <activity android:name=".groupChats.GroupChatMessageActivity" />
+        <activity android:name=".singleChat.ChatActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".ChatMessageActivity" />
-        <activity android:name=".PreActivities.RegisterActivity" />
-        <activity android:name=".PreActivities.LoginActivity" />
-        <activity android:name=".PreActivities.WelcomeActivity" />
-        <activity android:name=".PreActivities.StartActivity">
+        <activity android:name=".singleChat.ChatMessageActivity" />
+        <activity android:name=".preActivities.RegisterActivity" />
+        <activity android:name=".preActivities.LoginActivity" />
+        <activity android:name=".preActivities.WelcomeActivity" />
+        <activity android:name=".preActivities.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,7 +39,7 @@
         </activity>
 
         <service
-            android:name=".Notification.FirebaseIdService"
+            android:name=".notification.FirebaseIdService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -47,7 +47,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".Notification.FirebaseMessage"
+            android:name=".notification.FirebaseMessage"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

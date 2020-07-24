@@ -17,10 +17,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.mikhaellopez.circularimageview.CircularImageView
-import com.zone.chatterz.Adapter.FollowersAdapter
+import com.zone.chatterz.adapter.FollowersAdapter
 import com.zone.chatterz.FollowersActivity
-import com.zone.chatterz.Interfaces.DrawerLocker
-import com.zone.chatterz.Model.User
+import com.zone.chatterz.inferfaces.DrawerLocker
+import com.zone.chatterz.model.User
 import com.zone.chatterz.R
 import kotlin.collections.HashMap
 

@@ -3,7 +3,6 @@ package com.zone.chatterz
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -11,8 +10,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.zone.chatterz.Adapter.FollowersAdapter
-import com.zone.chatterz.Model.User
+import com.zone.chatterz.adapter.FollowersAdapter
+import com.zone.chatterz.model.User
 
 class FollowersActivity : AppCompatActivity() {
 

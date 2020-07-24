@@ -1,6 +1,6 @@
 package com.zone.chatterz
 
-import com.zone.chatterz.Interfaces.DrawerLocker
+import com.zone.chatterz.inferfaces.DrawerLocker
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
@@ -13,12 +13,13 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
-import com.zone.chatterz.FirebaseConnection.Connection
-import com.zone.chatterz.FirebaseConnection.FirebaseMethods
-import com.zone.chatterz.FirebaseConnection.RequestCallback
-import com.zone.chatterz.Model.User
-import com.zone.chatterz.PreActivities.WelcomeActivity
-import com.zone.chatterz.Settings.GeneralSettings
+import com.zone.chatterz.firebaseConnection.Connection
+import com.zone.chatterz.firebaseConnection.FirebaseMethods
+import com.zone.chatterz.firebaseConnection.RequestCallback
+import com.zone.chatterz.model.User
+import com.zone.chatterz.preActivities.WelcomeActivity
+import com.zone.chatterz.settings.GeneralSettings
+import com.zone.chatterz.groupChats.GroupChatsActivity
 import com.zone.chatterz.mainFragment.HomeFragment
 import com.zone.chatterz.mainFragment.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -68,7 +69,7 @@ class MainActivity : AppCompatActivity(), DrawerLocker{
             when (menuItem.itemId) {
 
                 R.id.home -> {
-                    val homeFragment = HomeFragment()
+                    val homeFragment = HomeFragment(this)
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container_main,homeFragment)
                         .addToBackStack(null).commit()
@@ -76,7 +77,8 @@ class MainActivity : AppCompatActivity(), DrawerLocker{
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.groups_bottombar -> {
-                    val groupActivity = GroupChatsActivity()
+                    val groupActivity =
+                        GroupChatsActivity()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container_main, groupActivity).addToBackStack(null).commit()
                     menuItem.setIcon(R.drawable.ic_multiple_users_silhouette)
@@ -118,7 +120,7 @@ class MainActivity : AppCompatActivity(), DrawerLocker{
 
     private fun setNavigationInitially() {
         bottomNavigationBar.selectedItemId = R.id.home
-        val homeFragment = HomeFragment()
+        val homeFragment = HomeFragment(this)
         supportFragmentManager.beginTransaction().add(R.id.container_main,homeFragment).commit()
         bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.ic_home_bottom_nav)
     }

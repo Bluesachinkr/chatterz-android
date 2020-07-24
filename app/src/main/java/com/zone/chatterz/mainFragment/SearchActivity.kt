@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.zone.chatterz.Adapter.SearchAdapter
-import com.zone.chatterz.Interfaces.DrawerLocker
-import com.zone.chatterz.Model.User
+import com.zone.chatterz.adapter.SearchAdapter
+import com.zone.chatterz.inferfaces.DrawerLocker
+import com.zone.chatterz.model.User
 import com.zone.chatterz.R
 
 

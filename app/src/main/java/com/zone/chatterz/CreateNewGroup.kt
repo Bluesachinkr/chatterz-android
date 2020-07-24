@@ -2,9 +2,7 @@ package com.zone.chatterz
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -17,11 +15,9 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.mikhaellopez.circularimageview.CircularImageView
-import com.zone.chatterz.Model.Group
-import com.zone.chatterz.Requirements.JpegImageCompressor
-import java.util.*
+import com.zone.chatterz.model.Group
+import com.zone.chatterz.requirements.JpegImageCompressor
 import kotlin.collections.HashMap
-import kotlin.concurrent.fixedRateTimer
 
 class CreateNewGroup : AppCompatActivity(), View.OnClickListener {
 
