@@ -14,6 +14,7 @@ open class Connection {
         val groupChats: String = "GroupChats"
         val userChats : String = "Chats"
         val tokens : String = "Tokens"
-
+        val postRef : String = "Post"
+        val friendRef : String= "Friends"
     }
 }

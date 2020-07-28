@@ -20,6 +20,7 @@ import com.zone.chatterz.model.User
 import com.zone.chatterz.preActivities.WelcomeActivity
 import com.zone.chatterz.settings.GeneralSettings
 import com.zone.chatterz.groupChats.GroupChatsActivity
+import com.zone.chatterz.mainFragment.CreatePostActivity
 import com.zone.chatterz.mainFragment.HomeFragment
 import com.zone.chatterz.mainFragment.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -63,9 +64,9 @@ class MainActivity : AppCompatActivity(), DrawerLocker{
         setNavigationInitially()
 
         bottomNavigationBar.setOnNavigationItemSelectedListener { menuItem ->
-            bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.ic_multiple_users_silhouette)
-            bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.ic_outline_home_bottom_nav)
-            bottomNavigationBar.menu.getItem(2).setIcon(R.drawable.proifle_light_icon)
+            bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.ic_outline_home_bottom_nav)
+            bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.ic_create)
+            bottomNavigationBar.menu.getItem(2).setIcon(R.drawable.search_light_icon)
             when (menuItem.itemId) {
 
                 R.id.home -> {
@@ -76,20 +77,16 @@ class MainActivity : AppCompatActivity(), DrawerLocker{
                     menuItem.setIcon(R.drawable.ic_home_bottom_nav)
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.groups_bottombar -> {
-                    val groupActivity =
-                        GroupChatsActivity()
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container_main, groupActivity).addToBackStack(null).commit()
-                    menuItem.setIcon(R.drawable.ic_multiple_users_silhouette)
+                R.id.create -> {
+                    startActivity(Intent(this,CreatePostActivity::class.java))
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.profile_bottombar -> {
-                    val profileActivity = SearchActivity()
+                    val searchActivity = SearchActivity()
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container_main, profileActivity)
+                        .replace(R.id.container_main, searchActivity)
                         .addToBackStack(null).commit()
-                    menuItem.setIcon(R.drawable.profile_dark_icon)
+                    menuItem.setIcon(R.drawable.search_dark_icon)
                     return@setOnNavigationItemSelectedListener true
                 }
             }
@@ -122,7 +119,7 @@ class MainActivity : AppCompatActivity(), DrawerLocker{
         bottomNavigationBar.selectedItemId = R.id.home
         val homeFragment = HomeFragment(this)
         supportFragmentManager.beginTransaction().add(R.id.container_main,homeFragment).commit()
-        bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.ic_home_bottom_nav)
+        bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.ic_home_bottom_nav)
     }
 
     private fun updateOnlineStatus() {

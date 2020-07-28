@@ -44,5 +44,13 @@ class Timings {
                 return ""
             }
         }
+
+        fun getCurrentTime() : String{
+            val sd = SimpleDateFormat("hh:mm yyyy-MM-dd z")
+            sd.timeZone = TimeZone.getTimeZone("Asia/Kolkata")
+            val date = Date()
+            val cur_date = sd.format(date)
+            return cur_date
+        }
     }
 }

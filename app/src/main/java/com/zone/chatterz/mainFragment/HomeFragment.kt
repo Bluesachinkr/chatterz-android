@@ -23,12 +23,16 @@ class HomeFragment(context: Context) : Fragment(), View.OnClickListener {
     private lateinit var profile_image_home_frag: ImageView
     private lateinit var chat_btn_home_frag: ImageView
 
+    private lateinit var friendsList : MutableList<String>
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_home, container, false)
+
+        getFriendsList()
 
         //Initialization of elements of Home fragment
         profile_image_home_frag = view.findViewById(R.id.profile_image_home_frag)
@@ -40,6 +44,28 @@ class HomeFragment(context: Context) : Fragment(), View.OnClickListener {
 
         setProfilePic()
         return view
+    }
+
+    private fun getFriendsList() {
+        this.friendsList = mutableListOf()
+        FirebaseMethods.addValueEventChild(Connection.friendRef,object : RequestCallback(){
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                for (data in dataSnapshot.children){
+                    val key = data.key.toString()
+                    friendsList.add(key)
+                }
+            }
+        })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setProfilePic()
+        setHomePosts()
+    }
+
+    private fun setHomePosts() {
+
     }
 
     private fun setProfilePic() {
@@ -66,7 +92,7 @@ class HomeFragment(context: Context) : Fragment(), View.OnClickListener {
             }
             profile_image_home_frag->{
                 //profile button
-               /* startActivity(Intent(mContext, ProfileActivity::class.java))*/
+               startActivity(Intent(mContext, ProfileActivity::class.java))
             }
             else -> {
                 return

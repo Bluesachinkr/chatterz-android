@@ -2,15 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/groups_bottombar"
-        android:icon="@drawable/ic_multiple_users_silhouette"
-        android:title="Groups" />
-
-    <item
         android:id="@+id/home"
         android:icon="@drawable/ic_outline_home_bottom_nav"
-        android:iconTint="@color/appColor"
         android:title="Home" />
+
+    <item
+        android:id="@+id/create"
+        android:icon="@drawable/ic_create"
+        android:title="Create"/>
 
     <item
         android:id="@+id/profile_bottombar"
