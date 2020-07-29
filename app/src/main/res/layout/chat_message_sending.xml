@@ -26,7 +26,8 @@
             android:background="@drawable/sending_chat_backround"
             android:fontFamily="serif"
             android:maxLines="30"
-            android:padding="8dp"
+            android:text="Hello Bro"
+            android:padding="12dp"
             android:textColor="@color/AppBackground"
             android:textSize="18sp" />
 

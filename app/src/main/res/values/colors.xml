@@ -15,5 +15,6 @@
     <color name="button_start_color">#00F0FF</color>
     <color name="colorLightBlue">#1FE4FF</color>
 
-    <color name="AppBackground">#1E1E1E</color>
+    <color name="ElementsAppBackground">#292929</color>
+    <color name="AppBackground">#242424</color>
 </resources>

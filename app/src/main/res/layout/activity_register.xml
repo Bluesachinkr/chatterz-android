@@ -18,9 +18,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="48dp"
+            android:fontFamily="@font/allura"
             android:text="Sign Up"
             android:textColor="@color/white"
-            android:fontFamily="@font/allura"
             android:textSize="42sp"
             android:textStyle="bold" />
 
@@ -35,21 +35,23 @@
                 android:id="@+id/username_edittext_register"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
-                android:hint="Full name"
                 android:backgroundTint="@color/appColor"
-                android:textColorHint="@color/white"
+                android:hint="Full name"
                 android:inputType="textPersonName"
-                android:padding="12dp" />
+                android:padding="12dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white" />
 
             <EditText
                 android:id="@+id/email_edittext_register"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
+                android:backgroundTint="@color/appColor"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
-                android:textColorHint="@color/white"
-                android:backgroundTint="@color/appColor"
-                android:padding="12dp" />
+                android:padding="12dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/password_edittext_register_layout"
@@ -65,9 +67,10 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/appColor"
                     android:hint="Password"
-                    android:textColorHint="@color/white"
                     android:inputType="textPassword"
-                    android:padding="12dp"/>
+                    android:padding="12dp"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -85,9 +88,10 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/appColor"
                     android:hint="Confirm Password"
-                    android:textColorHint="@color/white"
                     android:inputType="textPassword"
-                    android:padding="12dp"/>
+                    android:padding="12dp"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -102,9 +106,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
+                    android:indeterminateTint="@color/colorLoginTheme"
                     android:transitionName="Change_Button_to_Progress"
-                    android:visibility="invisible"
-                    android:indeterminateTint="@color/colorLoginTheme"/>
+                    android:visibility="invisible" />
 
                 <Button
                     android:id="@+id/register_signup_button"
@@ -116,7 +120,7 @@
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:transitionName="Change_Button_to_Progress"
-                    android:visibility="visible"/>
+                    android:visibility="visible" />
 
             </RelativeLayout>
 

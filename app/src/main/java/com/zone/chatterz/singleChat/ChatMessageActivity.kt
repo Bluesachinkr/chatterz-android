@@ -87,9 +87,7 @@ class ChatMessageActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onBackPressed() {
-        val intent = Intent(this, ChatActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        finish()
     }
 
     private fun readAllChats() {
@@ -233,7 +231,7 @@ class ChatMessageActivity : AppCompatActivity(), View.OnClickListener {
             backArrow -> {
                 onBackPressed()
             }
-            sendMessageButton->{
+            sendMessageButton -> {
                 notify = true
                 val message = editextMessage.text.toString()
                 if (!message.equals("")) {

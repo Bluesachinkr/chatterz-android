@@ -30,7 +30,7 @@
             android:background="@drawable/receiving_chat_background"
             android:fontFamily="serif"
             android:maxLines="30"
-            android:padding="8dp"
+            android:padding="12dp"
             android:text="Hello Bro"
             android:textColor="@color/AppBackground"
             android:textSize="18sp" />

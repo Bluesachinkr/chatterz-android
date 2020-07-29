@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -19,12 +18,11 @@ import com.google.firebase.database.*
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.adapter.FollowersAdapter
 import com.zone.chatterz.FollowersActivity
-import com.zone.chatterz.inferfaces.DrawerLocker
 import com.zone.chatterz.model.User
 import com.zone.chatterz.R
 import kotlin.collections.HashMap
 
-open class ProfileActivity : Fragment(), View.OnClickListener {
+open class ProfileActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseUser: FirebaseUser
@@ -40,42 +38,34 @@ open class ProfileActivity : Fragment(), View.OnClickListener {
     private lateinit var viewallFriends: TextView
     private lateinit var mFrindList: MutableList<User>
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-        val view = inflater.inflate(R.layout.fragment_profile, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_profile)
 
         mAuth = FirebaseAuth.getInstance()
 
-        profileImg = view.findViewById(R.id.ProfileImage)
-        userName = view.findViewById(R.id.userName_Profile)
-        textStatus = view.findViewById(R.id.userProfileTextStatus)
-        toolbar = view.findViewById(R.id.toolbarProfile)
-        editStatusButton = view.findViewById(R.id.statusEdit)
-        editStatusDone = view.findViewById(R.id.statusDone)
-        statusEditBox = view.findViewById(R.id.userStatusEditBox)
-        RecyclerFollowers = view.findViewById(R.id.Recycler_followers)
-        viewallFriends = view.findViewById(R.id.friendViewall)
+        profileImg = findViewById(R.id.ProfileImage)
+        userName = findViewById(R.id.userName_Profile)
+        textStatus = findViewById(R.id.userProfileTextStatus)
+        toolbar = findViewById(R.id.toolbarProfile)
+        editStatusButton = findViewById(R.id.statusEdit)
+        editStatusDone = findViewById(R.id.statusDone)
+        statusEditBox = findViewById(R.id.userStatusEditBox)
+        RecyclerFollowers = findViewById(R.id.Recycler_followers)
+        viewallFriends = findViewById(R.id.friendViewall)
 
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
-        (activity as AppCompatActivity).supportActionBar!!.setDisplayShowTitleEnabled(false)
-        setHasOptionsMenu(true)
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
 
-        (activity as DrawerLocker).setDrawerLockerEnabled(true)
-
-        val layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         RecyclerFollowers.layoutManager = layoutManager
         mFrindList = mutableListOf()
-        setFriendView(this.context!!)
+        setFriendView(this)
 
         loadProfileData()
 
         viewallFriends.setOnClickListener(this)
 
-        return view
     }
 
     private fun setFriendView(c: Context) {
@@ -115,18 +105,14 @@ open class ProfileActivity : Fragment(), View.OnClickListener {
         })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater : MenuInflater = menuInflater
         inflater!!.inflate(R.menu.profile_menu_appbar, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
-
-            R.id.settings_profile -> {
-                (activity as DrawerLocker).openDrawer()
-                return true
-            }
             else -> {
                 return super.onOptionsItemSelected(item)
             }
@@ -189,7 +175,7 @@ open class ProfileActivity : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             viewallFriends -> {
-                val intent = Intent(context, FollowersActivity::class.java)
+                val intent = Intent(this, FollowersActivity::class.java)
                 startActivity(intent)
             }
         }

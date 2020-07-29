@@ -25,6 +25,7 @@ import com.zone.chatterz.model.Chat
 import com.zone.chatterz.model.User
 import com.zone.chatterz.notification.Token
 import com.zone.chatterz.R
+import com.zone.chatterz.adapter.OnlineFriendAdapter
 
 open class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -43,7 +44,7 @@ open class ChatActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var onlineRecyclerView: RecyclerView
     private lateinit var headerView: View
     private lateinit var mOnlineUser: MutableList<User>
-    private lateinit var friendsAdapter: FriendsAdapter
+    private lateinit var onlineAdapter : OnlineFriendAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,20 +52,17 @@ open class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
         recentProgressBar = findViewById(R.id.recentProgressBar)
         message_recyclerView = findViewById(R.id.recent_RecyclerView)
-        drawerOnline = findViewById(R.id.drawerChats)
-        naviagtionOnline = findViewById(R.id.activeOnlineMenu)
         content = findViewById(R.id.contentOnline)
         onlineBtn = findViewById(R.id.onlinestatus)
         back_chat = findViewById(R.id.back_chat)
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
 
-        headerView = naviagtionOnline.getHeaderView(0)
-        onlineRecyclerView = headerView.findViewById(R.id.followerRecyclerView)
+      /*  onlineRecyclerView = headerView.findViewById(R.id.onlineRecyclerView)*/
 
-        setDrawerHalf()
+       /* setDrawerHalf()*/
 
-        drawerOnline.setScrimColor(Color.TRANSPARENT)
+      /*  drawerOnline.setScrimColor(Color.TRANSPARENT)
         drawerOnline.addDrawerListener(object : ActionBarDrawerToggle(
             this
             , drawerOnline,
@@ -76,7 +74,7 @@ open class ChatActivity : AppCompatActivity(), View.OnClickListener {
                 val slidex = drawerView.width * slideOffset
                 content.translationX = -slidex
             }
-        })
+        })*/
         /*onlineBtn.setOnClickListener {
             drawerOnline.openDrawer(Gravity.RIGHT)
             startOnlineView()
@@ -156,39 +154,30 @@ open class ChatActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 
-    /* private fun readFriendsOnline() {
+     private fun readFriendsOnline() {
          val list = mutableListOf<String>()
-         databaseReference =
-             FirebaseDatabase.getInstance().getReference("Friends").child(Connection.user)
-         databaseReference.addValueEventListener(object : ValueEventListener {
-             override fun onCancelled(p0: DatabaseError) {
-             }
-
-             override fun onDataChange(p0: DataSnapshot) {
-                 for (data in p0.children) {
+         FirebaseMethods.addValueEventChild(Connection.friendRef,object :RequestCallback(){
+             override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                 for (data in dataSnapshot.children) {
                      val friends = data.key!!
                      list.add(friends)
                  }
-                 val dataRef = FirebaseDatabase.getInstance().getReference("Users")
-                 dataRef.addValueEventListener(object : ValueEventListener {
-                     override fun onCancelled(p0: DatabaseError) {
-                     }
-
-                     override fun onDataChange(p0: DataSnapshot) {
-                         for (data in p0.children) {
+                 FirebaseMethods.addValueEvent(Connection.userRef,object : RequestCallback(){
+                     override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                         for (data in dataSnapshot.children) {
                              val user = data.getValue(User::class.java)
                              if (user != null && list.contains(user.id) && user.status.equals("online")) {
                                  mUsers.add(user)
                              }
                          }
                          val getContext = this@ChatActivity
-                         friendsAdapter = FriendsAdapter(getContext, mUsers)
-                         onlineRecyclerView.adapter = friendsAdapter
+                         onlineAdapter = OnlineFriendAdapter(getContext, mUsers)
+                         onlineRecyclerView.adapter = onlineAdapter
                      }
                  })
              }
          })
-     }*/
+     }
 
     private fun updateToken(token: String) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Tokens")

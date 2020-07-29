@@ -19,9 +19,8 @@ import com.zone.chatterz.firebaseConnection.RequestCallback
 import com.zone.chatterz.model.User
 import com.zone.chatterz.preActivities.WelcomeActivity
 import com.zone.chatterz.settings.GeneralSettings
-import com.zone.chatterz.groupChats.GroupChatsActivity
 import com.zone.chatterz.mainFragment.CreatePostActivity
-import com.zone.chatterz.mainFragment.HomeFragment
+import com.zone.chatterz.mainFragment.HomeActivity
 import com.zone.chatterz.mainFragment.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -70,7 +69,7 @@ class MainActivity : AppCompatActivity(), DrawerLocker{
             when (menuItem.itemId) {
 
                 R.id.home -> {
-                    val homeFragment = HomeFragment(this)
+                    val homeFragment = HomeActivity(this)
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container_main,homeFragment)
                         .addToBackStack(null).commit()
@@ -117,7 +116,7 @@ class MainActivity : AppCompatActivity(), DrawerLocker{
 
     private fun setNavigationInitially() {
         bottomNavigationBar.selectedItemId = R.id.home
-        val homeFragment = HomeFragment(this)
+        val homeFragment = HomeActivity(this)
         supportFragmentManager.beginTransaction().add(R.id.container_main,homeFragment).commit()
         bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.ic_home_bottom_nav)
     }

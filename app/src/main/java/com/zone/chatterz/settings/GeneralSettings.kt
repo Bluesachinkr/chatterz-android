@@ -22,6 +22,7 @@ import com.zone.chatterz.MainActivity
 import com.zone.chatterz.model.User
 import com.zone.chatterz.R
 import com.zone.chatterz.requirements.JpegImageCompressor
+import java.io.File
 
 class GeneralSettings : AppCompatActivity(), OnEditListener,View.OnClickListener {
 
@@ -80,9 +81,7 @@ class GeneralSettings : AppCompatActivity(), OnEditListener,View.OnClickListener
 
             val uri = data.data
 
-            val bitmap =
-                BitmapFactory.decodeStream(uri?.let { contentResolver.openInputStream(it) })
-            val compressedImg = JpegImageCompressor.imageCompression(bitmap)
+            val compressedImg = JpegImageCompressor.imageCompression(File(uri?.path))
             firebaseUser = mAuth.currentUser!!
             storageReference = FirebaseStorage.getInstance()
                 .getReference("profileImages/" + firebaseUser.uid + ".jpg")

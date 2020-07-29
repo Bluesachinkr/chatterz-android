@@ -17,6 +17,7 @@ import com.google.firebase.storage.StorageReference
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.model.Group
 import com.zone.chatterz.requirements.JpegImageCompressor
+import java.io.File
 import kotlin.collections.HashMap
 
 class CreateNewGroup : AppCompatActivity(), View.OnClickListener {
@@ -121,10 +122,8 @@ class CreateNewGroup : AppCompatActivity(), View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUESTCODE && resultCode == Activity.RESULT_OK && data != null) {
             val uri = data.data
-            val bitmap =
-                BitmapFactory.decodeStream(uri?.let { contentResolver.openInputStream(it) })
-            compressedImg = JpegImageCompressor.imageCompression(bitmap)
-            groupImage.setImageBitmap(bitmap)
+            compressedImg = JpegImageCompressor.imageCompression(File(uri?.path))
+            groupImage.setImageURI(uri)
         }
     }
 

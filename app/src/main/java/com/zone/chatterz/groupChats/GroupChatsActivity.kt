@@ -52,7 +52,7 @@ class GroupChatsActivity : Fragment() {
         return view
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    /*override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.let { it.inflate(R.menu.appbar_group_chats_view,menu) }
     }
 
@@ -67,7 +67,7 @@ class GroupChatsActivity : Fragment() {
                 return super.onOptionsItemSelected(item)
             }
         }
-    }
+    }*/
 
     private fun createGroupList() {
         firebaseUser = mAuth.currentUser!!
