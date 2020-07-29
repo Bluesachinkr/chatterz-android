@@ -47,8 +47,7 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var shareBtn_create_post: Button
     private lateinit var create_post_image: ImageView
 
-    private lateinit var create_post_title_name: EditText
-    private lateinit var create_post_hashtags: EditText
+    private lateinit var create_post_description: EditText
 
     private lateinit var camera_take_photo_gallery: ImageView
 
@@ -64,9 +63,7 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
         this.create_post_image = findViewById(R.id.create_post_image)
         this.camera_take_photo_gallery = findViewById(R.id.camera_take_photo_gallery)
 
-        this.create_post_title_name = findViewById(R.id.create_post_title_name)
-        this.create_post_hashtags = findViewById(R.id.create_post_hashtags)
-
+        this.create_post_description = findViewById(R.id.create_post_desciption)
         this.shareBtn_create_post.setOnClickListener(this)
         this.camera_take_photo_gallery.setOnClickListener(this)
         this.back_arrow_create_post.setOnClickListener(this)
@@ -132,10 +129,9 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun sharePost() {
         val time = Timings.getCurrentTime()
-        val title = create_post_title_name.text.toString()
-        val hashtags = create_post_hashtags.text.toString()
-        if (!resultPath.isEmpty() && !title.isEmpty() && !hashtags.isEmpty()) {
-            PostBackgroundTask().execute(time, title, hashtags, resultPath)
+        val description = create_post_description.text.toString()
+        if (!resultPath.isEmpty() && !description.isEmpty()) {
+            PostBackgroundTask().execute(time, description, resultPath)
             startActivity(Intent(this, MainActivity::class.java))
         }
     }
@@ -167,15 +163,13 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
 
         override fun doInBackground(vararg params: String?) : String {
             val time = params[0]
-            val title = params[1]
-            val hashtags = params[2]
-            val path = params[3]
+            val desrciption = params[1]
+            val path = params[2]
             val resultBytes = JpegImageCompressor.imageCompression(File(path))
-            if (time != null && title != null && hashtags != null) {
+            if (time != null && desrciption!= null) {
                 val hashMap = hashMapOf<String, Any>()
                 hashMap.put("postOwner", com.zone.chatterz.firebaseConnection.Connection.user)
-                hashMap.put("postTitle", title)
-                hashMap.put("postHashTags", hashtags)
+                hashMap.put("postDescription", desrciption)
                 hashMap.put("postTime", time)
                 hashMap.put("postImage", "null");
 
@@ -191,7 +185,7 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
                             for (data in dataSnapshot.children) {
                                 val post = data.getValue(Post::class.java)
                                 if(post != null ){
-                                    if (post.postTime.equals(time) && post.postTitle.equals(title)) {
+                                    if (post.postTime.equals(time) && post.postDescription.equals(desrciption)) {
                                         val postId: String = data.ref.key.toString()
                                         val storageRef = FirebaseStorage.getInstance()
                                             .getReference("/postImages" + postId + ".jpg")

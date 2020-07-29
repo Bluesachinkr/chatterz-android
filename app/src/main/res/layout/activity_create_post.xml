@@ -73,23 +73,12 @@
             </androidx.cardview.widget.CardView>
 
             <EditText
-                android:id="@+id/create_post_title_name"
+                android:id="@+id/create_post_desciption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:background="@drawable/background_edittext_chatbox"
-                android:hint="Wirte title.."
-                android:padding="16dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white" />
-
-            <EditText
-                android:id="@+id/create_post_hashtags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@drawable/background_edittext_chatbox"
-                android:hint="Wirte hashtags"
+                android:hint="Wirte caption..."
                 android:padding="16dp"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white" />

@@ -18,6 +18,9 @@ import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.singleChat.ChatMessageActivity
 import com.zone.chatterz.model.User
 import com.zone.chatterz.R
+import com.zone.chatterz.firebaseConnection.Connection
+import com.zone.chatterz.firebaseConnection.FirebaseMethods
+import com.zone.chatterz.firebaseConnection.RequestCallback
 
 class SearchAdapter(context: Context, mlist: List<User>) :
     RecyclerView.Adapter<SearchAdapter.Viewholder>() {
@@ -40,15 +43,10 @@ class SearchAdapter(context: Context, mlist: List<User>) :
     override fun onBindViewHolder(holder: Viewholder, position: Int) {
         val user = mlist.get(position)
 
-        val databaseReference =
-            FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
+        FirebaseMethods.addValueEventChild(Connection.friendRef,object : RequestCallback(){
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
                 mFriends.clear()
-                for (data in p0.children) {
+                for (data in dataSnapshot.children) {
                     data.key?.let { mFriends.add(it) }
                 }
             }
@@ -69,19 +67,14 @@ class SearchAdapter(context: Context, mlist: List<User>) :
         }
 
         holder.friendButton.setOnClickListener {
-            val  intent = Intent(mContext,
-                ChatMessageActivity::class.java)
-            intent.putExtra("UserId", user.id)
-            mContext.startActivity(intent)
+            setFollow(user.id,holder)
+            setVisibility(holder.friendButton,holder.unfriendButton)
         }
 
         holder.unfriendButton.setOnClickListener {
-            val  intent = Intent(mContext,
-                ChatMessageActivity::class.java)
-            intent.putExtra("UserId", user.id)
-            mContext.startActivity(intent)
+            removeFollow(user.id,holder)
+            setVisibility(holder.unfriendButton,holder.friendButton)
         }
-
     }
 
     class Viewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -90,7 +83,7 @@ class SearchAdapter(context: Context, mlist: List<User>) :
         val userName: TextView = itemView.findViewById(R.id.search_userName)
         val profileImg: CircularImageView = itemView.findViewById(R.id.search_profileImg)
         val unfriendButton: LinearLayout = itemView.findViewById(R.id.unfriendButton)
-
+        val search_mutualFriend_count : TextView = itemView.findViewById(R.id.search_mutualFriend_count)
     }
 
     private fun setFollow(userId: String, holder: Viewholder) {
@@ -103,21 +96,15 @@ class SearchAdapter(context: Context, mlist: List<User>) :
     }
 
     private fun removeFollow(userId: String, holder: Viewholder) {
-        val databaseReference =
-            FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                for (data in p0.children) {
+        FirebaseMethods.addValueEventChild(Connection.friendRef,object : RequestCallback(){
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                for (data in dataSnapshot.children) {
                     if (data.key.equals(userId)) {
                         data.ref.removeValue()
                         setVisibility(holder.unfriendButton, holder.friendButton)
                     }
                 }
             }
-
         })
     }
 

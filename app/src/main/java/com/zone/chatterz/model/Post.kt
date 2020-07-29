@@ -9,16 +9,13 @@ data class Post(
     @get:PropertyName("postImage")
     @set:PropertyName("postImage")
     var postImage : String,
-    @get:PropertyName("postTitle")
-    @set:PropertyName("postTitle")
-    var postTitle : String,
-    @get:PropertyName("postHashTags")
-    @set:PropertyName("postHashTags")
-    var postHashTags : String,
+    @get:PropertyName("postDescription")
+    @set:PropertyName("postDescription")
+    var postDescription : String,
     @get:PropertyName("postTime")
     @set:PropertyName("postTime")
     var postTime : String
 
 ) {
-    constructor():this("","","","","")
+    constructor():this("","","","")
 }

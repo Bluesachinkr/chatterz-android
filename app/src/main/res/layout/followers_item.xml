@@ -2,25 +2,48 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
+    android:layout_marginLeft="16dp"
     android:layout_height="wrap_content">
 
-    <com.mikhaellopez.circularimageview.CircularImageView
-        android:id="@+id/friendsProfileImg"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        app:civ_border_color="#000000"
-        app:civ_border_width="2dp"
-        android:src="@drawable/google_logo"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="14dp"/>
+    <RelativeLayout
+        android:id="@+id/friendImageLayout"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="8dp"
+        android:layout_gravity="center_vertical">
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/friendsProfileImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="2px"
+            android:src="@drawable/google_logo"
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerCrop"/>
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/friendOnlineStatus"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="#17FF00"
+            app:civ_border_color="#000000"
+            app:civ_border_width="5dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/friendProfileName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/friendsProfileImg"
+        android:layout_below="@id/friendImageLayout"
         android:text="Sachin kr"
         android:textColor="#000000"
+        android:visibility="gone"
         android:layout_centerHorizontal="true"
         android:maxLines="1"
         />

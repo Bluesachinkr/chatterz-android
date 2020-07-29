@@ -4,12 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
-    app:cardBackgroundColor="@color/AppBackground">
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@color/ElementsAppBackground">
     
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:orientation="vertical">
 
@@ -22,6 +26,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:layout_margin="8dp"
+                android:src="@drawable/google_logo"
                 app:civ_border_color="@color/appColor"
                 app:civ_border_width="2px"/>
 
@@ -32,6 +37,7 @@
                 android:textColor="@color/white"
                 android:layout_toRightOf="@id/profileImage_post"
                 android:layout_centerVertical="true"
+                android:text="Sachin Kumar"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:fontFamily="@font/aclonica"/>
@@ -56,6 +62,7 @@
                 android:id="@+id/image_post"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:src="@drawable/google_logo"
                 android:scaleType="centerInside"/>
         </RelativeLayout>
 
@@ -69,6 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
+            android:layout_marginLeft="4dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -78,44 +86,35 @@
                 android:src="@drawable/ic_outline_star"
                 android:layout_marginLeft="8dp"/>
 
-            <ImageView
-                android:id="@+id/comment_post"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_outline_comment"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="8dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/likes_layout_post"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="16dp"
-            android:visibility="gone"
-            android:orientation="horizontal">
-
             <TextView
                 android:id="@+id/no_of_likes_post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
+                android:text="999"
+                android:layout_marginLeft="4dp"
                 android:layout_gravity="center_vertical"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
 
-            <TextView
+            <ImageView
+                android:id="@+id/comment_post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Likes"
-                android:textColor="@color/white"
+                android:src="@drawable/ic_chats"
                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="24dp"/>
+
+            <TextView
+                android:id="@+id/no_of_comments_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="999"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="4dp"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginLeft="8dp"/>
+                android:textStyle="bold"/>
 
         </LinearLayout>
 
@@ -123,24 +122,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="16dp">
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="16dp">
 
             <TextView
-                android:id="@+id/title_post"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:layout_gravity="center_vertical"
-                android:textSize="20sp"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/hashtags_post"
+                android:id="@+id/description_post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/appColor"
                 android:layout_gravity="center_vertical"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:textStyle="bold"/>
 
         </LinearLayout>
 
