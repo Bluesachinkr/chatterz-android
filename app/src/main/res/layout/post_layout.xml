@@ -124,6 +124,7 @@
             android:orientation="vertical"
             android:layout_marginTop="8dp"
             android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp">
 
             <TextView
@@ -134,6 +135,44 @@
                 android:layout_gravity="center_vertical"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_marginLeft="4dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="?actionBarSize"
+                android:layout_height="?actionBarSize"
+                android:padding="10dp">
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/profileImage_comment_box_post"
+                    android:layout_width="?actionBarSize"
+                    android:layout_height="?actionBarSize"
+                    android:src="@drawable/google_logo"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:scaleType="centerInside"
+                    app:civ_border_width="1px"
+                    app:civ_border_color="@color/appColor"/>
+
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/comment_edittext_post"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:backgroundTint="@color/appColor"
+                android:hint="Write a comment..."
+                android:textColorHint="@color/white"/>
 
         </LinearLayout>
 

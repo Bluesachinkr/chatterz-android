@@ -48,6 +48,34 @@ class FirebaseMethods {
             })
         }
 
+        fun singleValueEventDifferentChild(reference: String,childReference: String, requestCallback: RequestCallback) {
+            databaseReference = FirebaseDatabase.getInstance().getReference(reference).child(
+                childReference
+            )
+            databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    requestCallback.onDataChanged(p0)
+                }
+            })
+        }
+
+        fun addValueEventDifferentChild(reference: String,childReference: String, requestCallback: RequestCallback) {
+            databaseReference = FirebaseDatabase.getInstance().getReference(reference).child(
+                childReference
+            )
+            databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    requestCallback.onDataChanged(p0)
+                }
+            })
+        }
+
         fun addValueEventChild(reference: String, requestCallback: RequestCallback) {
             databaseReference = FirebaseDatabase.getInstance().getReference(reference).child(
                 firebaseUser.uid

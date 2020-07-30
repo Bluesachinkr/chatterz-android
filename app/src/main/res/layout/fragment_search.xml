@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/AppBackground"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayoutSearchBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF">
+        android:background="@color/AppBackground">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
@@ -28,8 +29,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="8dp"
                 android:text="Search"
-                android:textColor="#000000"
-                android:textSize="32sp"
+                android:textColor="@color/white"
+                android:textSize="36sp"
                 android:textStyle="bold" />
 
         </RelativeLayout>
@@ -72,7 +73,7 @@
                     android:id="@+id/searchedView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
+                    android:layout_marginTop="8dp"
                     android:visibility="gone" />
 
             </RelativeLayout>

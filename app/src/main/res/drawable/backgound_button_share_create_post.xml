@@ -7,10 +7,10 @@
 
     <stroke
         android:color="@color/white"
-        android:width="8px"/>
+        android:width="4px"/>
 
     <gradient
-        android:startColor="@color/colorPrimaryDark"
+        android:startColor="@color/colorLoginTheme"
         android:angle="135"
         android:endColor="@color/appColor"/>
 

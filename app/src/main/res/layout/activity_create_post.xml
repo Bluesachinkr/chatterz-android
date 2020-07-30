@@ -72,16 +72,24 @@
 
             </androidx.cardview.widget.CardView>
 
-            <EditText
-                android:id="@+id/create_post_desciption"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/background_edittext_chatbox"
-                android:hint="Wirte caption..."
-                android:padding="16dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white" />
+                android:focusable="false"
+                android:focusableInTouchMode="true">
+
+                <EditText
+                    android:id="@+id/create_post_desciption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_edittext_chatbox"
+                    android:hint="Wirte caption..."
+                    android:padding="16dp"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white" />
+
+            </RelativeLayout>
 
         </LinearLayout>
 

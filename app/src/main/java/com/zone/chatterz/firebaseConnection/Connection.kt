@@ -16,5 +16,7 @@ open class Connection {
         val tokens : String = "Tokens"
         val postRef : String = "Post"
         val friendRef : String= "Friends"
+        val likesRef : String = "Likes"
+        val commentsRef : String = "Comments"
     }
 }

@@ -7,15 +7,20 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.FirebaseDatabase
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
+import com.zone.chatterz.inferfaces.CommentControls
 import com.zone.chatterz.model.User
 import com.zone.chatterz.preActivities.WelcomeActivity
 import com.zone.chatterz.settings.GeneralSettings
@@ -24,13 +29,20 @@ import com.zone.chatterz.mainFragment.HomeActivity
 import com.zone.chatterz.mainFragment.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), DrawerLocker{
+class MainActivity : AppCompatActivity(), DrawerLocker,CommentControls{
 
     private lateinit var drawer: DrawerLayout
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseAuthListener: FirebaseAuth.AuthStateListener
     private lateinit var content: RelativeLayout
     private lateinit var navigationDrawerMenu: NavigationView
+    private lateinit var bottomnav_main_screen : BottomNavigationView
+    private lateinit var comment_layout_main : RelativeLayout
+
+    private var postId : String = ""
+
+    private lateinit var add_comment_post : ImageView
+    private lateinit var comment_edittext_comment_add : EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +51,10 @@ class MainActivity : AppCompatActivity(), DrawerLocker{
         this.mAuth = FirebaseAuth.getInstance()
         this.drawer = findViewById(R.id.drawerLayout)
         this.content = findViewById(R.id.contentLayout)
+        this.add_comment_post = findViewById(R.id.add_comment_post)
+        this.comment_edittext_comment_add = findViewById(R.id.comment_edittext_add_comment)
+        this.comment_layout_main = findViewById(R.id.comment_layout_main)
+        this.bottomnav_main_screen = findViewById(R.id.bottomNavigationBar)
         this.navigationDrawerMenu = findViewById(R.id.NavigationDrawerMenu)
         drawer.setScrimColor(Color.TRANSPARENT)
         drawer.addDrawerListener(object :
@@ -62,7 +78,7 @@ class MainActivity : AppCompatActivity(), DrawerLocker{
 
         setNavigationInitially()
 
-        bottomNavigationBar.setOnNavigationItemSelectedListener { menuItem ->
+        bottomnav_main_screen.setOnNavigationItemSelectedListener { menuItem ->
             bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.ic_outline_home_bottom_nav)
             bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.ic_create)
             bottomNavigationBar.menu.getItem(2).setIcon(R.drawable.search_light_icon)
@@ -112,10 +128,21 @@ class MainActivity : AppCompatActivity(), DrawerLocker{
         }
 
         updateOnlineStatus()
+
+        add_comment_post.setOnClickListener {
+            val message : String = comment_edittext_comment_add.text.toString()
+            val hashMap = hashMapOf<String,Any>()
+            hashMap.put("message",message)
+            hashMap.put("sender",Connection.user)
+            hashMap.put("likes",0)
+            hashMap.put("heart","yes")
+            val databaseReference = FirebaseDatabase.getInstance().getReference(Connection.commentsRef).child(postId)
+            databaseReference.push().setValue(hashMap)
+        }
     }
 
     private fun setNavigationInitially() {
-        bottomNavigationBar.selectedItemId = R.id.home
+        bottomnav_main_screen.selectedItemId = R.id.home
         val homeFragment = HomeActivity(this)
         supportFragmentManager.beginTransaction().add(R.id.container_main,homeFragment).commit()
         bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.ic_home_bottom_nav)
@@ -150,6 +177,17 @@ class MainActivity : AppCompatActivity(), DrawerLocker{
     override fun onStart() {
         super.onStart()
         mAuth.addAuthStateListener(firebaseAuthListener)
+    }
+
+    override fun openCommentBox(id : String) {
+        this.postId = id
+        println("done")
+    }
+
+    override fun openCommentEditext(id : String) {
+        this.postId = id
+        this.bottomnav_main_screen.visibility = View.GONE
+        this.comment_layout_main.visibility = View.GONE
     }
 }
 

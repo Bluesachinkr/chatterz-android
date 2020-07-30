@@ -3,6 +3,9 @@ package com.zone.chatterz.model
 import com.google.firebase.database.PropertyName
 
 data class Post(
+    @get:PropertyName("postId")
+    @set:PropertyName("postId")
+    var postId : String,
     @get:PropertyName("postOwner")
     @set:PropertyName("postOwner")
     var postOwner : String,
@@ -17,5 +20,5 @@ data class Post(
     var postTime : String
 
 ) {
-    constructor():this("","","","")
+    constructor():this("","","","","")
 }

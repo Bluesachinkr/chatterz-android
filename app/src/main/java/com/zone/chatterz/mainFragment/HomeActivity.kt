@@ -36,9 +36,8 @@ class HomeActivity(context: Context) : Fragment(), View.OnClickListener {
     private lateinit var profile_image_home_frag: ImageView
     private lateinit var chat_btn_home_frag: ImageView
 
-    private lateinit var reloadProgressBar_home : ProgressBar
+    private lateinit var reloadProgressBar_home: ProgressBar
 
-    private lateinit var friendsList: MutableList<String>
     private lateinit var postList: MutableList<Post>
 
     override fun onCreateView(
@@ -58,46 +57,42 @@ class HomeActivity(context: Context) : Fragment(), View.OnClickListener {
         chat_btn_home_frag.setOnClickListener(this)
         profile_image_home_frag.setOnClickListener(this)
 
-        getFriendsList()
+
         reloadPosts()
-        setProfilePic()
+
         return view
     }
 
-    private fun getFriendsList() {
-        this.friendsList = mutableListOf()
+    override fun onStart() {
+        super.onStart()
+        setProfilePic()
+    }
+
+    private fun reloadPosts() {
+        reloadProgressBar_home.visibility = View.VISIBLE
+        val friendsList: MutableList<String> = mutableListOf()
         FirebaseMethods.addValueEventChild(Connection.friendRef, object : RequestCallback() {
             override fun onDataChanged(dataSnapshot: DataSnapshot) {
                 for (data in dataSnapshot.children) {
                     val key = data.key.toString()
                     friendsList.add(key)
                 }
+                getPostList(friendsList)
             }
         })
-    }
-
-    private fun reloadPosts() {
-        reloadProgressBar_home.visibility = View.VISIBLE
-        getPostList()
     }
 
     /*
     * Initialize user information
     */
 
-    private fun getPostList() {
+    private fun getPostList(friendsList: MutableList<String>) {
         this.postList = mutableListOf()
         friendsList.add(Connection.user)
         for (friend in friendsList) {
-            val databaseReference =
-                FirebaseDatabase.getInstance().getReference(Connection.postRef).child(friend)
-            databaseReference.addValueEventListener(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onDataChange(p0: DataSnapshot) {
-                    for (data in p0.children) {
+            FirebaseMethods.singleValueEventChild(Connection.postRef, object : RequestCallback() {
+                override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                    for (data in dataSnapshot.children) {
                         val post = data.getValue(Post::class.java)
                         post?.let {
                             postList.add(post)
@@ -111,18 +106,7 @@ class HomeActivity(context: Context) : Fragment(), View.OnClickListener {
                     recyclerView_home.visibility = View.VISIBLE
                     reloadProgressBar_home.visibility = View.GONE
                 }
-
             })
-            /* FirebaseMethods.addValueEventChild(Connection.postRef, object : RequestCallback() {
-                 override fun onDataChanged(dataSnapshot: DataSnapshot) {
-                     for (data in dataSnapshot.children) {
-                         val post = data.getValue(Post::class.java)
-                         post?.let {
-                             postList.add(post)
-                         }
-                     }
-                 }
-             })*/
         }
     }
 
