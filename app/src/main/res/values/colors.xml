@@ -17,4 +17,6 @@
 
     <color name="ElementsAppBackground">#292929</color>
     <color name="AppBackground">#242424</color>
+
+    <color name="GreyColorLittleHighlighted">#D1D1D1</color>
 </resources>

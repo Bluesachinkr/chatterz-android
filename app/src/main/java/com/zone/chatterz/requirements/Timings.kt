@@ -1,5 +1,6 @@
 package com.zone.chatterz.requirements
 
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -45,7 +46,7 @@ class Timings {
             }
         }
 
-        fun getCurrentTime() : String{
+        fun getCurrentTime(): String {
             val sd = SimpleDateFormat("hh:mm yyyy-MM-dd z")
             sd.timeZone = TimeZone.getTimeZone("Asia/Kolkata")
             val date = Date()
@@ -53,7 +54,7 @@ class Timings {
             return cur_date
         }
 
-        private fun getDateFormatted(str: String): String {
+        fun getDateFormatted(str: String): String {
             val sd = SimpleDateFormat("hh:mm yyyy-MM-dd")
             val s = sd.parse(str)
             val sd1 = SimpleDateFormat("yyyy-MM-dd")
@@ -61,7 +62,7 @@ class Timings {
             return s1
         }
 
-        private fun getTimeFormatted(str: String): String {
+        fun getTimeFormatted(str: String): String {
             val sd = SimpleDateFormat("hh:mm yyyy-MM-dd")
             val s = sd.parse(str)
             val sd1 = SimpleDateFormat("hh:mm")
@@ -69,34 +70,86 @@ class Timings {
             return s1
         }
 
-        fun getDateOfTime(str : String) : Int{
+        fun getDateOfTime(str: String): Int {
             val str1 = getDateFormatted(str)
-            val dateStr = str1.substring(8,10)
+            val dateStr = str1.substring(8, 10)
             return Integer.parseInt(dateStr)
         }
 
-        fun getMonthOfTime(str : String) : Int{
+        fun getMonthOfTime(str: String): Int {
             val str1 = getDateFormatted(str)
-            val monthStr = str1.substring(5,7)
+            val monthStr = str1.substring(5, 7)
             return Integer.parseInt(monthStr)
         }
 
-        fun getYearOfTime(str : String) : Int{
+        fun getYearOfTime(str: String): Int {
             val str1 = getDateFormatted(str)
-            val yearStr  =str1.substring(0,4)
+            val yearStr = str1.substring(0, 4)
             return Integer.parseInt(yearStr)
         }
-        
-        fun getHourofTime(str : String) : Int{
+
+        fun getHourofTime(str: String): Int {
             val str1 = getTimeFormatted(str)
-            val hrstr = str1.substring(0,2)
+            val hrstr = str1.substring(0, 2)
             return Integer.parseInt(hrstr)
         }
 
-        fun getMinutesofTime(str: String) : Int{
+        fun getMinutesofTime(str: String): Int {
             val str1 = getTimeFormatted(str)
-            val hrstr = str1.substring(3,5)
+            val hrstr = str1.substring(3, 5)
             return Integer.parseInt(hrstr)
+        }
+
+        fun timeUploadPost(postTime: String): String {
+            val time = Timings.getCurrentTime()
+            val yearPost = getYearOfTime(postTime).toString()
+            val yearTime = getYearOfTime(time).toString()
+            val builder = StringBuilder("")
+            if (yearPost.equals(yearTime)) {
+                val MonthPost = getYearOfTime(postTime).toString()
+                val MonthTime = getYearOfTime(time).toString()
+                if (MonthPost.equals(MonthTime)) {
+                    val dayPost = getYearOfTime(postTime).toString()
+                    val dayTime = getYearOfTime(time).toString()
+                    if (dayPost.equals(dayTime)) {
+                        val hourPost = getYearOfTime(postTime).toString()
+                        val hourTime = getYearOfTime(time).toString()
+                        if (hourPost.equals(hourTime)) {
+                            val minutesPost = getYearOfTime(postTime).toString()
+                            val minutesTime = getYearOfTime(time).toString()
+                            if (minutesPost.equals(minutesTime)) {
+                                builder.append("now")
+                            } else {
+                                val y1 = Integer.parseInt(minutesPost)
+                                val y2 = Integer.parseInt(minutesTime)
+                                builder.append(y2 - y1)
+                                builder.append(" minutes ago")
+                            }
+                        } else {
+                            val y1 = Integer.parseInt(hourPost)
+                            val y2 = Integer.parseInt(hourTime)
+                            builder.append(y2 - y1)
+                            builder.append(" hours ago")
+                        }
+                    } else {
+                        val y1 = Integer.parseInt(dayPost)
+                        val y2 = Integer.parseInt(dayTime)
+                        builder.append(y2 - y1)
+                        builder.append(" days ago")
+                    }
+                } else {
+                    val y1 = Integer.parseInt(MonthPost)
+                    val y2 = Integer.parseInt(MonthTime)
+                    builder.append(y2 - y1)
+                    builder.append(" months ago")
+                }
+            } else {
+                val y1 = Integer.parseInt(yearPost)
+                val y2 = Integer.parseInt(yearTime)
+                builder.append(y2 - y1)
+                builder.append(" years ago")
+            }
+            return builder.toString()
         }
     }
 }

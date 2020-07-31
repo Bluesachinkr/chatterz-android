@@ -21,36 +21,36 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/allura"
                 android:text="@string/app_name"
                 android:textColor="@color/white"
-                android:textSize="36sp"
-                android:fontFamily="@font/allura"/>
+                android:textSize="36sp" />
 
             <ImageView
                 android:id="@+id/chat_btn_home_frag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_chat"
-                android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
-                android:layout_margin="8dp"/>
+                android:layout_centerVertical="true"
+                android:layout_margin="8dp"
+                android:src="@drawable/ic_chat" />
 
             <RelativeLayout
                 android:layout_width="?actionBarSize"
                 android:layout_height="?actionBarSize"
-                android:padding="8dp"
+                android:layout_alignParentLeft="true"
                 android:layout_marginLeft="4dp"
-                android:layout_alignParentLeft="true">
+                android:padding="8dp">
 
                 <com.mikhaellopez.circularimageview.CircularImageView
                     android:id="@+id/profile_image_home_frag"
                     android:layout_width="?actionBarSize"
                     android:layout_height="?actionBarSize"
                     android:scaleType="centerCrop"
-                    app:civ_border_width="2px"
-                    app:civ_border_color="@color/appColor" />
+                    app:civ_border_color="@color/appColor"
+                    app:civ_border_width="2px" />
 
             </RelativeLayout>
 
@@ -72,24 +72,75 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?actionBarSize">
 
-        <ProgressBar
-            android:id="@+id/reloadProgressBar_home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminateTint="@color/appColor"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="64dp"
-            android:visibility="gone"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView_home"
+        <RelativeLayout
+            android:id="@+id/home_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none"
-            android:visibility="gone"/>
+            android:layout_above="@id/comment_layout_home">
+
+            <ProgressBar
+                android:id="@+id/reloadProgressBar_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="64dp"
+                android:indeterminateTint="@color/appColor"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_home"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/comment_layout_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/add_comment_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/ic_add_comment" />
+
+            <EditText
+                android:id="@+id/comment_edittext_add_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="8dp"
+                android:layout_toLeftOf="@id/add_comment_post"
+                android:background="@color/white"
+                android:hint="Write a comment..."
+                android:padding="12dp"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/bottom_comment_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+        <include layout="@layout/bottom_sheet_comments" />
+
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

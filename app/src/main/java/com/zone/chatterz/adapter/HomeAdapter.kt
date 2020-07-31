@@ -4,9 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.database.DataSnapshot
@@ -14,19 +12,28 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.mikhaellopez.circularimageview.CircularImageView
+import com.zone.chatterz.MainActivity
 import com.zone.chatterz.R
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
+import com.zone.chatterz.inferfaces.CommentControls
+import com.zone.chatterz.mainFragment.HomeActivity
 import com.zone.chatterz.model.Post
 import com.zone.chatterz.model.User
-import java.lang.Exception
+import com.zone.chatterz.requirements.Timings
+import java.io.File
 
-class HomeAdapter(mContext: Context, postList: MutableList<Post>) :
+class HomeAdapter(
+    mContext: Context,
+    postList: MutableList<Post>,
+    commentControls: CommentControls
+) :
     RecyclerView.Adapter<HomeAdapter.Viewholder>() {
 
     private val mContext = mContext
     private val postList = postList
+    private val commentControls = commentControls
 
     class Viewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val profileImage_post: CircularImageView = itemView.findViewById(R.id.profileImage_post)
@@ -34,13 +41,14 @@ class HomeAdapter(mContext: Context, postList: MutableList<Post>) :
         val options_post: ImageView = itemView.findViewById(R.id.options_post)
         val image_post: ImageView = itemView.findViewById(R.id.image_post)
         val like_post: ImageView = itemView.findViewById(R.id.like_post)
+        val time_post: TextView = itemView.findViewById(R.id.time_post)
         val no_of_likes_post: TextView = itemView.findViewById(R.id.no_of_likes_post)
         val comment_post: ImageView = itemView.findViewById(R.id.comment_post)
         val no_of_comments_post: TextView = itemView.findViewById(R.id.no_of_comments_post)
         val description_post: TextView = itemView.findViewById(R.id.description_post)
         val profileImage_comment_box_post: CircularImageView =
             itemView.findViewById(R.id.profileImage_comment_box_post)
-        val comment_edittext_post: EditText = itemView.findViewById(R.id.comment_edittext_post)
+        val comment_box_post: LinearLayout = itemView.findViewById(R.id.comment_edittext_post)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Viewholder {
@@ -60,9 +68,11 @@ class HomeAdapter(mContext: Context, postList: MutableList<Post>) :
         //setting image
         Glide.with(mContext).load(post.postImage).into(holder.image_post)
 
-
         //setting description on post
         holder.description_post.text = post.postDescription
+
+        //settting time post uploaded
+        holder.time_post.text = Timings.timeUploadPost(post.postTime)
 
         likesCount(post.postId, holder)
 
@@ -72,20 +82,26 @@ class HomeAdapter(mContext: Context, postList: MutableList<Post>) :
             likeOnPost(post.postId, holder)
         }
 
-        val databaseReference =
-            FirebaseDatabase.getInstance().getReference(Connection.likesRef).child(post.postId)
-                .child(Connection.user)
+        holder.comment_post.setOnClickListener {
+            commentControls.openCommentLayout(post.postId)
+        }
 
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
-                    holder.like_post.setImageResource(R.drawable.ic_filled_like_star_post)
+        holder.comment_box_post.setOnClickListener {
+            (mContext as HomeActivity.NavigationControls).removeNavigation()
+            (mContext as HomeActivity.NavigationControls).openCommentEditext(post.postId)
+            it.visibility = View.GONE
+            MainActivity.is_changed = true
+            MainActivity.comment_viewholder_changed = holder
+        }
+
+        FirebaseMethods.singleValueEvent(Connection.likesRef + File.separator + post.postId + File.separator + Connection.user,
+            object : RequestCallback() {
+                override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        holder.like_post.setImageResource(R.drawable.ic_filled_like_star_post)
+                    }
                 }
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-            }
-        })
+            })
     }
 
     private fun commentsCount(postId: String, holder: Viewholder) {
@@ -96,7 +112,7 @@ class HomeAdapter(mContext: Context, postList: MutableList<Post>) :
                 override fun onDataChanged(dataSnapshot: DataSnapshot) {
                     if (dataSnapshot.exists()) {
                         val count = dataSnapshot.childrenCount
-                        val zero = 0 as Long
+                        val zero: Long = 0
                         if (count == zero) {
                             holder.no_of_comments_post.text = "0"
                         } else {

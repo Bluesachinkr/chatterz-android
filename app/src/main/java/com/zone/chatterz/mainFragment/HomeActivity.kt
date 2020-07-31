@@ -2,33 +2,36 @@ package com.zone.chatterz.mainFragment
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.zone.chatterz.singleChat.ChatActivity
 import com.zone.chatterz.R
+import com.zone.chatterz.adapter.CommentAdapter
 import com.zone.chatterz.adapter.HomeAdapter
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
+import com.zone.chatterz.inferfaces.CommentControls
+import com.zone.chatterz.model.Comment
 import com.zone.chatterz.model.Post
 import com.zone.chatterz.model.User
 import com.zone.chatterz.requirements.Timings
+import com.zone.chatterz.singleChat.ChatActivity
+import java.io.File
 import java.util.*
-import kotlin.Comparator
 
-class HomeActivity(context: Context) : Fragment(), View.OnClickListener {
+
+class HomeActivity(context: Context,listener : NavigationControls) : Fragment(), View.OnClickListener, CommentControls {
 
     private val mContext = context
 
@@ -36,9 +39,15 @@ class HomeActivity(context: Context) : Fragment(), View.OnClickListener {
     private lateinit var profile_image_home_frag: ImageView
     private lateinit var chat_btn_home_frag: ImageView
 
+    private lateinit var backArrowCommentSheet: ImageView
+    private lateinit var down_comment_view: ImageView
+    private lateinit var commentSheetRecyclerView: RecyclerView
+    private lateinit var bottomSheetBeahavior: BottomSheetBehavior<View>
+
     private lateinit var reloadProgressBar_home: ProgressBar
 
     private lateinit var postList: MutableList<Post>
+    private val listener = listener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,13 +62,49 @@ class HomeActivity(context: Context) : Fragment(), View.OnClickListener {
         recyclerView_home = view.findViewById(R.id.recyclerView_home)
         reloadProgressBar_home = view.findViewById(R.id.reloadProgressBar_home)
 
+        commentSheetRecyclerView = view.findViewById(R.id.comments_bottom_recycler)
+        down_comment_view = view.findViewById(R.id.down_comment_view)
+
         //Setting on click listener of buttons in home fragment
         chat_btn_home_frag.setOnClickListener(this)
         profile_image_home_frag.setOnClickListener(this)
+        down_comment_view.setOnClickListener(this)
+
 
 
         reloadPosts()
 
+        if (Build.VERSION.SDK_INT >= 11) {
+            recyclerView_home.addOnLayoutChangeListener(View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+                if (bottom < oldBottom) {
+                    recyclerView_home.postDelayed(Runnable {
+                        recyclerView_home.adapter?.let {
+                            recyclerView_home.smoothScrollToPosition(it.itemCount - 1)
+                        }
+                    }, 100)
+                }
+            })
+        }
+
+        val bottomsheet: View = view.findViewById(R.id.bottom_comment_sheet)
+        bottomSheetBeahavior = BottomSheetBehavior.from(bottomsheet)
+        val displayMetrics = activity!!.resources.displayMetrics
+
+        val height = displayMetrics.heightPixels
+
+        val maxHeight = (height * 0.6).toInt()
+        bottomSheetBeahavior.peekHeight = maxHeight
+        bottomSheetBeahavior.isHideable = true
+        bottomSheetBeahavior.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheetBeahavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback(){
+            override fun onSlide(p0: View, p1: Float) {
+            }
+            override fun onStateChanged(p0: View, p1: Int) {
+                if(p1 == BottomSheetBehavior.STATE_HIDDEN){
+                    listener.openNavigation()
+                }
+            }
+        })
         return view
     }
 
@@ -101,7 +146,7 @@ class HomeActivity(context: Context) : Fragment(), View.OnClickListener {
                     sort(postList)
                     val linearLayout = LinearLayoutManager(mContext)
                     recyclerView_home.layoutManager = linearLayout
-                    val adapter = HomeAdapter(mContext, postList)
+                    val adapter = HomeAdapter(mContext, postList, this@HomeActivity)
                     recyclerView_home.adapter = adapter
                     recyclerView_home.visibility = View.VISIBLE
                     reloadProgressBar_home.visibility = View.GONE
@@ -178,9 +223,49 @@ class HomeActivity(context: Context) : Fragment(), View.OnClickListener {
                 //profile button
                 startActivity(Intent(mContext, ProfileActivity::class.java))
             }
+            down_comment_view -> {
+                closeCommentLayout()
+            }
             else -> {
                 return
             }
         }
+    }
+
+    override fun openCommentLayout(id: String) {
+        bottomSheetBeahavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        listener.openCommentEditext(id)
+        val layoutManager = LinearLayoutManager(mContext)
+        commentSheetRecyclerView.layoutManager = layoutManager
+        openComments(id)
+    }
+
+    private fun openComments(id: String) {
+        val commentsList  = mutableListOf<Comment>()
+        val reference = Connection.commentsRef + File.separator+id
+        FirebaseMethods.addValueEvent(reference,object : RequestCallback(){
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                for (data in dataSnapshot.children){
+                    val comments = data.getValue(Comment::class.java)
+                    comments?.let {
+                        commentsList.add(comments)
+                    }
+                }
+                val adapter = CommentAdapter(mContext,commentsList)
+                commentSheetRecyclerView.adapter = adapter
+            }
+        })
+    }
+
+    override fun closeCommentLayout() {
+        bottomSheetBeahavior.state = BottomSheetBehavior.STATE_HIDDEN
+        listener.openNavigation()
+    }
+
+
+    interface NavigationControls {
+        fun removeNavigation()
+        fun openNavigation()
+        fun openCommentEditext(id: String)
     }
 }

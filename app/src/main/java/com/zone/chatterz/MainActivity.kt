@@ -1,5 +1,6 @@
 package com.zone.chatterz
 
+import android.content.Context
 import com.zone.chatterz.inferfaces.DrawerLocker
 import android.content.Intent
 import android.graphics.Color
@@ -7,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -17,6 +19,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
+import com.zone.chatterz.adapter.HomeAdapter
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
@@ -29,20 +32,26 @@ import com.zone.chatterz.mainFragment.HomeActivity
 import com.zone.chatterz.mainFragment.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), DrawerLocker,CommentControls{
+class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationControls {
 
     private lateinit var drawer: DrawerLayout
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseAuthListener: FirebaseAuth.AuthStateListener
     private lateinit var content: RelativeLayout
     private lateinit var navigationDrawerMenu: NavigationView
-    private lateinit var bottomnav_main_screen : BottomNavigationView
-    private lateinit var comment_layout_main : RelativeLayout
+    private lateinit var bottomnav_main_screen: BottomNavigationView
 
-    private var postId : String = ""
+    private var commentReadTextOpen = false
+    private var postId: String = ""
 
-    private lateinit var add_comment_post : ImageView
-    private lateinit var comment_edittext_comment_add : EditText
+    private lateinit var add_comment_post: ImageView
+    private lateinit var comment_edittext_comment_add: EditText
+    private lateinit var comment_layout_home: RelativeLayout
+
+    companion object {
+        var is_changed = false
+        var comment_viewholder_changed: HomeAdapter.Viewholder? = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,9 +60,9 @@ class MainActivity : AppCompatActivity(), DrawerLocker,CommentControls{
         this.mAuth = FirebaseAuth.getInstance()
         this.drawer = findViewById(R.id.drawerLayout)
         this.content = findViewById(R.id.contentLayout)
-        this.add_comment_post = findViewById(R.id.add_comment_post)
-        this.comment_edittext_comment_add = findViewById(R.id.comment_edittext_add_comment)
-        this.comment_layout_main = findViewById(R.id.comment_layout_main)
+        add_comment_post = findViewById(R.id.add_comment_post)
+        comment_edittext_comment_add = findViewById(R.id.comment_edittext_add_comment)
+        comment_layout_home = findViewById(R.id.comment_layout_home)
         this.bottomnav_main_screen = findViewById(R.id.bottomNavigationBar)
         this.navigationDrawerMenu = findViewById(R.id.NavigationDrawerMenu)
         drawer.setScrimColor(Color.TRANSPARENT)
@@ -76,6 +85,12 @@ class MainActivity : AppCompatActivity(), DrawerLocker,CommentControls{
             }
         }
 
+        add_comment_post.setOnClickListener {
+            addComment()
+            closeCommentBox()
+            refreshPostComments()
+        }
+
         setNavigationInitially()
 
         bottomnav_main_screen.setOnNavigationItemSelectedListener { menuItem ->
@@ -85,15 +100,15 @@ class MainActivity : AppCompatActivity(), DrawerLocker,CommentControls{
             when (menuItem.itemId) {
 
                 R.id.home -> {
-                    val homeFragment = HomeActivity(this)
+                    val homeFragment = HomeActivity(this, this)
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container_main,homeFragment)
+                        .replace(R.id.container_main, homeFragment, "HomeFragment")
                         .addToBackStack(null).commit()
                     menuItem.setIcon(R.drawable.ic_home_bottom_nav)
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.create -> {
-                    startActivity(Intent(this,CreatePostActivity::class.java))
+                    startActivity(Intent(this, CreatePostActivity::class.java))
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.profile_bottombar -> {
@@ -129,27 +144,18 @@ class MainActivity : AppCompatActivity(), DrawerLocker,CommentControls{
 
         updateOnlineStatus()
 
-        add_comment_post.setOnClickListener {
-            val message : String = comment_edittext_comment_add.text.toString()
-            val hashMap = hashMapOf<String,Any>()
-            hashMap.put("message",message)
-            hashMap.put("sender",Connection.user)
-            hashMap.put("likes",0)
-            hashMap.put("heart","yes")
-            val databaseReference = FirebaseDatabase.getInstance().getReference(Connection.commentsRef).child(postId)
-            databaseReference.push().setValue(hashMap)
-        }
     }
 
     private fun setNavigationInitially() {
         bottomnav_main_screen.selectedItemId = R.id.home
-        val homeFragment = HomeActivity(this)
-        supportFragmentManager.beginTransaction().add(R.id.container_main,homeFragment).commit()
+        val homeFragment = HomeActivity(this, this)
+        supportFragmentManager.beginTransaction()
+            .add(R.id.container_main, homeFragment, "HomeFragment").commit()
         bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.ic_home_bottom_nav)
     }
 
     private fun updateOnlineStatus() {
-        FirebaseMethods.singleValueEventChild(Connection.userRef,object : RequestCallback() {
+        FirebaseMethods.singleValueEventChild(Connection.userRef, object : RequestCallback() {
             override fun onDataChanged(dataSnapshot: DataSnapshot) {
                 var user = dataSnapshot.getValue(User::class.java)
                 user.let {
@@ -179,15 +185,73 @@ class MainActivity : AppCompatActivity(), DrawerLocker,CommentControls{
         mAuth.addAuthStateListener(firebaseAuthListener)
     }
 
-    override fun openCommentBox(id : String) {
-        this.postId = id
-        println("done")
+    override fun onBackPressed() {
+        if (commentReadTextOpen) {
+            openNavigation()
+            closeCommentBox()
+            val fragment = supportFragmentManager.findFragmentByTag("HomeFragment") as HomeActivity
+            fragment.closeCommentLayout()
+
+            if (is_changed) {
+                comment_viewholder_changed?.let {
+                    it.comment_box_post.visibility = View.VISIBLE
+                    is_changed = false
+                }
+                comment_viewholder_changed = null
+            }
+        } else {
+            super.onBackPressed()
+        }
     }
 
-    override fun openCommentEditext(id : String) {
-        this.postId = id
+    private fun refreshPostComments() {
+        comment_viewholder_changed?.let {
+            var count = Integer.parseInt(it.no_of_comments_post.text.toString()) + 1
+            it.no_of_comments_post.text = count.toString()
+            it.comment_box_post.visibility = View.VISIBLE
+            val inputManager: InputMethodManager =
+                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(
+                currentFocus!!.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
+            )
+        }
+        openNavigation()
+        this.comment_edittext_comment_add.hint = "Write a comment..."
+        this.comment_edittext_comment_add.text.clear()
+    }
+
+    private fun addComment() {
+        val message: String = comment_edittext_comment_add.text.toString()
+        val hashMap = hashMapOf<String, Any>()
+        hashMap.put("message", message)
+        hashMap.put("sender", Connection.user)
+        hashMap.put("likes", 0)
+        hashMap.put("heart", "yes")
+        val databaseReference =
+            FirebaseDatabase.getInstance().getReference(Connection.commentsRef)
+                .child(postId)
+        databaseReference.push().setValue(hashMap)
+    }
+
+    fun closeCommentBox() {
+        comment_layout_home.visibility = View.GONE
+    }
+
+    override fun removeNavigation() {
         this.bottomnav_main_screen.visibility = View.GONE
-        this.comment_layout_main.visibility = View.GONE
+        this.commentReadTextOpen = true
+    }
+
+    override fun openNavigation() {
+        this.bottomnav_main_screen.visibility = View.VISIBLE
+        this.commentReadTextOpen = false
+    }
+
+    override fun openCommentEditext(id: String) {
+        postId = id
+        removeNavigation()
+        comment_layout_home.visibility = View.VISIBLE
     }
 }
 
