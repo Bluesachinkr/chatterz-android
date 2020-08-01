@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -30,6 +31,7 @@ import com.zone.chatterz.settings.GeneralSettings
 import com.zone.chatterz.mainFragment.CreatePostActivity
 import com.zone.chatterz.mainFragment.HomeActivity
 import com.zone.chatterz.mainFragment.SearchActivity
+import com.zone.chatterz.requirements.Timings
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationControls {
@@ -227,7 +229,11 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
         hashMap.put("message", message)
         hashMap.put("sender", Connection.user)
         hashMap.put("likes", 0)
-        hashMap.put("heart", "yes")
+        hashMap.put("heart",false)
+        hashMap.put("time",Timings.getCurrentTime())
+        hashMap.put("isReply",false)
+        hashMap.put("toReply","null")
+        hashMap.put("onReplyParent","null")
         val databaseReference =
             FirebaseDatabase.getInstance().getReference(Connection.commentsRef)
                 .child(postId)
@@ -253,6 +259,12 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
         removeNavigation()
         comment_layout_home.visibility = View.VISIBLE
     }
+
+    override fun onCommentReplyEdit(message: String) {
+        this.comment_edittext_comment_add.text = message.toEditable()
+    }
+
+    fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
 }
 
 

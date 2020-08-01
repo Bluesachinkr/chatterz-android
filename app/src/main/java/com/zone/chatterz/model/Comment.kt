@@ -6,16 +6,23 @@ data class Comment(
 
     @set:PropertyName("message")
     @get:PropertyName("message")
-    var message : String,
+    var message: String,
     @set:PropertyName("sender")
     @get:PropertyName("sender")
-    var sender : String,
+    var sender: String,
     @set:PropertyName("heart")
     @get:PropertyName("heart")
-    var heart : String,
+    var heart: Boolean,
     @set:PropertyName("likes")
     @get:PropertyName("likes")
-    var likes : Long
-){
-    constructor():this("","","",0)
+    var likes: Long,
+    @set:PropertyName("time")
+    @get:PropertyName("time")
+    var time: String,
+    @set:PropertyName("isReply")
+    @get:PropertyName("isReply")
+    var isReply: Boolean
+
+) {
+    constructor() : this("", "", false, 0, "", false)
 }

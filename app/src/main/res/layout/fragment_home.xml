@@ -11,7 +11,7 @@
         android:id="@+id/appBarlayout_home"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        android:background="@color/AppBackground"
+        android:background="@color/ElementsAppBackground"
         app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout

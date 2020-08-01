@@ -3,9 +3,9 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#F8F8F8</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="appColor">#00F0FF</color>
+    <color name="appColor">#00E5FF</color>
 
-    <color name="white">#ffffff</color>
+    <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
     <color name="colorLoginTheme">#0081CA</color>
@@ -15,8 +15,9 @@
     <color name="button_start_color">#00F0FF</color>
     <color name="colorLightBlue">#1FE4FF</color>
 
-    <color name="ElementsAppBackground">#292929</color>
-    <color name="AppBackground">#242424</color>
+    <color name="ElementsAppBackground">#1A2433</color>
+    <color name="AppBackground">#17202A</color>
 
-    <color name="GreyColorLittleHighlighted">#D1D1D1</color>
+    <color name="GreyColorLittleHighlighted">#4E586E</color>
+
 </resources>

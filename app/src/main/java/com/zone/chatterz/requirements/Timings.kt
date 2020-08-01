@@ -101,22 +101,22 @@ class Timings {
         }
 
         fun timeUploadPost(postTime: String): String {
-            val time = Timings.getCurrentTime()
+            val time = getCurrentTime()
             val yearPost = getYearOfTime(postTime).toString()
             val yearTime = getYearOfTime(time).toString()
             val builder = StringBuilder("")
             if (yearPost.equals(yearTime)) {
-                val MonthPost = getYearOfTime(postTime).toString()
-                val MonthTime = getYearOfTime(time).toString()
+                val MonthPost = getMonthOfTime(postTime).toString()
+                val MonthTime = getMonthOfTime(time).toString()
                 if (MonthPost.equals(MonthTime)) {
-                    val dayPost = getYearOfTime(postTime).toString()
-                    val dayTime = getYearOfTime(time).toString()
+                    val dayPost = getDateOfTime(postTime).toString()
+                    val dayTime = getDateOfTime(time).toString()
                     if (dayPost.equals(dayTime)) {
-                        val hourPost = getYearOfTime(postTime).toString()
-                        val hourTime = getYearOfTime(time).toString()
+                        val hourPost = getHourofTime(postTime).toString()
+                        val hourTime = getHourofTime(time).toString()
                         if (hourPost.equals(hourTime)) {
-                            val minutesPost = getYearOfTime(postTime).toString()
-                            val minutesTime = getYearOfTime(time).toString()
+                            val minutesPost = getMinutesofTime(postTime).toString()
+                            val minutesTime = getMinutesofTime(time).toString()
                             if (minutesPost.equals(minutesTime)) {
                                 builder.append("now")
                             } else {

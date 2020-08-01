@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +23,7 @@ import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
 import com.zone.chatterz.inferfaces.CommentControls
+import com.zone.chatterz.inferfaces.CommentReloadListener
 import com.zone.chatterz.model.Comment
 import com.zone.chatterz.model.Post
 import com.zone.chatterz.model.User
@@ -31,16 +33,15 @@ import java.io.File
 import java.util.*
 
 
-class HomeActivity(context: Context,listener : NavigationControls) : Fragment(), View.OnClickListener, CommentControls {
+class HomeActivity(context: Context,listener : NavigationControls) : Fragment(), View.OnClickListener, CommentControls, CommentReloadListener {
 
     private val mContext = context
 
     private lateinit var recyclerView_home: RecyclerView
     private lateinit var profile_image_home_frag: ImageView
     private lateinit var chat_btn_home_frag: ImageView
-
-    private lateinit var backArrowCommentSheet: ImageView
     private lateinit var down_comment_view: ImageView
+    private lateinit var comments_counts_bottom_sheet : TextView
     private lateinit var commentSheetRecyclerView: RecyclerView
     private lateinit var bottomSheetBeahavior: BottomSheetBehavior<View>
 
@@ -64,6 +65,7 @@ class HomeActivity(context: Context,listener : NavigationControls) : Fragment(),
 
         commentSheetRecyclerView = view.findViewById(R.id.comments_bottom_recycler)
         down_comment_view = view.findViewById(R.id.down_comment_view)
+        comments_counts_bottom_sheet = view.findViewById(R.id.comments_counts_bottom_sheet)
 
         //Setting on click listener of buttons in home fragment
         chat_btn_home_frag.setOnClickListener(this)
@@ -77,7 +79,7 @@ class HomeActivity(context: Context,listener : NavigationControls) : Fragment(),
         if (Build.VERSION.SDK_INT >= 11) {
             recyclerView_home.addOnLayoutChangeListener(View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
                 if (bottom < oldBottom) {
-                    recyclerView_home.postDelayed(Runnable {
+                    recyclerView_home.postDelayed({
                         recyclerView_home.adapter?.let {
                             recyclerView_home.smoothScrollToPosition(it.itemCount - 1)
                         }
@@ -245,13 +247,18 @@ class HomeActivity(context: Context,listener : NavigationControls) : Fragment(),
         val reference = Connection.commentsRef + File.separator+id
         FirebaseMethods.addValueEvent(reference,object : RequestCallback(){
             override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                val count = dataSnapshot.childrenCount
+                val builder = StringBuffer("(")
+                builder.append(count)
+                builder.append(")")
+                comments_counts_bottom_sheet.text = builder.toString()
                 for (data in dataSnapshot.children){
                     val comments = data.getValue(Comment::class.java)
                     comments?.let {
                         commentsList.add(comments)
                     }
                 }
-                val adapter = CommentAdapter(mContext,commentsList)
+                val adapter = CommentAdapter(mContext,commentsList,this@HomeActivity)
                 commentSheetRecyclerView.adapter = adapter
             }
         })
@@ -267,5 +274,11 @@ class HomeActivity(context: Context,listener : NavigationControls) : Fragment(),
         fun removeNavigation()
         fun openNavigation()
         fun openCommentEditext(id: String)
+        fun onCommentReplyEdit(message : String)
     }
+
+    override fun onReload(id: String, postId: String) {
+        TODO("Not yet implemented")
+    }
+
 }

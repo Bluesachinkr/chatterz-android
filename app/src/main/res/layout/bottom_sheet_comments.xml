@@ -8,7 +8,32 @@
     <RelativeLayout
         android:id="@+id/comment_app_bar_bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="?actionBarSize">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comments"
+                android:textSize="24sp"
+                android:layout_marginLeft="16dp"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/comments_counts_bottom_sheet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(24)"
+                android:textSize="20sp"
+                android:layout_marginLeft="4dp"
+                android:textColor="@color/GreyColorLittleHighlighted"/>
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/down_comment_view"
