@@ -22,7 +22,7 @@ import com.zone.chatterz.adapter.HomeAdapter
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
-import com.zone.chatterz.inferfaces.CommentControls
+import com.zone.chatterz.inferfaces.CommentControlListener
 import com.zone.chatterz.inferfaces.CommentReloadListener
 import com.zone.chatterz.model.Comment
 import com.zone.chatterz.model.Post
@@ -31,9 +31,11 @@ import com.zone.chatterz.requirements.Timings
 import com.zone.chatterz.singleChat.ChatActivity
 import java.io.File
 import java.util.*
+import kotlin.collections.HashMap
 
 
-class HomeActivity(context: Context,listener : NavigationControls) : Fragment(), View.OnClickListener, CommentControls, CommentReloadListener {
+class HomeActivity(context: Context, listener: NavigationControls) : Fragment(),
+    View.OnClickListener, CommentControlListener, CommentReloadListener {
 
     private val mContext = context
 
@@ -41,11 +43,15 @@ class HomeActivity(context: Context,listener : NavigationControls) : Fragment(),
     private lateinit var profile_image_home_frag: ImageView
     private lateinit var chat_btn_home_frag: ImageView
     private lateinit var down_comment_view: ImageView
-    private lateinit var comments_counts_bottom_sheet : TextView
+    private lateinit var comments_counts_bottom_sheet: TextView
     private lateinit var commentSheetRecyclerView: RecyclerView
     private lateinit var bottomSheetBeahavior: BottomSheetBehavior<View>
 
     private lateinit var reloadProgressBar_home: ProgressBar
+
+    companion object{
+        val commentsList = mutableListOf<Comment>()
+    }
 
     private lateinit var postList: MutableList<Post>
     private val listener = listener
@@ -98,11 +104,13 @@ class HomeActivity(context: Context,listener : NavigationControls) : Fragment(),
         bottomSheetBeahavior.peekHeight = maxHeight
         bottomSheetBeahavior.isHideable = true
         bottomSheetBeahavior.state = BottomSheetBehavior.STATE_HIDDEN
-        bottomSheetBeahavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback(){
+        bottomSheetBeahavior.setBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(p0: View, p1: Float) {
             }
+
             override fun onStateChanged(p0: View, p1: Int) {
-                if(p1 == BottomSheetBehavior.STATE_HIDDEN){
+                if (p1 == BottomSheetBehavior.STATE_HIDDEN) {
                     listener.openNavigation()
                 }
             }
@@ -243,23 +251,26 @@ class HomeActivity(context: Context,listener : NavigationControls) : Fragment(),
     }
 
     private fun openComments(id: String) {
-        val commentsList  = mutableListOf<Comment>()
-        val reference = Connection.commentsRef + File.separator+id
-        FirebaseMethods.addValueEvent(reference,object : RequestCallback(){
+        val commentsList = mutableListOf<Comment>()
+        val hashMap = hashMapOf<String,Boolean>()
+        val reference = Connection.commentsRef + File.separator + id
+        FirebaseMethods.addValueEvent(reference, object : RequestCallback() {
             override fun onDataChanged(dataSnapshot: DataSnapshot) {
                 val count = dataSnapshot.childrenCount
                 val builder = StringBuffer("(")
                 builder.append(count)
                 builder.append(")")
                 comments_counts_bottom_sheet.text = builder.toString()
-                for (data in dataSnapshot.children){
+                for (data in dataSnapshot.children) {
                     val comments = data.getValue(Comment::class.java)
                     comments?.let {
                         commentsList.add(comments)
+                        hashMap.put(comments.sender,false)
                     }
                 }
-                val adapter = CommentAdapter(mContext,commentsList,this@HomeActivity)
+                val adapter = CommentAdapter(mContext, commentsList, this@HomeActivity,hashMap)
                 commentSheetRecyclerView.adapter = adapter
+
             }
         })
     }
@@ -274,11 +285,42 @@ class HomeActivity(context: Context,listener : NavigationControls) : Fragment(),
         fun removeNavigation()
         fun openNavigation()
         fun openCommentEditext(id: String)
-        fun onCommentReplyEdit(message : String)
+        fun onCommentReplyEdit(message: String)
+        fun onCommentInfo(parent: String, to: String)
     }
 
-    override fun onReload(id: String, postId: String) {
-        TODO("Not yet implemented")
+    override fun onReload(id: String, postId: String,hashMap : HashMap<String,Boolean>,parent : String) {
+      //  val commentsList = mutableListOf<Comment>()
+        val reference = Connection.commentsRef + File.separator + postId
+        FirebaseMethods.addValueEvent(reference, object : RequestCallback() {
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                val count = dataSnapshot.childrenCount
+                val builder = StringBuffer("(")
+                builder.append(count)
+                builder.append(")")
+                comments_counts_bottom_sheet.text = builder.toString()
+                for (data in dataSnapshot.children) {
+                    val comments = data.getValue(Comment::class.java)
+                    comments?.let {
+                        commentsList.add(comments)
+                        if(hashMap[comments.sender]!!){
+                            val ref = Connection.commentReplyRef + File.separator + postId + File.separator + parent
+                            FirebaseMethods.addValueEvent(ref,object : RequestCallback(){
+                                override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                                    for (data in dataSnapshot.children){
+                                        val comment = data.getValue(Comment::class.java)
+                                        comment?.let {
+                                            commentsList.add(comment)
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                    }
+                }
+                val adapter = CommentAdapter(mContext, commentsList, this@HomeActivity,hashMap)
+                commentSheetRecyclerView.adapter = adapter
+            }
+        })
     }
-
 }

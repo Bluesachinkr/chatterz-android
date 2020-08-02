@@ -1,6 +1,6 @@
 package com.zone.chatterz.inferfaces
 
-interface CommentControls {
+interface CommentControlListener {
     fun openCommentLayout(id:String)
     fun closeCommentLayout()
 }

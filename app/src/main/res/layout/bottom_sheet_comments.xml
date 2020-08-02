@@ -49,6 +49,7 @@
         android:id="@+id/comments_bottom_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="72dp"
         android:layout_below="@id/comment_app_bar_bottom_sheet"
         android:scrollbars="none"/>
 

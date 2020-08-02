@@ -17,7 +17,7 @@ import com.zone.chatterz.R
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
-import com.zone.chatterz.inferfaces.CommentControls
+import com.zone.chatterz.inferfaces.CommentControlListener
 import com.zone.chatterz.mainFragment.HomeActivity
 import com.zone.chatterz.model.Post
 import com.zone.chatterz.model.User
@@ -27,13 +27,13 @@ import java.io.File
 class HomeAdapter(
     mContext: Context,
     postList: MutableList<Post>,
-    commentControls: CommentControls
+    commentControlListener: CommentControlListener
 ) :
     RecyclerView.Adapter<HomeAdapter.Viewholder>() {
 
     private val mContext = mContext
     private val postList = postList
-    private val commentControls = commentControls
+    private val commentControls = commentControlListener
 
     class Viewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val profileImage_post: CircularImageView = itemView.findViewById(R.id.profileImage_post)
@@ -110,7 +110,6 @@ class HomeAdapter(
             postId,
             object : RequestCallback() {
                 override fun onDataChanged(dataSnapshot: DataSnapshot) {
-                    if (dataSnapshot.exists()) {
                         val count = dataSnapshot.childrenCount
                         val zero: Long = 0
                         if (count == zero) {
@@ -119,7 +118,6 @@ class HomeAdapter(
                             holder.no_of_comments_post.text = count.toString()
                         }
                     }
-                }
             })
     }
 

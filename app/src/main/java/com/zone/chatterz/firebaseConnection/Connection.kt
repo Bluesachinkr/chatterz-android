@@ -18,5 +18,6 @@ open class Connection {
         val friendRef : String= "Friends"
         val likesRef : String = "Likes"
         val commentsRef : String = "Comments"
+        val commentReplyRef : String = "CommentsReply"
     }
 }

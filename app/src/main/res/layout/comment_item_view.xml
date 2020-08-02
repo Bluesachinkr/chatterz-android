@@ -6,6 +6,12 @@
     android:layout_margin="6dp"
     android:background="@color/AppBackground">
 
+    <View
+        android:id="@+id/space_comment"
+        android:layout_width="?actionBarSize"
+        android:layout_height="?actionBarSize"
+        />
+
     <RelativeLayout
         android:id="@+id/comment_pic_relative_layout"
         android:layout_width="?actionBarSize"
@@ -125,6 +131,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"/>
+
+        <LinearLayout
+            android:id="@+id/view_all_replies"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginLeft="24dp"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="48dp"
+                android:layout_height="1dp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View all replies"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+
+            <View
+                android:layout_width="48dp"
+                android:layout_height="1dp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/white"/>
+        </LinearLayout>
 
     </LinearLayout>
 
