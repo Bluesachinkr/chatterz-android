@@ -30,8 +30,10 @@ import com.zone.chatterz.settings.GeneralSettings
 import com.zone.chatterz.mainFragment.CreatePostActivity
 import com.zone.chatterz.mainFragment.HomeActivity
 import com.zone.chatterz.mainFragment.SearchActivity
+import com.zone.chatterz.model.Comment
 import com.zone.chatterz.requirements.Timings
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
 
 class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationControls {
 
@@ -45,10 +47,7 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
     private var commentReadTextOpen = false
     private var postId: String = ""
 
-    private var parentComment: String = ""
-    private var toReply: String = ""
-    private var isComment: Boolean = true
-
+    //add coment
     private lateinit var add_comment_post: ImageView
     private lateinit var comment_edittext_comment_add: EditText
     private lateinit var comment_layout_home: RelativeLayout
@@ -194,8 +193,6 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
         if (commentReadTextOpen) {
             openNavigation()
             closeCommentBox()
-            val fragment = supportFragmentManager.findFragmentByTag("HomeFragment") as HomeActivity
-            fragment.closeCommentLayout()
 
             if (is_changed) {
                 comment_viewholder_changed?.let {
@@ -228,6 +225,11 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
 
     private fun addComment() {
         val message: String = comment_edittext_comment_add.text.toString()
+        val databaseReference =
+            FirebaseDatabase.getInstance().getReference(Connection.commentsRef)
+                .child(postId)
+        val push = databaseReference.push()
+        val str = push.key.toString()
         val hashMap = hashMapOf<String, Any>()
         hashMap.put("postId", postId)
         hashMap.put("message", message)
@@ -235,25 +237,12 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
         hashMap.put("likes", 0)
         hashMap.put("heart", false)
         hashMap.put("time", Timings.getCurrentTime())
-        if (isComment) {
-            hashMap.put("isComment", true)
-            hashMap.put("toReply", "none")
-            hashMap.put("parent", "none")
-            hashMap.put("isReply", 0)
-            val databaseReference =
-                FirebaseDatabase.getInstance().getReference(Connection.commentsRef)
-                    .child(postId)
-            databaseReference.push().setValue(hashMap)
-        } else {
-            hashMap.put("isComment", false)
-            hashMap.put("toReply", toReply)
-            hashMap.put("parent", parentComment)
-            hashMap.put("isReply", 1)
-            val databaseReference =
-                FirebaseDatabase.getInstance().getReference(Connection.commentReplyRef)
-                    .child(postId).child(parentComment)
-            databaseReference.push().setValue(hashMap)
-        }
+        hashMap.put("isComment", true)
+        hashMap.put("toReply", "none")
+        hashMap.put("parent", "none")
+        hashMap.put("isReply", 0)
+        hashMap.put("commentId", str)
+        push.setValue(hashMap)
     }
 
     fun closeCommentBox() {
@@ -275,18 +264,6 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
         removeNavigation()
         comment_layout_home.visibility = View.VISIBLE
     }
-
-    override fun onCommentReplyEdit(message: String) {
-        this.comment_edittext_comment_add.text = message.toEditable()
-        this.isComment = false
-    }
-
-    override fun onCommentInfo(parent: String, to: String) {
-        this.parentComment = parent
-        this.toReply = to
-    }
-
-    fun String.toEditable(): Editable = Editable.Factory.getInstance().newEditable(this)
 }
 
 

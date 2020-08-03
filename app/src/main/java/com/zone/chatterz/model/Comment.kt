@@ -3,7 +3,9 @@ package com.zone.chatterz.model
 import com.google.firebase.database.PropertyName
 
 data class Comment(
-
+    @set:PropertyName("commentId")
+    @get:PropertyName("commentId")
+    var commentId: String,
     @set:PropertyName("postId")
     @get:PropertyName("postId")
     var postId: String,
@@ -22,9 +24,9 @@ data class Comment(
     @set:PropertyName("time")
     @get:PropertyName("time")
     var time: String,
-    @set:PropertyName("isReply")
-    @get:PropertyName("isReply")
-    var isReply: Long,
+    @set:PropertyName("replyCount")
+    @get:PropertyName("replyCount")
+    var replyCount: Long,
     @set:PropertyName("isComment")
     @get:PropertyName("isComment")
     var isComment : Boolean,
@@ -35,5 +37,5 @@ data class Comment(
     @get:PropertyName("parent")
     var parent : String
 ) {
-    constructor() : this("","", "", false, 0, "", 0,true,"","")
+    constructor() : this("","","", "", false, 0, "", 0,true,"","")
 }

@@ -1,6 +1,7 @@
 package com.zone.chatterz.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.mikhaellopez.circularimageview.CircularImageView
+import com.zone.chatterz.CommentActivity
 import com.zone.chatterz.MainActivity
 import com.zone.chatterz.R
 import com.zone.chatterz.firebaseConnection.Connection
@@ -19,6 +21,7 @@ import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
 import com.zone.chatterz.inferfaces.CommentControlListener
 import com.zone.chatterz.mainFragment.HomeActivity
+import com.zone.chatterz.model.Comment
 import com.zone.chatterz.model.Post
 import com.zone.chatterz.model.User
 import com.zone.chatterz.requirements.Timings
@@ -26,14 +29,12 @@ import java.io.File
 
 class HomeAdapter(
     mContext: Context,
-    postList: MutableList<Post>,
-    commentControlListener: CommentControlListener
+    postList: MutableList<Post>
 ) :
     RecyclerView.Adapter<HomeAdapter.Viewholder>() {
 
     private val mContext = mContext
     private val postList = postList
-    private val commentControls = commentControlListener
 
     class Viewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val profileImage_post: CircularImageView = itemView.findViewById(R.id.profileImage_post)
@@ -83,13 +84,16 @@ class HomeAdapter(
         }
 
         holder.comment_post.setOnClickListener {
-            commentControls.openCommentLayout(post.postId)
+            val intent = Intent(mContext, CommentActivity::class.java)
+            intent.putExtra("postId", post.postId)
+            mContext.startActivity(intent)
         }
 
         holder.comment_box_post.setOnClickListener {
             (mContext as HomeActivity.NavigationControls).removeNavigation()
             (mContext as HomeActivity.NavigationControls).openCommentEditext(post.postId)
             it.visibility = View.GONE
+            HomeActivity.commentItem = position
             MainActivity.is_changed = true
             MainActivity.comment_viewholder_changed = holder
         }
@@ -105,19 +109,21 @@ class HomeAdapter(
     }
 
     private fun commentsCount(postId: String, holder: Viewholder) {
+        var commentsCount: Long = 0
         FirebaseMethods.addValueEventDifferentChild(
             Connection.commentsRef,
             postId,
             object : RequestCallback() {
                 override fun onDataChanged(dataSnapshot: DataSnapshot) {
-                        val count = dataSnapshot.childrenCount
-                        val zero: Long = 0
-                        if (count == zero) {
-                            holder.no_of_comments_post.text = "0"
-                        } else {
-                            holder.no_of_comments_post.text = count.toString()
+                    commentsCount += dataSnapshot.childrenCount
+                    for (data in dataSnapshot.children) {
+                        val comment = data.getValue(Comment::class.java)
+                        comment?.let {
+                            commentsCount += comment.isReply
                         }
                     }
+                    holder.no_of_comments_post.text = commentsCount.toString()
+                }
             })
     }
 

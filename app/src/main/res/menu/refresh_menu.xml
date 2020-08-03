@@ -1,0 +1,7 @@
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@+id/chats_refresh"
+        app:showAsAction="never"
+        android:title="Refesh" />
+</menu>

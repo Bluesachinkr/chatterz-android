@@ -96,40 +96,6 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/comment_layout_home"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/add_comment_post"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
-                android:src="@drawable/ic_add_comment" />
-
-            <EditText
-                android:id="@+id/comment_edittext_add_comment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_margin="8dp"
-                android:layout_toLeftOf="@id/add_comment_post"
-                android:background="@color/white"
-                android:hint="Write a comment..."
-                android:padding="12dp"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-
-        </RelativeLayout>
-
     </RelativeLayout>
 
     <androidx.core.widget.NestedScrollView

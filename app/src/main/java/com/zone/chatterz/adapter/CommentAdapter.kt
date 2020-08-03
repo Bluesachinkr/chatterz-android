@@ -6,17 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.FirebaseDatabase
 import com.mikhaellopez.circularimageview.CircularImageView
-import com.zone.chatterz.MainActivity
 import com.zone.chatterz.R
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
+import com.zone.chatterz.inferfaces.CommentLayoutListener
 import com.zone.chatterz.inferfaces.CommentReloadListener
 import com.zone.chatterz.mainFragment.HomeActivity
 import com.zone.chatterz.model.Comment
@@ -28,6 +29,7 @@ class CommentAdapter(
     mContext: Context,
     commentList: MutableList<Comment>,
     mCommentReloadListener: CommentReloadListener
+    , mCommentLayoutListener: CommentLayoutListener
     , hashMap: HashMap<String, Boolean>
 ) :
     RecyclerView.Adapter<CommentAdapter.Viewholder>() {
@@ -35,7 +37,8 @@ class CommentAdapter(
     private val mContext = mContext
     private val commentList = commentList
     private val hashMap: HashMap<String, Boolean> = hashMap
-    private val mCommentReloadListener: CommentReloadListener = mCommentReloadListener
+    private val mCommentReloadListener = mCommentReloadListener
+    private val mCommentLayoutListener = mCommentLayoutListener
     private val COMMENT_TYPE = 1
     private val REPLY_TYPE = 2
 
@@ -49,14 +52,20 @@ class CommentAdapter(
         val comment_reply = itemView.findViewById<TextView>(R.id.comment_reply)
         val comment_heart = itemView.findViewById<ImageView>(R.id.comment_heart)
         val comment_view_all_replies = itemView.findViewById<LinearLayout>(R.id.view_all_replies)
+        val comment_view_all_replies_text =
+            itemView.findViewById<TextView>(R.id.view_all_replies_text)
+        val comment_heart_click_layout =
+            itemView.findViewById<RelativeLayout>(R.id.heart_layout_comment)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Viewholder {
-        if(viewType == COMMENT_TYPE){
-            val view = LayoutInflater.from(mContext).inflate(R.layout.comment_item_view, parent, false)
+        if (viewType == COMMENT_TYPE) {
+            val view =
+                LayoutInflater.from(mContext).inflate(R.layout.comment_item_view, parent, false)
             return Viewholder(view)
-        }else{
-            val view = LayoutInflater.from(mContext).inflate(R.layout.comment_reply_item_view, parent, false)
+        } else {
+            val view = LayoutInflater.from(mContext)
+                .inflate(R.layout.comment_reply_item_view, parent, false)
             return Viewholder(view)
         }
     }
@@ -68,7 +77,7 @@ class CommentAdapter(
     override fun onBindViewHolder(holder: Viewholder, position: Int) {
         val comment = commentList.get(position)
 
-        if (comment.isReply > 0) {
+        if (comment.replyCount > 0 && comment.isComment) {
             holder.comment_view_all_replies.visibility = View.VISIBLE
         }
         holder.comment_message.text = comment.message
@@ -95,32 +104,52 @@ class CommentAdapter(
             } else {
                 hashMap.put(comment.sender, false)
             }
-            mCommentReloadListener.onReload("", comment.postId, hashMap, comment.sender)
+            mCommentReloadListener.onReload("", comment.postId, hashMap, comment.commentId)
+        }
+
+        holder.comment_heart_click_layout.setOnClickListener {
+            val database = FirebaseDatabase.getInstance().getReference(Connection.commentsRef)
+                .child(comment.postId).child(comment.commentId).child("heart")
+            if (comment.heart) {
+                holder.comment_heart.setImageResource(R.drawable.ic_heart)
+                database.ref.setValue(false)
+            } else {
+                holder.comment_heart.setImageResource(R.drawable.ic_heart_filled)
+                database.ref.setValue(true)
+            }
         }
 
         holder.comment_reply.setOnClickListener {
             val builder = StringBuilder("@")
-            var key = ""
             if (comment.isComment) {
-                key = comment.sender
+                userMention(builder, comment.sender, comment)
             } else {
-                key = comment.parent
-            }
-
-            FirebaseMethods.singleValueEvent(Connection.userRef + File.separator + key,
-                object : RequestCallback() {
-                    override fun onDataChanged(dataSnapshot: DataSnapshot) {
-                        val data = dataSnapshot.getValue(User::class.java)
-                        data?.let {
-                            builder.append(data.username)
-                            builder.append(" ")
-                            (mContext as HomeActivity.NavigationControls).onCommentReplyEdit(builder.toString())
-                            (mContext as HomeActivity.NavigationControls).onCommentInfo(comment.sender,comment.sender)
+                FirebaseMethods.singleValueEvent(Connection.commentsRef + File.separator + comment.postId + File.separator + comment.parent,
+                    object : RequestCallback() {
+                        override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                            val com = dataSnapshot.getValue(Comment::class.java)
+                            com?.let {
+                                userMention(builder, com.sender, comment)
+                            }
                         }
-                    }
-                })
-            notifyDataSetChanged()
+                    })
+            }
         }
+    }
+
+    private fun userMention(builder: StringBuilder, key: String, comment: Comment) {
+        FirebaseMethods.singleValueEvent(Connection.userRef + File.separator + key,
+            object : RequestCallback() {
+                override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                    val data = dataSnapshot.getValue(User::class.java)
+                    data?.let {
+                        builder.append(data.username)
+                        builder.append(" ")
+                        mCommentLayoutListener.onCommentReplyEdit(builder.toString())
+                        mCommentLayoutListener.onReplyInfo(comment.commentId, comment.sender)
+                    }
+                }
+            })
     }
 
     private fun loadUserInfo(holder: Viewholder, sender: String) {
@@ -142,9 +171,9 @@ class CommentAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val comment = commentList[position]
-        if(comment.isComment){
+        if (comment.isComment) {
             return COMMENT_TYPE
-        }else{
+        } else {
             return REPLY_TYPE
         }
     }

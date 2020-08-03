@@ -20,7 +20,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="8dp"
         android:layout_marginLeft="4dp"
-        android:padding="4dp">
+        android:padding="6dp">
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/comment_pic"
@@ -60,6 +60,7 @@
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:textSize="18sp"
+                    android:fontFamily="@font/avenir_book"
                     android:textColor="@color/white"/>
 
                 <TextView
@@ -67,7 +68,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/avenir_book"
                     android:textColor="@color/GreyColorLittleHighlighted"/>
 
                 <TextView
@@ -77,6 +79,7 @@
                     android:layout_marginTop="12dp"
                     android:textColor="@color/white"
                     android:textSize="16sp"
+                    android:fontFamily="@font/avenir_book"
                     android:text=""/>
 
                 <LinearLayout
@@ -147,6 +150,7 @@
                 android:background="@color/white"/>
 
             <TextView
+                android:id="@+id/view_all_replies_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="View all replies"

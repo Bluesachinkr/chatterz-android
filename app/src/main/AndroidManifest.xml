@@ -19,7 +19,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".mainFragment.CreatePostActivity"></activity>
+        <activity android:name=".CommentActivity"></activity>
+        <activity android:name=".mainFragment.CreatePostActivity" />
         <activity android:name=".FollowersActivity" />
         <activity android:name=".settings.GeneralSettings" />
         <activity android:name=".SettingsActivity" />
@@ -43,8 +44,7 @@
         <service
             android:name=".services.PostUploadService"
             android:enabled="true"
-            android:exported="true">
-        </service>
+            android:exported="true"></service>
         <service
             android:name=".notification.FirebaseIdService"
             android:enabled="true"
