@@ -1,184 +1,143 @@
 package com.zone.chatterz.mainFragment
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.view.*
-import android.widget.EditText
-import android.widget.ImageView
+import android.util.DisplayMetrics
+import android.view.View
 import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.*
+import com.google.android.material.tabs.TabLayout
 import com.mikhaellopez.circularimageview.CircularImageView
-import com.zone.chatterz.adapter.FollowersAdapter
-import com.zone.chatterz.FollowersActivity
-import com.zone.chatterz.model.User
+import com.zone.chatterz.ArchiveFragment
+import com.zone.chatterz.PhotosPostProfileFragment
 import com.zone.chatterz.R
-import kotlin.collections.HashMap
+import com.zone.chatterz.VideosProfileFragment
 
-open class ProfileActivity : AppCompatActivity(), View.OnClickListener {
 
-    private lateinit var mAuth: FirebaseAuth
-    private lateinit var firebaseUser: FirebaseUser
-    private lateinit var databaseReference: DatabaseReference
-    private lateinit var profileImg: CircularImageView
-    private lateinit var userName: TextView
-    private lateinit var textStatus: TextView
-    private lateinit var toolbar: Toolbar
-    private lateinit var editStatusButton: ImageView
-    private lateinit var editStatusDone: ImageView
-    private lateinit var statusEditBox: EditText
-    private lateinit var RecyclerFollowers: RecyclerView
-    private lateinit var viewallFriends: TextView
-    private lateinit var mFrindList: MutableList<User>
+open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
+    TabLayout.OnTabSelectedListener {
+
+    private lateinit var profile_img_profile: CircularImageView
+    private lateinit var display_unique_name: TextView
+    private lateinit var about_me_profile: TextView
+
+    private lateinit var tab_layout_profile: TabLayout
+    private lateinit var viewPager_profile: ViewPager
+
+    private lateinit var viewPager_adapter: ViewPagerAdapter
+
+    private val fragments: MutableList<Fragment> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        mAuth = FirebaseAuth.getInstance()
+        this.profile_img_profile = findViewById(R.id.profile_img_profile)
+        this.display_unique_name = findViewById(R.id.display_unique_name)
+        this.about_me_profile = findViewById(R.id.about_me_profile)
 
-        profileImg = findViewById(R.id.ProfileImage)
-        userName = findViewById(R.id.userName_Profile)
-        textStatus = findViewById(R.id.userProfileTextStatus)
-        toolbar = findViewById(R.id.toolbarProfile)
-        editStatusButton = findViewById(R.id.statusEdit)
-        editStatusDone = findViewById(R.id.statusDone)
-        statusEditBox = findViewById(R.id.userStatusEditBox)
-        RecyclerFollowers = findViewById(R.id.Recycler_followers)
-        viewallFriends = findViewById(R.id.friendViewall)
+        this.tab_layout_profile = findViewById(
+            R.id.tab_layout_profile
+        )
+        this.viewPager_profile = findViewById(R.id.viewPager_profile)
 
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayShowTitleEnabled(false)
-
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        RecyclerFollowers.layoutManager = layoutManager
-        mFrindList = mutableListOf()
-        setFriendView(this)
-
-        loadProfileData()
-
-        viewallFriends.setOnClickListener(this)
-
+        setUpViewPager()
+        loadUserData()
     }
 
-    private fun setFriendView(c: Context) {
-        val list = mutableListOf<String>()
-        val firebaseUser = mAuth.currentUser!!
-        val databaseReference =
-            FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
+    private fun setUpViewPager() {
+        //load fragments
+        loadFragments()
+        //loading viewpager
+        this.viewPager_adapter = ViewPagerAdapter(supportFragmentManager, fragments)
+        viewPager_profile.adapter = this.viewPager_adapter
+        viewPager_profile.offscreenPageLimit = 2
 
-            override fun onDataChange(p0: DataSnapshot) {
-                for (data in p0.children) {
-                    val friendId = data.key!!
-                    list.add(friendId)
-                }
-                val databaseReference = FirebaseDatabase.getInstance().getReference("Users")
-                databaseReference.addValueEventListener(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {
-                    }
+        //set up custom height
+        setViewPagerCustomHeight()
 
-                    override fun onDataChange(p0: DataSnapshot) {
-                        for (data in p0.children) {
-                            val user = data.getValue(User::class.java)
-                            if (user != null && list.contains(user.id)) {
-                                mFrindList.add(user)
-                            }
-
-                        }
-                        val adapter = FollowersAdapter(c, mFrindList, "profile")
-                        RecyclerFollowers.adapter = adapter
-                    }
-
-                })
-            }
-
-        })
+        //set up viewpager on tab
+        tab_layout_profile.setupWithViewPager(viewPager_profile)
+        //set up icons
+        setUptabIcons()
+        //set up selected listener
+        tab_layout_profile.setOnTabSelectedListener(this)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater : MenuInflater = menuInflater
-        inflater!!.inflate(R.menu.profile_menu_appbar, menu)
-        return super.onCreateOptionsMenu(menu)
+    private fun setViewPagerCustomHeight() {
+        val layoutParams = viewPager_profile.layoutParams
+        val displayMetrics = DisplayMetrics()
+        val tabParams = tab_layout_profile.layoutParams
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val height = displayMetrics.heightPixels - tabParams.height - getStatusBarHeight()
+        layoutParams.height = height
+        viewPager_profile.layoutParams = layoutParams
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
-            else -> {
-                return super.onOptionsItemSelected(item)
-            }
-        }
-        return false
+
+    private fun setUptabIcons() {
+        tab_layout_profile.getTabAt(0)?.setIcon(R.drawable.ic_home_tab_profile)
+        tab_layout_profile.getTabAt(1)?.setIcon(R.drawable.ic_videos_tab_profile)
+        tab_layout_profile.getTabAt(2)?.setIcon(R.drawable.ic_archive_tab_profile)
     }
 
-    private fun loadProfileData() {
-        firebaseUser = mAuth.currentUser!!
-        databaseReference =
-            FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.uid)
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                val user = p0.getValue(User::class.java)
-                user?.let { setProfileLayout(user) }
-            }
-        })
+    private fun loadFragments() {
+        fragments.add(PhotosPostProfileFragment())
+        fragments.add(VideosProfileFragment())
+        fragments.add(ArchiveFragment())
     }
 
-    private fun setProfileBio(content: String) {
-        firebaseUser = mAuth.currentUser!!
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users")
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
+    private fun loadUserData() {
+        this.display_unique_name.text = com.zone.chatterz.data.UserData.username
 
-            override fun onDataChange(p0: DataSnapshot) {
-                for (data in p0.children) {
-                    val user = data.getValue(User::class.java)
-                    if (user != null) {
-                        if (user.id.equals(firebaseUser.uid)) {
-                            val hashMap = HashMap<String, Any>()
-                            hashMap.put("bio", content)
-                            data.ref.updateChildren(hashMap)
-                        }
-                    }
-                }
-            }
+        this.about_me_profile.text = com.zone.chatterz.data.UserData.bio
 
-        })
-
-    }
-
-    private fun setProfileLayout(user: User) {
-        userName.text = user.username
-        if (!textStatus.text.equals("null")) {
-            textStatus.text = user.bio
-        }
-
-        if (!user.imageUrl.equals("null")) {
-            Glide.with(this).load(user.imageUrl).into(profileImg)
-        } else {
-            profileImg.setImageResource(R.drawable.google_logo)
+        if (!com.zone.chatterz.data.UserData.imageUrl.isEmpty()) {
+            Glide.with(this).load(com.zone.chatterz.data.UserData.imageUrl)
+                .into(profile_img_profile)
         }
     }
 
     override fun onClick(v: View?) {
-        when (v) {
-            viewallFriends -> {
-                val intent = Intent(this, FollowersActivity::class.java)
-                startActivity(intent)
-            }
+        TODO("Not yet implemented")
+    }
+
+    class ViewPagerAdapter(fm: FragmentManager, fragments: MutableList<Fragment>) :
+        FragmentPagerAdapter(fm) {
+        private val fragments = fragments
+        override fun getItem(position: Int): Fragment {
+            return fragments[position]
+        }
+
+        override fun getCount(): Int {
+            return fragments.size
         }
     }
 
+    override fun onTabReselected(p0: TabLayout.Tab?) {
+
+    }
+
+    override fun onTabUnselected(p0: TabLayout.Tab?) {
+
+    }
+
+    override fun onTabSelected(p0: TabLayout.Tab?) {
+        p0?.let {
+            viewPager_profile.setCurrentItem(it.position)
+        }
+    }
+
+    open fun getStatusBarHeight(): Int {
+        var result = 0
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = resources.getDimensionPixelSize(resourceId)
+        }
+        return result
+    }
 }

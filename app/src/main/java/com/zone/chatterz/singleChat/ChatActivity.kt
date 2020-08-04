@@ -1,22 +1,19 @@
 package com.zone.chatterz.singleChat
 
-import android.graphics.Color
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.ProgressBar
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.iid.FirebaseInstanceId
-import com.zone.chatterz.adapter.FriendsAdapter
 import com.zone.chatterz.adapter.ChatRecentAdapter
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
@@ -30,9 +27,7 @@ import com.zone.chatterz.adapter.OnlineFriendAdapter
 open class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var message_recyclerView: RecyclerView
-    private lateinit var recentProgressBar: ProgressBar
     private lateinit var databaseReference: DatabaseReference
-    private lateinit var firebaseUser: FirebaseUser
     private lateinit var mUsers: MutableList<User>
     private lateinit var chatRecentAdapter: ChatRecentAdapter
     private lateinit var usersList: MutableList<String>
@@ -46,19 +41,25 @@ open class ChatActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mOnlineUser: MutableList<User>
     private lateinit var onlineAdapter : OnlineFriendAdapter
 
+    private lateinit var mRefreshLayoutChat : SwipeRefreshLayout
+    private lateinit var mSwipeRefreshListener : SwipeRefreshLayout.OnRefreshListener
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        recentProgressBar = findViewById(R.id.recentProgressBar)
         message_recyclerView = findViewById(R.id.recent_RecyclerView)
         content = findViewById(R.id.contentOnline)
         onlineBtn = findViewById(R.id.onlinestatus)
         back_chat = findViewById(R.id.back_chat)
 
-        firebaseUser = FirebaseAuth.getInstance().currentUser!!
+        mRefreshLayoutChat = findViewById(R.id.swipe_refresh_recent_chats)
+        mSwipeRefreshListener = SwipeRefreshLayout.OnRefreshListener {
+            readRecentChats()
+        }
+        mRefreshLayoutChat.setOnRefreshListener(mSwipeRefreshListener)
 
-      /*  onlineRecyclerView = headerView.findViewById(R.id.onlineRecyclerView)*/
+        onlineRecyclerView = findViewById(R.id.onlineRecyclerView)
 
        /* setDrawerHalf()*/
 
@@ -80,32 +81,49 @@ open class ChatActivity : AppCompatActivity(), View.OnClickListener {
             startOnlineView()
 
         }*/
+        mSwipeRefreshListener.onRefresh()
         back_chat.setOnClickListener(this)
-        readRecentChats()
+        /*readRecentChats()*/
+
+        readFriendsOnline()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+           R.id.chats_refresh->{
+               mRefreshLayoutChat.isRefreshing = true
+               readRecentChats()
+               return true
+           }
+            else->{
+                return super.onOptionsItemSelected(item)
+            }
+        }
     }
 
     private fun readRecentChats() {
         this.usersList = mutableListOf()
+        message_recyclerView.adapter = null
         message_recyclerView.setHasFixedSize(true)
         val linearLayoutManager = LinearLayoutManager(this)
         message_recyclerView.layoutManager = linearLayoutManager
         FirebaseMethods.addValueEventChild(Connection.userChats, object : RequestCallback() {
             override fun onDataChanged(dataSnapshot: DataSnapshot) {
-                recentProgressBar.visibility = View.VISIBLE
                 usersList.clear()
                 for (dataSet in dataSnapshot.children) {
                     val chat = dataSet.getValue(Chat::class.java)
                     if (chat != null) {
-                        if (chat.sender.equals(firebaseUser.uid)) {
+                        if (chat.sender.equals(Connection.user)) {
                             usersList.add(chat.receiver)
                         }
-                        if (chat.receiver.equals(firebaseUser.uid)) {
+                        if (chat.receiver.equals(Connection.user)) {
                             usersList.add(chat.sender)
                         }
                     }
                 }
                 readUser()
                 FirebaseInstanceId.getInstance().getToken()?.let { updateToken(it) }
+                mRefreshLayoutChat.isRefreshing = false
             }
         })
     }
@@ -148,8 +166,6 @@ open class ChatActivity : AppCompatActivity(), View.OnClickListener {
                     chatRecentAdapter = ChatRecentAdapter(getContext, mUsers)
                     message_recyclerView.adapter = chatRecentAdapter
                 }
-                recentProgressBar.visibility = View.GONE
-                message_recyclerView.visibility = View.VISIBLE
             }
         })
     }
@@ -194,14 +210,10 @@ open class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
      }*/
 
-    override fun onBackPressed() {
-        finish();
-    }
-
     override fun onClick(v: View?) {
         when (v) {
             back_chat -> {
-                onBackPressed()
+                finish()
             }
             else -> {
                 return

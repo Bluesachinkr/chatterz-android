@@ -119,7 +119,7 @@ class HomeAdapter(
                     for (data in dataSnapshot.children) {
                         val comment = data.getValue(Comment::class.java)
                         comment?.let {
-                            commentsCount += comment.isReply
+                            commentsCount += comment.replyCount
                         }
                     }
                     holder.no_of_comments_post.text = commentsCount.toString()

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import com.zone.chatterz.R
+import com.zone.chatterz.data.UserData
 
 class StartActivity : AppCompatActivity() {
 
@@ -14,6 +15,7 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
 
+        UserData.onUserInfo()
         Handler().postDelayed({
 
             var intent = Intent(this, WelcomeActivity::class.java)
