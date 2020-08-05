@@ -14,6 +14,7 @@
         android:orientation="horizontal">
 
         <RelativeLayout
+            android:id="@+id/followers_btn_profile"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_margin="8dp"
@@ -49,6 +50,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/following_btn_profile"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_margin="8dp"

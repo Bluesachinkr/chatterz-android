@@ -7,10 +7,12 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.iceteck.silicompressorr.SiliCompressor
+import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
 import com.zone.chatterz.model.Post
 import java.io.ByteArrayOutputStream
+import java.io.File
 
 
 class PostUploadService : IntentService(null) {
@@ -28,38 +30,22 @@ class PostUploadService : IntentService(null) {
             hashMap.put("postDescription", description)
             hashMap.put("postTime", time)
             hashMap.put("postImage", "null")
-            hashMap.put("postId", "null")
 
             val databaseReference = FirebaseDatabase.getInstance().reference
-            databaseReference.child(com.zone.chatterz.firebaseConnection.Connection.postRef)
-                .child(com.zone.chatterz.firebaseConnection.Connection.user)
-                .push()
-                .setValue(hashMap)
+            val push =
+                databaseReference.child(com.zone.chatterz.firebaseConnection.Connection.postRef)
+                    .push()
+            val str = push.key.toString()
+            hashMap.put("postId",str)
+            push.setValue(hashMap)
 
-            FirebaseMethods.addValueEventChild(com.zone.chatterz.firebaseConnection.Connection.postRef,
-                object : RequestCallback() {
-                    override fun onDataChanged(dataSnapshot: DataSnapshot) {
-                        var postId: String = ""
-                        for (data in dataSnapshot.children) {
-                            val post = data.getValue(Post::class.java)
-                            if (post != null) {
-                                if (post.postTime.equals(time) && post.postDescription.equals(
-                                        description
-                                    )
-                                ) {
-                                    postId= data.ref.key.toString()
-                                    hashMap.clear()
-                                    hashMap.put("postId", postId)
-                                    data.ref.updateChildren(hashMap)
-                                    resultImageArray?.let {
-                                        uploadImage(postId,data,it)
-                                    }
-                                    break
-                                }
-                            }
-                        }
+            FirebaseMethods.singleValueEvent(Connection.postRef+ File.separator+str,object : RequestCallback(){
+                override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                    resultImageArray?.let {
+                        uploadImage(str,dataSnapshot,it)
                     }
-                })
+                }
+            })
         }
     }
 

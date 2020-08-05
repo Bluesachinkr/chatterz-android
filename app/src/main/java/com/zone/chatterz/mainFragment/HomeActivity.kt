@@ -49,9 +49,9 @@ class HomeActivity(context: Context, listener: NavigationControls) : Fragment(),
     companion object {
         val commentsList = mutableListOf<Comment>()
         var commentItem = 0
+        val postList: MutableList<Post> = mutableListOf()
     }
 
-    private lateinit var postList: MutableList<Post>
     private val listener = listener
 
     override fun onCreateView(
@@ -117,7 +117,7 @@ class HomeActivity(context: Context, listener: NavigationControls) : Fragment(),
     private fun reloadPosts() {
         reloadProgressBar_home.visibility = View.VISIBLE
         val friendsList: MutableList<String> = mutableListOf()
-        FirebaseMethods.addValueEventChild(Connection.friendRef, object : RequestCallback() {
+        FirebaseMethods.addValueEventChild(Connection.followingRef, object : RequestCallback() {
             override fun onDataChanged(dataSnapshot: DataSnapshot) {
                 for (data in dataSnapshot.children) {
                     val key = data.key.toString()
@@ -133,27 +133,27 @@ class HomeActivity(context: Context, listener: NavigationControls) : Fragment(),
     */
 
     private fun getPostList(friendsList: MutableList<String>) {
-        this.postList = mutableListOf()
         friendsList.add(Connection.user)
-        for (friend in friendsList) {
-            FirebaseMethods.singleValueEventChild(Connection.postRef, object : RequestCallback() {
-                override fun onDataChanged(dataSnapshot: DataSnapshot) {
-                    for (data in dataSnapshot.children) {
-                        val post = data.getValue(Post::class.java)
-                        post?.let {
+        FirebaseMethods.addValueEvent(Connection.postRef, object : RequestCallback() {
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                postList.clear()
+                for (data in dataSnapshot.children) {
+                    val post = data.getValue(Post::class.java)
+                    post?.let {
+                        if (friendsList.contains(post.postOwner)) {
                             postList.add(post)
                         }
                     }
-                    sort(postList)
-                    val linearLayout = LinearLayoutManager(mContext)
-                    recyclerView_home.layoutManager = linearLayout
-                    val adapter = HomeAdapter(mContext, postList)
-                    recyclerView_home.adapter = adapter
-                    recyclerView_home.visibility = View.VISIBLE
-                    reloadProgressBar_home.visibility = View.GONE
                 }
-            })
-        }
+                sort(postList)
+                val linearLayout = LinearLayoutManager(mContext)
+                recyclerView_home.layoutManager = linearLayout
+                val adapter = HomeAdapter(mContext, postList)
+                recyclerView_home.adapter = adapter
+                recyclerView_home.visibility = View.VISIBLE
+                reloadProgressBar_home.visibility = View.GONE
+            }
+        })
     }
 
     private fun sort(postList: MutableList<Post>) {

@@ -104,7 +104,7 @@
             android:layout_marginLeft="24dp"
             android:layout_marginRight="24dp"
             app:tabIconTint="@color/appColor"
-            app:tabIndicatorColor="@color/white">
+            app:tabIndicatorColor="@color/colorLoginTheme">
         </com.google.android.material.tabs.TabLayout>
 
         <androidx.viewpager.widget.ViewPager

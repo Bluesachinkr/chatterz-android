@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_marginLeft="16dp"
+    android:layout_width="match_parent"
+    android:background="@color/AppBackground"
     android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/friendImageLayout"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="8dp"
+        android:layout_width="?actionBarSize"
+        android:layout_height="?actionBarSize"
+        android:layout_margin="16dp"
         android:layout_gravity="center_vertical">
 
         <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/friendsProfileImg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/followers_following_profile_img"
+            android:layout_width="?actionBarSize"
+            android:layout_height="?actionBarSize"
             app:civ_border_color="@color/white"
             app:civ_border_width="2px"
             android:src="@drawable/google_logo"
@@ -23,7 +23,7 @@
             android:scaleType="centerCrop"/>
 
         <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/friendOnlineStatus"
+            android:id="@+id/followers_following_online_status"
             android:layout_width="8dp"
             android:layout_height="8dp"
             android:background="#17FF00"
@@ -36,16 +36,99 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/friendProfileName"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/friendImageLayout"
-        android:text="Sachin kr"
-        android:textColor="#000000"
+        android:layout_toRightOf="@id/friendImageLayout"
+        android:layout_marginLeft="6dp"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/followers_following_unique_display_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="schn_kr"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/avenir_book"
+            android:textColor="@color/white"
+            android:layout_toRightOf="@id/friendImageLayout"
+            android:maxLines="1"
+            />
+
+        <TextView
+            android:id="@+id/followers_following_profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sachin Kumar"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/avenir_book"
+            android:textColor="@color/colorLightGrey"
+            android:layout_toRightOf="@id/friendImageLayout"
+            android:maxLines="1"
+            />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/follow_button_follower_following_screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:visibility="visible"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="14dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/background_buttons">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Follow"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:textSize="14sp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/following_button_follower_following_screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
         android:visibility="gone"
-        android:layout_centerHorizontal="true"
-        android:maxLines="1"
-        />
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="12dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/background_buttons">
+
+        <TextView
+            android:id="@+id/text_following"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Following"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:textSize="14sp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/not_seen_icon"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="12dp"
+            android:layout_toRightOf="@id/text_following"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

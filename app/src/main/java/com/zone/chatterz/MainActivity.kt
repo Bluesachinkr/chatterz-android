@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
 import com.zone.chatterz.adapter.HomeAdapter
+import com.zone.chatterz.data.UserData
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
@@ -60,6 +61,8 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        UserData.onUserInfo()
 
         this.mAuth = FirebaseAuth.getInstance()
         this.drawer = findViewById(R.id.drawerLayout)

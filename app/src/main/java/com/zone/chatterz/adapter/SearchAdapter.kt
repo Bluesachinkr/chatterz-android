@@ -43,7 +43,7 @@ class SearchAdapter(context: Context, mlist: List<User>) :
     override fun onBindViewHolder(holder: Viewholder, position: Int) {
         val user = mlist.get(position)
 
-        FirebaseMethods.addValueEventChild(Connection.friendRef,object : RequestCallback(){
+        FirebaseMethods.addValueEventChild(Connection.friendRef, object : RequestCallback() {
             override fun onDataChanged(dataSnapshot: DataSnapshot) {
                 mFriends.clear()
                 for (data in dataSnapshot.children) {
@@ -67,13 +67,13 @@ class SearchAdapter(context: Context, mlist: List<User>) :
         }
 
         holder.friendButton.setOnClickListener {
-            setFollow(user.id,holder)
-            setVisibility(holder.friendButton,holder.unfriendButton)
+            setFollow(user.id, holder)
+            setVisibility(holder.friendButton, holder.unfriendButton)
         }
 
         holder.unfriendButton.setOnClickListener {
-            removeFollow(user.id,holder)
-            setVisibility(holder.unfriendButton,holder.friendButton)
+            removeFollow(user.id, holder)
+            setVisibility(holder.unfriendButton, holder.friendButton)
         }
     }
 
@@ -83,29 +83,29 @@ class SearchAdapter(context: Context, mlist: List<User>) :
         val userName: TextView = itemView.findViewById(R.id.search_userName)
         val profileImg: CircularImageView = itemView.findViewById(R.id.search_profileImg)
         val unfriendButton: LinearLayout = itemView.findViewById(R.id.unfriendButton)
-        val search_mutualFriend_count : TextView = itemView.findViewById(R.id.search_mutualFriend_count)
+        val search_mutualFriend_count: TextView =
+            itemView.findViewById(R.id.search_mutualFriend_count)
     }
 
     private fun setFollow(userId: String, holder: Viewholder) {
-        val databaseReference =
-            FirebaseDatabase.getInstance().getReference("Friends").child(firebaseUser.uid)
-        if (!mFriends.contains(userId)) {
-            databaseReference.child(userId).setValue(true)
-            setVisibility(holder.friendButton, holder.unfriendButton)
-        }
+        val databaseReference = FirebaseDatabase.getInstance().getReference(Connection.followingRef)
+            .child(firebaseUser.uid)
+        databaseReference.child(userId).setValue(true)
+        val followerRef =
+            FirebaseDatabase.getInstance().getReference(Connection.followersRef).child(userId)
+        followerRef.child(Connection.user).setValue(true)
+        setVisibility(holder.friendButton, holder.unfriendButton)
     }
 
     private fun removeFollow(userId: String, holder: Viewholder) {
-        FirebaseMethods.addValueEventChild(Connection.friendRef,object : RequestCallback(){
-            override fun onDataChanged(dataSnapshot: DataSnapshot) {
-                for (data in dataSnapshot.children) {
-                    if (data.key.equals(userId)) {
-                        data.ref.removeValue()
-                        setVisibility(holder.unfriendButton, holder.friendButton)
-                    }
-                }
-            }
-        })
+        val databaseReference =
+            FirebaseDatabase.getInstance().getReference(Connection.followingRef)
+                .child(firebaseUser.uid)
+        databaseReference.child(userId).removeValue()
+        val followerRef =
+            FirebaseDatabase.getInstance().getReference(Connection.followersRef).child(userId)
+        followerRef.child(Connection.user).removeValue()
+        setVisibility(holder.unfriendButton, holder.friendButton)
     }
 
     private fun setVisibility(l1: LinearLayout, l2: LinearLayout) {

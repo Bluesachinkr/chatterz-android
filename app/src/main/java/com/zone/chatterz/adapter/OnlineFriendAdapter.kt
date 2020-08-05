@@ -33,15 +33,15 @@ class OnlineFriendAdapter(mContext : Context,onlineList : MutableList<User>) : R
         } else {
             Glide.with(mContext).load(user.imageUrl).into(holder.friendProfieImg)
         }
-        if(user.status.equals("online")){
+       /* if(user.status.equals("online")){
             holder.friendOnlineStatus.visibility = View.VISIBLE
         }else{
             holder.friendOnlineStatus.visibility = View.GONE
-        }
+        }*/
     }
 
     class Viewholder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val friendProfieImg = itemView.findViewById<CircularImageView>(R.id.friendsProfileImg)
-        val friendOnlineStatus = itemView.findViewById<CircularImageView>(R.id.friendOnlineStatus)
+        //val friendOnlineStatus = itemView.findViewById<CircularImageView>(R.id.friendOnlineStatus)
     }
 }

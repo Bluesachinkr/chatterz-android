@@ -60,8 +60,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="16dp"
                                 android:scaleType="centerInside"
-                                android:src="@drawable/google_logo"
-                                app:civ_border_color="@color/black"
+                                app:civ_border_color="#FFFFFF"
                                 app:civ_border_width="4dp" />
 
                             <LinearLayout

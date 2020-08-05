@@ -1,8 +1,10 @@
 package com.zone.chatterz.mainFragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -11,11 +13,13 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.database.DataSnapshot
 import com.mikhaellopez.circularimageview.CircularImageView
-import com.zone.chatterz.ArchiveFragment
-import com.zone.chatterz.PhotosPostProfileFragment
-import com.zone.chatterz.R
-import com.zone.chatterz.VideosProfileFragment
+import com.zone.chatterz.*
+import com.zone.chatterz.firebaseConnection.Connection
+import com.zone.chatterz.firebaseConnection.FirebaseMethods
+import com.zone.chatterz.firebaseConnection.RequestCallback
+import java.io.File
 
 
 open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
@@ -24,6 +28,11 @@ open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
     private lateinit var profile_img_profile: CircularImageView
     private lateinit var display_unique_name: TextView
     private lateinit var about_me_profile: TextView
+
+    private lateinit var following_btn_profile : RelativeLayout
+    private lateinit var followers_btn_profile : RelativeLayout
+    private lateinit var followers_count : TextView
+    private lateinit var following_count : TextView
 
     private lateinit var tab_layout_profile: TabLayout
     private lateinit var viewPager_profile: ViewPager
@@ -40,6 +49,11 @@ open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
         this.display_unique_name = findViewById(R.id.display_unique_name)
         this.about_me_profile = findViewById(R.id.about_me_profile)
 
+        this.followers_btn_profile = findViewById(R.id.followers_btn_profile)
+        this.following_btn_profile = findViewById(R.id.following_btn_profile)
+        this.followers_count = findViewById(R.id.followers_count)
+        this.following_count = findViewById(R.id.following_count)
+
         this.tab_layout_profile = findViewById(
             R.id.tab_layout_profile
         )
@@ -47,6 +61,9 @@ open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
 
         setUpViewPager()
         loadUserData()
+
+        this.following_btn_profile.setOnClickListener(this)
+        this.followers_btn_profile.setOnClickListener(this)
     }
 
     private fun setUpViewPager() {
@@ -86,7 +103,9 @@ open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     private fun loadFragments() {
-        fragments.add(PhotosPostProfileFragment())
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        fragments.add(PhotosPostProfileFragment(this,displayMetrics.widthPixels/3))
         fragments.add(VideosProfileFragment())
         fragments.add(ArchiveFragment())
     }
@@ -100,10 +119,37 @@ open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
             Glide.with(this).load(com.zone.chatterz.data.UserData.imageUrl)
                 .into(profile_img_profile)
         }
+
+        FirebaseMethods.singleValueEvent(Connection.followersRef+ File.separator+Connection.user,object : RequestCallback(){
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                val count = dataSnapshot.childrenCount.toString()
+                followers_count.text = count
+            }
+        })
+        FirebaseMethods.singleValueEvent(Connection.followingRef+ File.separator+Connection.user,object : RequestCallback(){
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                val count = dataSnapshot.childrenCount.toString()
+                following_count.text = count
+            }
+        })
     }
 
     override fun onClick(v: View?) {
-        TODO("Not yet implemented")
+        when(v){
+            followers_btn_profile->{
+                val intent = Intent(this,FollowingFollowersActivity::class.java)
+                intent.putExtra("from","followers")
+                startActivity(intent)
+            }
+            following_btn_profile->{
+                val intent = Intent(this,FollowingFollowersActivity::class.java)
+                intent.putExtra("from","following")
+                startActivity(intent)
+            }
+            else->{
+                return
+            }
+        }
     }
 
     class ViewPagerAdapter(fm: FragmentManager, fragments: MutableList<Fragment>) :
@@ -132,7 +178,8 @@ open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
         }
     }
 
-    open fun getStatusBarHeight(): Int {
+
+    private fun getStatusBarHeight(): Int {
         var result = 0
         val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
         if (resourceId > 0) {
