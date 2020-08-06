@@ -13,7 +13,6 @@ import com.zone.chatterz.adapter.FollowersFollowingAdapter
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
-import com.zone.chatterz.model.User
 import java.io.File
 
 

@@ -9,6 +9,9 @@ data class User (
     @set:PropertyName("username")
     @get:PropertyName("username")
     var username: String,
+    @set:PropertyName("displayName")
+    @get:PropertyName("displayName")
+    var displayName: String,
     @set:PropertyName("imageUrl")
     @get:PropertyName("imageUrl")
     var imageUrl: String,
@@ -19,5 +22,5 @@ data class User (
     var status : String
 
 ){
-    constructor():this("","","","","","")
+    constructor():this("","","","","","","")
 }

@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -27,14 +26,12 @@ import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
 import com.zone.chatterz.model.User
 import com.zone.chatterz.preActivities.WelcomeActivity
-import com.zone.chatterz.settings.GeneralSettings
+import com.zone.chatterz.settings.EditProfileActivity
 import com.zone.chatterz.mainFragment.CreatePostActivity
 import com.zone.chatterz.mainFragment.HomeActivity
 import com.zone.chatterz.mainFragment.SearchActivity
-import com.zone.chatterz.model.Comment
 import com.zone.chatterz.requirements.Timings
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
 
 class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationControls {
 
@@ -138,7 +135,7 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
                     return@setNavigationItemSelectedListener true
                 }
                 R.id.settings_icon -> {
-                    val intent = Intent(this, GeneralSettings::class.java)
+                    val intent = Intent(this, EditProfileActivity::class.java)
                     startActivity(intent)
                     return@setNavigationItemSelectedListener true
                 }

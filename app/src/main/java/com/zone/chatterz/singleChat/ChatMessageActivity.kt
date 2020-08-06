@@ -1,6 +1,5 @@
 package com.zone.chatterz.singleChat
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -22,6 +21,7 @@ import com.zone.chatterz.notification.*
 import com.zone.chatterz.R
 import kotlinx.android.synthetic.main.activity_chatmessage.*
 import retrofit2.Call
+import java.io.File
 
 class ChatMessageActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -91,7 +91,7 @@ class ChatMessageActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun readAllChats() {
-        FirebaseMethods.addValueEventChild(Connection.userRef, object : RequestCallback() {
+        FirebaseMethods.singleValueEvent(Connection.userRef+ File.separator+userId, object : RequestCallback() {
             override fun onDataChanged(dataSnapshot: DataSnapshot) {
                 setProfileNameAndImgAppBar(dataSnapshot)
                 readMessage()
@@ -109,11 +109,11 @@ class ChatMessageActivity : AppCompatActivity(), View.OnClickListener {
 
         //Clear Edittext and make ready to take next chat
         editextMessage.setText("")
-        databaseReference.child("Chats").child(sender).push().setValue(hashMap)
-        databaseReference.child("Chats").child(reciever).push().setValue(hashMap)
+        databaseReference.child("Chats").child(sender).child(reciever).push().setValue(hashMap)
+        databaseReference.child("Chats").child(reciever).child(sender).push().setValue(hashMap)
 
         val mes = message
-        FirebaseMethods.addValueEventChild(Connection.userRef, object : RequestCallback() {
+        FirebaseMethods.singleValueEvent(Connection.userRef+File.separator+userId, object : RequestCallback() {
             override fun onDataChanged(dataSnapshot: DataSnapshot) {
                 val user = dataSnapshot.getValue(User::class.java)
                 if (user != null) {
@@ -175,7 +175,8 @@ class ChatMessageActivity : AppCompatActivity(), View.OnClickListener {
     private fun readMessage() {
 
         mChat = mutableListOf()
-        FirebaseMethods.addValueEventChild(Connection.userChats, object : RequestCallback() {
+        val ref = Connection.userChats+File.separator+Connection.user+File.separator+userId
+        FirebaseMethods.addValueEvent(ref, object : RequestCallback() {
             override fun onDataChanged(dataSnapshot: DataSnapshot) {
                 mChat.clear()
                 for (dataset in dataSnapshot.children) {
@@ -184,7 +185,7 @@ class ChatMessageActivity : AppCompatActivity(), View.OnClickListener {
                         mChat.add(chat)
                     }
                 }
-                val chatsAdapter = ChatsAdapter(applicationContext, mChat)
+                val chatsAdapter = ChatsAdapter(this@ChatMessageActivity, mChat)
                 chatsRecyclerview.adapter = chatsAdapter
             }
         })
@@ -198,7 +199,7 @@ class ChatMessageActivity : AppCompatActivity(), View.OnClickListener {
             if (user.imageUrl.equals("null")) {
                 profileImg_chatBar.setImageResource(R.drawable.google_logo)
             } else {
-                Glide.with(applicationContext).load(user.imageUrl).into(profileImg_chatBar)
+                Glide.with(this).load(user.imageUrl).into(profileImg_chatBar)
             }
             userNameChatBox.text = user.username
             lastOnline.text = user.status

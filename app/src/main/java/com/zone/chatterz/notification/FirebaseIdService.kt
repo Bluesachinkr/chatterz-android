@@ -1,6 +1,7 @@
 package com.zone.chatterz.notification
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.FirebaseInstanceIdService
@@ -12,21 +13,18 @@ class FirebaseIdService : FirebaseInstanceIdService() {
 
         val firebaseUser = FirebaseAuth.getInstance().currentUser!!
 
-        val token: String? = FirebaseInstanceId.getInstance().getToken()
-
-        if (firebaseUser != null && token != null) {
-            updateToken(token)
+        firebaseUser?.let {
+            val token: String? = FirebaseInstanceId.getInstance().getToken()
+            token?.let {
+                updateToken(it, firebaseUser)
+            }
         }
     }
 
-    private fun updateToken(token: String) {
-
-        val firebaseUser = FirebaseAuth.getInstance().currentUser!!
-
+    private fun updateToken(token: String, firebaseUser: FirebaseUser) {
         val reference = FirebaseDatabase.getInstance().getReference("Tokens")
         val refreshToken = Token(token)
         reference.child(firebaseUser.uid).setValue(refreshToken)
-
     }
 
 }

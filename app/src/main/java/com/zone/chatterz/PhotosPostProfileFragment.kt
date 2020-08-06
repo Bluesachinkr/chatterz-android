@@ -20,11 +20,10 @@ import com.zone.chatterz.model.Post
 import java.io.File
 import java.util.*
 
-class PhotosPostProfileFragment(mContext : Context,mWidth : Int) : Fragment() {
+class PhotosPostProfileFragment(mContext : Context,user: String) : Fragment() {
 
     private val mContext = mContext
-    private val mWidth = mWidth
-
+    private val user = user
     private lateinit var grid_view_photos_post_profile : RecyclerView
     private val mPostList = mutableListOf<Post>()
     private lateinit var imageAdapter: ImageAdapter
@@ -54,7 +53,7 @@ class PhotosPostProfileFragment(mContext : Context,mWidth : Int) : Fragment() {
                 for (data in dataSnapshot.children){
                     val post = data.getValue(Post::class.java)
                     post?.let {
-                        if(post.postOwner == Connection.user){
+                        if(post.postOwner == user){
                             mPostList.add(post)
                         }
                     }

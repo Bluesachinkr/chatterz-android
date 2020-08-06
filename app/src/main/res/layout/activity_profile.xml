@@ -60,6 +60,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="16dp"
                                 android:scaleType="centerInside"
+                                android:src="@drawable/google_logo"
                                 app:civ_border_color="#FFFFFF"
                                 app:civ_border_width="4dp" />
 
@@ -91,6 +92,7 @@
                             android:src="@drawable/back_arrow" />
 
                         <TextView
+                            android:id="@+id/display_unique_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
@@ -102,13 +104,46 @@
                             android:textSize="26sp"
                             android:textStyle="bold" />
 
-                        <ImageView
+                        <RelativeLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="16dp"
-                            android:src="@drawable/settings_icon" />
+                            android:layout_height="match_parent">
+
+                            <RelativeLayout
+                                android:id="@+id/settting_profile_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="?actionBarSize"
+                                android:layout_alignParentEnd="true">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_marginLeft="8dp"
+                                    android:layout_marginRight="8dp"
+                                    android:src="@drawable/settings_icon" />
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/message_profile_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="?actionBarSize"
+                                android:layout_alignParentEnd="true"
+                                android:visibility="gone" >
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="8dp"
+                                    android:layout_marginRight="8dp"
+                                    android:src="@drawable/ic_message_btn_check" />
+
+                            </RelativeLayout>
+
+                        </RelativeLayout>
 
                     </RelativeLayout>
 
@@ -127,7 +162,7 @@
         android:fillViewport="true"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <include layout="@layout/profile_scroll_view"/>
+        <include layout="@layout/profile_scroll_view" />
 
     </androidx.core.widget.NestedScrollView>
 

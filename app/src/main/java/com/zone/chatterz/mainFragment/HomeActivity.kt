@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,21 +16,16 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.database.DataSnapshot
 import com.zone.chatterz.R
-import com.zone.chatterz.adapter.CommentAdapter
 import com.zone.chatterz.adapter.HomeAdapter
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
-import com.zone.chatterz.inferfaces.CommentControlListener
-import com.zone.chatterz.inferfaces.CommentReloadListener
 import com.zone.chatterz.model.Comment
 import com.zone.chatterz.model.Post
 import com.zone.chatterz.model.User
 import com.zone.chatterz.requirements.Timings
 import com.zone.chatterz.singleChat.ChatActivity
-import java.io.File
 import java.util.*
-import kotlin.collections.HashMap
 
 
 class HomeActivity(context: Context, listener: NavigationControls) : Fragment(),
@@ -222,7 +216,10 @@ class HomeActivity(context: Context, listener: NavigationControls) : Fragment(),
             }
             profile_image_home_frag -> {
                 //profile button
-                startActivity(Intent(mContext, ProfileActivity::class.java))
+                val intent = Intent(mContext,ProfileActivity::class.java)
+                intent.putExtra("for","myOwn")
+                intent.putExtra("user",Connection.user)
+                startActivity(intent)
             }
             else -> {
                 return

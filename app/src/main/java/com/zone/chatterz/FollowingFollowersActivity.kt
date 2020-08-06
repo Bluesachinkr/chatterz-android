@@ -10,7 +10,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
-import com.zone.chatterz.mainFragment.ProfileActivity
 import java.lang.StringBuilder
 
 class FollowingFollowersActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {

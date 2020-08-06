@@ -3,7 +3,6 @@ package com.zone.chatterz.settings
 import com.zone.chatterz.inferfaces.OnEditListener
 import android.app.Activity
 import android.content.Intent
-import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -24,7 +23,7 @@ import com.zone.chatterz.R
 import com.zone.chatterz.requirements.JpegImageCompressor
 import java.io.File
 
-class GeneralSettings : AppCompatActivity(), OnEditListener,View.OnClickListener {
+class EditProfileActivity : AppCompatActivity(), OnEditListener,View.OnClickListener {
 
     private lateinit var addAccountImage: ImageView
     private lateinit var accountImage: CircularImageView
@@ -44,7 +43,7 @@ class GeneralSettings : AppCompatActivity(), OnEditListener,View.OnClickListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_general_settings)
+        setContentView(R.layout.activity_edit_profile)
 
         mAuth = FirebaseAuth.getInstance()
 
@@ -204,7 +203,7 @@ class GeneralSettings : AppCompatActivity(), OnEditListener,View.OnClickListener
                             if (user.imageUrl.equals("null")) {
                                 accountImage.setImageResource(R.drawable.new_group_icon)
                             } else {
-                                Glide.with(this@GeneralSettings).load(user.imageUrl)
+                                Glide.with(this@EditProfileActivity).load(user.imageUrl)
                                     .into(accountImage)
                             }
                             break

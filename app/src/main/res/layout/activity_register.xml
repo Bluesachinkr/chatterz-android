@@ -25,8 +25,66 @@
             android:textStyle="bold" />
 
         <LinearLayout
+            android:id="@+id/display_unique_name_register_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_below="@id/signup_text_register"
+            android:layout_margin="16dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/unique_name_edittext_register"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:backgroundTint="@color/appColor"
+                android:hint="Display Name"
+                android:inputType="textPersonName"
+                android:padding="12dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white" />
+
+            <RelativeLayout
+                android:id="@+id/next_signup_button"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:background="@drawable/background_buttons"
+                android:layout_marginTop="36dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Next"
+                        android:textColor="#FFFFFF"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="20sp"
+                        android:textStyle="bold"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="8dp"
+                        android:src="@drawable/ic_next_arrow"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/signUp_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_below="@id/signup_text_register"
             android:layout_margin="16dp"
             android:orientation="vertical">
@@ -129,161 +187,6 @@
 
 
     </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_margin="5dp"
-        android:orientation="vertical">
-
-        <!--<androidx.cardview.widget.CardView
-            android:id="@+id/cardview_register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            app:cardBackgroundColor="#FFFFFF"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardUseCompatPadding="true">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/signup_text_register"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="48dp"
-                    android:text="Sign Up"
-                    android:textColor="@color/white"
-                    android:fontFamily="@font/allura"
-                    android:textSize="48sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/signup_text_register"
-                    android:layout_marginTop="28dp"
-                    android:orientation="vertical">
-
-                    <EditText
-                        android:id="@+id/username_edittext_register"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:background="@drawable/background_edittext_loginscreen"
-                        android:drawableLeft="@drawable/email_icon_login"
-                        android:hint="Full name"
-                        android:inputType="textPersonName"
-                        android:padding="12dp" />
-
-                    <EditText
-                        android:id="@+id/email_edittext_register"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginRight="20dp"
-                        android:background="@drawable/background_edittext_loginscreen"
-                        android:drawableLeft="@drawable/email_icon_register"
-                        android:hint="Email"
-                        android:inputType="textEmailAddress"
-                        android:padding="12dp" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/password_edittext_register_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginRight="20dp"
-                        app:hintEnabled="false"
-                        app:passwordToggleEnabled="true"
-                        app:passwordToggleTint="@color/colorLightGrey">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/password_edittext_register"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/background_edittext_loginscreen"
-                            android:drawableStart="@drawable/password_icon_login"
-                            android:hint="Password"
-                            android:inputType="textPassword"
-                            android:padding="12dp"/>
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/confirm_password_edittext_register_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginRight="20dp"
-                        app:hintEnabled="false"
-                        app:passwordToggleEnabled="true"
-                        app:passwordToggleTint="@color/colorLightGrey">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/confirm_password_edittext_register"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/background_edittext_loginscreen"
-                            android:drawableStart="@drawable/password_icon_login"
-                            android:hint="Confirm Password"
-                            android:inputType="textPassword"
-                            android:padding="12dp"/>
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="36dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginBottom="30dp">
-
-                        <ProgressBar
-                            android:id="@+id/progressBar_register"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_gravity="center_horizontal"
-                            android:transitionName="Change_Button_to_Progress"
-                            android:visibility="invisible"
-                            android:indeterminateTint="@color/colorLoginTheme"/>
-
-                        <Button
-                            android:id="@+id/register_signup_button"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/background_buttons"
-                            android:text="Register"
-                            android:textColor="#FFFFFF"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
-                            android:transitionName="Change_Button_to_Progress"
-                            android:visibility="visible"/>
-
-                    </RelativeLayout>
-
-
-                </LinearLayout>
-
-
-            </RelativeLayout>
-
-
-        </androidx.cardview.widget.CardView>-->
-
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"

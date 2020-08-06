@@ -17,8 +17,9 @@ import com.zone.chatterz.firebaseConnection.RequestCallback
 import com.zone.chatterz.model.Chat
 import com.zone.chatterz.model.User
 import com.zone.chatterz.R
+import java.io.File
 
-class ChatRecentAdapter(context: Context, list: List<User>) :
+class ChatRecentAdapter(context: Context, list: List<String>) :
     RecyclerView.Adapter<ChatRecentAdapter.Viewholder>() {
 
     private val mUsers = list
@@ -35,25 +36,32 @@ class ChatRecentAdapter(context: Context, list: List<User>) :
 
     override fun onBindViewHolder(holder: Viewholder, position: Int) {
 
-        val user: User = mUsers.get(position)
-        holder.userName.text = user.username
+        val userId: String = mUsers.get(position)
+        FirebaseMethods.singleValueEvent(Connection.userRef+ File.separator+userId,object : RequestCallback(){
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                val user = dataSnapshot.getValue(User::class.java)
+                user?.let {
+                    holder.userName.text = user.username
 
-        lastMessage(user.id, holder.userlastMessage)
+                    lastMessage(userId, holder.userlastMessage)
 
-        if (user.status.equals("online")) {
-            holder.status.visibility = View.VISIBLE
-        } else {
-            holder.status.visibility = View.GONE
-        }
-        if (user.imageUrl.equals("null")) {
-            holder.profileImage.setImageResource(R.drawable.google_logo)
-        } else {
-            Glide.with(mContext).load(user.imageUrl).into(holder.profileImage)
-        }
+                    if (user.status.equals("online")) {
+                        holder.status.visibility = View.VISIBLE
+                    } else {
+                        holder.status.visibility = View.GONE
+                    }
+                    if (user.imageUrl.equals("null")) {
+                        holder.profileImage.setImageResource(R.drawable.google_logo)
+                    } else {
+                        Glide.with(mContext).load(user.imageUrl).into(holder.profileImage)
+                    }
+                }
+            }
+        })
 
         holder.itemView.setOnClickListener {
             val intent = Intent(mContext, ChatMessageActivity::class.java)
-            intent.putExtra("UserId", user.id)
+            intent.putExtra("UserId", userId)
             mContext.startActivity(intent)
         }
 
@@ -72,15 +80,16 @@ class ChatRecentAdapter(context: Context, list: List<User>) :
 
     private fun lastMessage(userId: String, lastMessage: TextView) {
         var message: String = "nothing"
-        FirebaseMethods.addValueEventChild(Connection.userChats, object : RequestCallback() {
+        val ref = Connection.userChats+File.separator+Connection.user+File.separator+userId
+        FirebaseMethods.addValueEvent(ref, object : RequestCallback() {
             override fun onDataChanged(dataSnapshot: DataSnapshot) {
                 for (dataSet in dataSnapshot.children) {
                     val chat = dataSet.getValue(Chat::class.java)
-                    if (chat != null) {
-                        if (chat.sender.equals(FirebaseMethods.firebaseUser.uid) && chat.receiver.equals(
+                    chat?.let{
+                        if (it.sender.equals(Connection.user) && it.receiver.equals(
                                 userId
                             ) ||
-                            chat.sender.equals(userId) && chat.receiver.equals(FirebaseMethods.firebaseUser.uid)
+                            it.sender.equals(userId) && it.receiver.equals(Connection.user)
                         ) {
                             message = chat.message
                         }

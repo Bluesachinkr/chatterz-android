@@ -1,6 +1,7 @@
 package com.zone.chatterz.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.zone.chatterz.R
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
+import com.zone.chatterz.mainFragment.ProfileActivity
 import com.zone.chatterz.model.User
 import java.io.File
 
@@ -84,6 +86,22 @@ class FollowersFollowingAdapter(
         } else {
             holder.following_button_follower_following_screen.visibility = View.GONE
             holder.following_button_follower_following_screen.visibility = View.VISIBLE
+        }
+
+        holder.itemView.setOnClickListener {
+            val intent = Intent(mContext, ProfileActivity::class.java)
+            intent.putExtra("for", "checking")
+            intent.putExtra("user", user)
+            if (followingHashMap != null) {
+                if (followingHashMap.containsKey(user)) {
+                    intent.putExtra("isFollowing", true)
+                } else {
+                    intent.putExtra("isFollowing", false)
+                }
+            } else {
+                intent.putExtra("isFollowing", true)
+            }
+            mContext.startActivity(intent)
         }
     }
 }

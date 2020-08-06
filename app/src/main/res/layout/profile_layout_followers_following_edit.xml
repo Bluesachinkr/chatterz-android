@@ -100,7 +100,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/display_unique_name"
+                android:id="@+id/display_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sachin Kumar"
@@ -115,23 +115,55 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:background="@drawable/background_edit_profile_btn"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:text="Edit Profile"
-                android:layout_centerHorizontal="true"
+            <RelativeLayout
+                android:id="@+id/edit_profile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_edit_profile_btn"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:layout_centerVertical="true"
-                android:textColor="@color/white"/>
+                android:layout_centerHorizontal="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:text="Edit Profile"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/white"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/follow_btn_check_profile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_edit_profile_btn"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                android:layout_centerHorizontal="true">
+
+                <TextView
+                    android:id="@+id/follow_following_btn_profile_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:text="Follow"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/white"/>
+
+            </RelativeLayout>
 
         </RelativeLayout>
 

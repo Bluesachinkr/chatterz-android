@@ -23,12 +23,12 @@ import com.zone.chatterz.model.User
 import com.zone.chatterz.notification.Token
 import com.zone.chatterz.R
 import com.zone.chatterz.adapter.OnlineFriendAdapter
+import java.io.File
 
 open class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var message_recyclerView: RecyclerView
     private lateinit var databaseReference: DatabaseReference
-    private lateinit var mUsers: MutableList<User>
     private lateinit var chatRecentAdapter: ChatRecentAdapter
     private lateinit var usersList: MutableList<String>
     private lateinit var drawerOnline: DrawerLayout
@@ -85,7 +85,7 @@ open class ChatActivity : AppCompatActivity(), View.OnClickListener {
         back_chat.setOnClickListener(this)
         /*readRecentChats()*/
 
-        readFriendsOnline()
+      //  readFriendsOnline()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -107,21 +107,15 @@ open class ChatActivity : AppCompatActivity(), View.OnClickListener {
         message_recyclerView.setHasFixedSize(true)
         val linearLayoutManager = LinearLayoutManager(this)
         message_recyclerView.layoutManager = linearLayoutManager
-        FirebaseMethods.addValueEventChild(Connection.userChats, object : RequestCallback() {
+        FirebaseMethods.addValueEvent(Connection.userChats+ File.separator+Connection.user, object : RequestCallback() {
             override fun onDataChanged(dataSnapshot: DataSnapshot) {
                 usersList.clear()
                 for (dataSet in dataSnapshot.children) {
-                    val chat = dataSet.getValue(Chat::class.java)
-                    if (chat != null) {
-                        if (chat.sender.equals(Connection.user)) {
-                            usersList.add(chat.receiver)
-                        }
-                        if (chat.receiver.equals(Connection.user)) {
-                            usersList.add(chat.sender)
-                        }
-                    }
+                    val str = dataSet.key.toString()
+                    usersList.add(str)
                 }
-                readUser()
+                chatRecentAdapter = ChatRecentAdapter(this@ChatActivity, usersList)
+                message_recyclerView.adapter = chatRecentAdapter
                 FirebaseInstanceId.getInstance().getToken()?.let { updateToken(it) }
                 mRefreshLayoutChat.isRefreshing = false
             }
@@ -143,34 +137,7 @@ open class ChatActivity : AppCompatActivity(), View.OnClickListener {
         naviagtionOnline.layoutParams = params
     }
 
-
-    private fun readUser() {
-        mUsers = mutableListOf()
-        FirebaseMethods.addValueEvent(Connection.userRef, object : RequestCallback() {
-            override fun onDataChanged(dataSnapshot: DataSnapshot) {
-                mUsers.clear()
-                for (dataSet in dataSnapshot.children) {
-                    val user = dataSet.getValue(User::class.java)
-                    if (user != null) {
-                        for (userId in usersList) {
-                            if (userId.equals(user.id)) {
-                                if (!mUsers.contains(user)) {
-                                    mUsers.add(user)
-                                }
-                            }
-                        }
-                    }
-                }
-                val getContext = this@ChatActivity
-                if (getContext != null) {
-                    chatRecentAdapter = ChatRecentAdapter(getContext, mUsers)
-                    message_recyclerView.adapter = chatRecentAdapter
-                }
-            }
-        })
-    }
-
-     private fun readFriendsOnline() {
+     /*private fun readFriendsOnline() {
          val list = mutableListOf<String>()
          FirebaseMethods.addValueEventChild(Connection.friendRef,object :RequestCallback(){
              override fun onDataChanged(dataSnapshot: DataSnapshot) {
@@ -193,7 +160,7 @@ open class ChatActivity : AppCompatActivity(), View.OnClickListener {
                  })
              }
          })
-     }
+     }*/
 
     private fun updateToken(token: String) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Tokens")
