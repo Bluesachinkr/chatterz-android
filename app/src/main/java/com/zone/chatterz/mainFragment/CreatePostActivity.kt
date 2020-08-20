@@ -3,10 +3,8 @@ package com.zone.chatterz.mainFragment
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -14,6 +12,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.zone.chatterz.CreatePostCamera
 import com.zone.chatterz.MainActivity
 import com.zone.chatterz.R
 import com.zone.chatterz.requirements.Timings
@@ -31,7 +30,7 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var create_post_description: EditText
 
-    private lateinit var camera_take_photo_gallery: ImageView
+    private lateinit var camera_btn_create_post: ImageView
 
     private var selectedImage: Uri? = null
     private var resultPath: String = ""
@@ -40,15 +39,23 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_post)
 
+        val ig = intent
+        ig?.let {
+            selectedImage = (it.extras?.get("output")) as Uri
+            selectedImage?.let {
+                this.resultPath = it.path.toString()
+            }
+        }
+
         this.back_arrow_create_post = findViewById(R.id.back_arrow_create_post)
         this.shareBtn_create_post = findViewById(R.id.shareBtn_create_post)
         this.create_post_image = findViewById(R.id.create_post_image)
-        this.camera_take_photo_gallery = findViewById(R.id.camera_take_photo_gallery)
+        this.camera_btn_create_post = findViewById(R.id.camera_btn_create_post)
 
         this.create_post_description = findViewById(R.id.create_post_desciption)
         this.shareBtn_create_post.setOnClickListener(this)
-        this.camera_take_photo_gallery.setOnClickListener(this)
         this.back_arrow_create_post.setOnClickListener(this)
+        this.camera_btn_create_post.setOnClickListener(this)
 
         val permission = arrayOf<String>(
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -64,6 +71,10 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
             ) == PackageManager.PERMISSION_DENIED)
         ) {
             ActivityCompat.requestPermissions(this, permission, PERMISSION_CODE)
+        }
+
+        selectedImage?.let {
+            this.create_post_image.setImageURI(it)
         }
     }
 
@@ -123,10 +134,14 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
             shareBtn_create_post -> {
                 sharePost()
             }
-            camera_take_photo_gallery -> {
+            camera_btn_create_post -> {
+                startActivity(Intent(this, CreatePostCamera::class.java))
+            }
+          /*  camera_take_photo_gallery -> {
                 val permission = arrayOf<String>(
                     android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                    android.Manifest.permission.CAMERA
                 )
                 if ((ContextCompat.checkSelfPermission(
                         this,
@@ -142,7 +157,7 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
                 val intent =
                     Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 startActivityForResult(intent, TAKE_PHOTO_GALLERY)
-            }
+            }*/
             back_arrow_create_post -> {
                 finish()
             }

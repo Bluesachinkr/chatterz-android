@@ -51,7 +51,11 @@ class ChatRecentAdapter(context: Context, list: List<String>) :
                         holder.status.visibility = View.GONE
                     }
                     if (user.imageUrl.equals("null")) {
-                        holder.profileImage.setImageResource(R.drawable.google_logo)
+                        if(user.gender.equals("Male")){
+                           holder.profileImage.setImageResource(R.drawable.ic_male_gender_profile)
+                        }else{
+                            holder.profileImage.setImageResource(R.drawable.ic_female_gender_profile)
+                        }
                     } else {
                         Glide.with(mContext).load(user.imageUrl).into(holder.profileImage)
                     }

@@ -185,11 +185,19 @@ class HomeAdapter(
                     val user = dataSnapshot.getValue(User::class.java)
                     user?.let {
                         //setting profile image
-                        Glide.with(mContext).load(it.imageUrl).into(holder.profileImage_post)
-
-                        //setting profile image comment
-                        Glide.with(mContext).load(it.imageUrl)
-                            .into(holder.profileImage_comment_box_post)
+                        if(user.imageUrl.equals("null")){
+                            if(user.gender.equals("Male")){
+                                holder.profileImage_post.setImageResource(R.drawable.ic_male_gender_profile)
+                                holder.profileImage_comment_box_post.setImageResource(R.drawable.ic_male_gender_profile)
+                            }else{
+                                holder.profileImage_post.setImageResource(R.drawable.ic_female_gender_profile)
+                                holder.profileImage_comment_box_post.setImageResource(R.drawable.ic_female_gender_profile)
+                            }
+                        }else{
+                            Glide.with(mContext).load(it.imageUrl).into(holder.profileImage_post)
+                            Glide.with(mContext).load(it.imageUrl)
+                                .into(holder.profileImage_comment_box_post)
+                        }
 
                         //setting profile name
                         holder.profileName_post.text = it.username

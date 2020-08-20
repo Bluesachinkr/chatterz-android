@@ -8,36 +8,132 @@
     tools:context=".preActivities.RegisterActivity">
 
     <RelativeLayout
+        android:id="@+id/other_info_register_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true">
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone">
 
-        <TextView
-            android:id="@+id/signup_text_register"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="48dp"
-            android:fontFamily="@font/allura"
-            android:text="Sign Up"
-            android:textColor="@color/white"
-            android:textSize="42sp"
-            android:textStyle="bold" />
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="72dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/avenir_book"
+                android:text="Welcome, "
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/name_user_register_welcome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/avenir_book"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/add_profile_photo_register"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerInside"
+                android:src="@drawable/google_logo" />
+
+            <TextView
+                android:id="@+id/add_proile_photo_btn_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:text="Add Profile Photo"
+                android:textColor="@color/appColor"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="16dp">
+
+           <!-- <Button
+                android:id="@+id/skip_btn_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/background_buttons"
+                android:text="SKIP"
+                android:textColor="@color/white"
+                android:textSize="16sp" />-->
+
+            <Button
+                android:id="@+id/next_btn_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/background_buttons"
+                android:text="NEXT"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/register_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/display_unique_name_register_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:layout_below="@id/signup_text_register"
+            android:layout_centerVertical="true"
             android:layout_margin="16dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="48dp"
+                android:fontFamily="@font/allura"
+                android:text="Sign Up"
+                android:textColor="@color/white"
+                android:textSize="42sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/unique_name_edittext_register"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
+                android:layout_marginTop="36dp"
                 android:backgroundTint="@color/appColor"
+                android:gravity="center"
                 android:hint="Display Name"
                 android:inputType="textPersonName"
                 android:padding="12dp"
@@ -45,34 +141,49 @@
                 android:textColorHint="@color/white" />
 
             <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="12dp">
+
+                <Spinner
+                    android:id="@+id/gender_chooose_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:spinnerMode="dialog" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/next_signup_button"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
-                android:background="@drawable/background_buttons"
-                android:layout_marginTop="36dp">
+                android:layout_marginTop="36dp"
+                android:background="@drawable/background_buttons">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:text="Next"
                         android:textColor="#FFFFFF"
-                        android:layout_gravity="center_vertical"
                         android:textSize="20sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="8dp"
-                        android:src="@drawable/ic_next_arrow"/>
+                        android:src="@drawable/ic_next_arrow" />
 
                 </LinearLayout>
 
@@ -84,15 +195,27 @@
             android:id="@+id/signUp_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_below="@id/signup_text_register"
+            android:layout_centerVertical="true"
             android:layout_margin="16dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="48dp"
+                android:fontFamily="@font/allura"
+                android:text="Sign Up"
+                android:textColor="@color/white"
+                android:textSize="42sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/username_edittext_register"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
+                android:layout_marginTop="16dp"
                 android:backgroundTint="@color/appColor"
                 android:hint="Full name"
                 android:inputType="textPersonName"
@@ -182,35 +305,33 @@
 
             </RelativeLayout>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Have an Account ?"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/signIn_text_clickable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sign In"
+                android:textColor="@color/colorLoginTheme"
+                android:textSize="13sp" />
 
         </LinearLayout>
 
-
     </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Have an Account ?"
-            android:textColor="@color/white"
-            android:textSize="13sp" />
-
-        <TextView
-            android:id="@+id/signIn_text_clickable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign In"
-            android:textColor="@color/colorLoginTheme"
-            android:textSize="13sp" />
-
-    </LinearLayout>
 
 </RelativeLayout>

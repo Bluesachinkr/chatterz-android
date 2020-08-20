@@ -34,6 +34,15 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
+        <ImageView
+            android:id="@+id/camera_btn_create_post"
+            android:layout_width="?actionBarSize"
+            android:layout_height="?actionBarSize"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@id/shareBtn_create_post"
+            android:padding="12dp"
+            android:src="@drawable/camera_icon" />
+
     </RelativeLayout>
 
     <ScrollView
@@ -45,32 +54,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
+            <ImageView
+                android:id="@+id/create_post_image"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="16dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/create_post_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
-                    <ImageView
-                        android:id="@+id/camera_take_photo_gallery"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/camera_icon"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"/>
-
-                </RelativeLayout>
-
-            </androidx.cardview.widget.CardView>
+                android:layout_height="wrap_content"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"

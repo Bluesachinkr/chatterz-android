@@ -1,12 +1,16 @@
 package com.zone.chatterz.singleChat
 
+import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -25,8 +29,9 @@ import com.zone.chatterz.R
 import com.zone.chatterz.adapter.OnlineFriendAdapter
 import java.io.File
 
-open class ChatActivity : AppCompatActivity(), View.OnClickListener {
+open class ChatActivity(mContext : Context) : Fragment(), View.OnClickListener {
 
+    private val mContext =  mContext
     private lateinit var message_recyclerView: RecyclerView
     private lateinit var databaseReference: DatabaseReference
     private lateinit var chatRecentAdapter: ChatRecentAdapter
@@ -44,48 +49,28 @@ open class ChatActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mRefreshLayoutChat : SwipeRefreshLayout
     private lateinit var mSwipeRefreshListener : SwipeRefreshLayout.OnRefreshListener
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_chat)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.activity_chat,container,false)
+        message_recyclerView = view.findViewById(R.id.recent_RecyclerView)
+        content = view.findViewById(R.id.contentOnline)
+        onlineBtn = view.findViewById(R.id.onlinestatus)
+        back_chat = view.findViewById(R.id.back_chat)
 
-        message_recyclerView = findViewById(R.id.recent_RecyclerView)
-        content = findViewById(R.id.contentOnline)
-        onlineBtn = findViewById(R.id.onlinestatus)
-        back_chat = findViewById(R.id.back_chat)
-
-        mRefreshLayoutChat = findViewById(R.id.swipe_refresh_recent_chats)
+        mRefreshLayoutChat = view.findViewById(R.id.swipe_refresh_recent_chats)
         mSwipeRefreshListener = SwipeRefreshLayout.OnRefreshListener {
             readRecentChats()
         }
         mRefreshLayoutChat.setOnRefreshListener(mSwipeRefreshListener)
 
-        onlineRecyclerView = findViewById(R.id.onlineRecyclerView)
+        onlineRecyclerView = view.findViewById(R.id.onlineRecyclerView)
 
-       /* setDrawerHalf()*/
-
-      /*  drawerOnline.setScrimColor(Color.TRANSPARENT)
-        drawerOnline.addDrawerListener(object : ActionBarDrawerToggle(
-            this
-            , drawerOnline,
-            R.string.openDrawer,
-            R.string.closeDrawer
-        ) {
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                super.onDrawerSlide(drawerView, slideOffset)
-                val slidex = drawerView.width * slideOffset
-                content.translationX = -slidex
-            }
-        })*/
-        /*onlineBtn.setOnClickListener {
-            drawerOnline.openDrawer(Gravity.RIGHT)
-            startOnlineView()
-
-        }*/
         mSwipeRefreshListener.onRefresh()
         back_chat.setOnClickListener(this)
-        /*readRecentChats()*/
-
-      //  readFriendsOnline()
+        return view
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -105,7 +90,7 @@ open class ChatActivity : AppCompatActivity(), View.OnClickListener {
         this.usersList = mutableListOf()
         message_recyclerView.adapter = null
         message_recyclerView.setHasFixedSize(true)
-        val linearLayoutManager = LinearLayoutManager(this)
+        val linearLayoutManager = LinearLayoutManager(mContext)
         message_recyclerView.layoutManager = linearLayoutManager
         FirebaseMethods.addValueEvent(Connection.userChats+ File.separator+Connection.user, object : RequestCallback() {
             override fun onDataChanged(dataSnapshot: DataSnapshot) {
@@ -114,7 +99,7 @@ open class ChatActivity : AppCompatActivity(), View.OnClickListener {
                     val str = dataSet.key.toString()
                     usersList.add(str)
                 }
-                chatRecentAdapter = ChatRecentAdapter(this@ChatActivity, usersList)
+                chatRecentAdapter = ChatRecentAdapter(mContext, usersList)
                 message_recyclerView.adapter = chatRecentAdapter
                 FirebaseInstanceId.getInstance().getToken()?.let { updateToken(it) }
                 mRefreshLayoutChat.isRefreshing = false
@@ -174,13 +159,12 @@ open class ChatActivity : AppCompatActivity(), View.OnClickListener {
          val customParams = linearLayout.layoutParams as LinearLayout.LayoutParams
          customParams.weight = .4f
          linearLayout.layoutParams = customParams
-
      }*/
 
     override fun onClick(v: View?) {
         when (v) {
             back_chat -> {
-                finish()
+                //finish()
             }
             else -> {
                 return

@@ -174,7 +174,11 @@ open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
                         Glide.with(this@ProfileActivity).load(data.imageUrl)
                             .into(profile_img_profile)
                     }else{
-                        profile_img_profile.setImageResource(R.drawable.google_logo)
+                        if(data.gender.equals("Male")){
+                            profile_img_profile.setImageResource(R.drawable.ic_male_gender_profile)
+                        }else{
+                            profile_img_profile.setImageResource(R.drawable.ic_female_gender_profile)
+                        }
                     }
                 }
             }

@@ -31,6 +31,7 @@ import com.zone.chatterz.mainFragment.CreatePostActivity
 import com.zone.chatterz.mainFragment.HomeActivity
 import com.zone.chatterz.mainFragment.SearchActivity
 import com.zone.chatterz.requirements.Timings
+import com.zone.chatterz.singleChat.ChatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationControls {
@@ -101,6 +102,7 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
             bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.ic_outline_home_bottom_nav)
             bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.ic_create)
             bottomNavigationBar.menu.getItem(2).setIcon(R.drawable.search_light_icon)
+            bottomNavigationBar.menu.getItem(3).setIcon(R.drawable.ic_chat)
             when (menuItem.itemId) {
 
                 R.id.home -> {
@@ -112,7 +114,7 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.create -> {
-                    startActivity(Intent(this, CreatePostActivity::class.java))
+                    startActivity(Intent(this, CreatePostCamera::class.java))
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.profile_bottombar -> {
@@ -121,6 +123,14 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
                         .replace(R.id.container_main, searchActivity)
                         .addToBackStack(null).commit()
                     menuItem.setIcon(R.drawable.search_dark_icon)
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.chat_bottombar -> {
+                    val chatActivity = ChatActivity(this)
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container_main, chatActivity)
+                        .addToBackStack(null).commit()
+                    menuItem.setIcon(R.drawable.ic_chat)
                     return@setOnNavigationItemSelectedListener true
                 }
             }

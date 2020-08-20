@@ -13,7 +13,12 @@
 
     <item
         android:id="@+id/profile_bottombar"
-        android:icon="@drawable/proifle_light_icon"
+        android:icon="@drawable/ic_heart"
         android:title="Profile" />
+
+    <item
+        android:id="@+id/chat_bottombar"
+        android:icon="@drawable/ic_chat"
+        android:title="Chat"/>
 
 </menu>

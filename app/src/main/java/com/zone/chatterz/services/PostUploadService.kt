@@ -10,7 +10,6 @@ import com.iceteck.silicompressorr.SiliCompressor
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
-import com.zone.chatterz.model.Post
 import java.io.ByteArrayOutputStream
 import java.io.File
 

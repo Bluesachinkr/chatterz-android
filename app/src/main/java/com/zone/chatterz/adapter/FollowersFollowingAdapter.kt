@@ -63,7 +63,11 @@ class FollowersFollowingAdapter(
                     val user = dataSnapshot.getValue(User::class.java)
                     user?.let {
                         if (user.imageUrl.equals("null")) {
-                            holder.followers_following_profile_img.setImageResource(R.drawable.google_logo)
+                           if(user.gender.equals("Male")){
+                               holder.followers_following_profile_img.setImageResource(R.drawable.ic_male_gender_profile)
+                           }else{
+                               holder.followers_following_profile_img.setImageResource(R.drawable.ic_female_gender_profile)
+                           }
                         } else {
                             Glide.with(mContext).load(user.imageUrl)
                                 .into(holder.followers_following_profile_img)
@@ -74,7 +78,6 @@ class FollowersFollowingAdapter(
                         } else {
                             holder.followers_following_online_status.visibility = View.GONE
                         }
-
                         holder.followers_following_profile_name.text = user.username
                     }
                 }
