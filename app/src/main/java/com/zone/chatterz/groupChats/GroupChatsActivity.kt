@@ -1,5 +1,6 @@
 package com.zone.chatterz.groupChats
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -18,11 +20,15 @@ import com.zone.chatterz.CreateNewGroup
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.model.Group
 import com.zone.chatterz.R
+import com.zone.chatterz.inferfaces.ChatControlListener
 
-class GroupChatsActivity : Fragment() {
+class GroupChatsActivity(mContext : Context,listener : ChatControlListener) : Fragment() {
 
+    private val mContext = mContext
+    private val listener = listener
     private lateinit var groupChatView: RecyclerView
     private lateinit var progressBar: ProgressBar
+    private lateinit var open_chats_FloatingButton : FloatingActionButton
     private lateinit var databaseReference: DatabaseReference
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseUser: FirebaseUser
@@ -37,6 +43,11 @@ class GroupChatsActivity : Fragment() {
         groupChatView = view.findViewById(R.id.groupChatRecent_RecyclerView)
         progressBar = view.findViewById(R.id.groupChatRecentProgressBar)
         toolbarGroup = view.findViewById(R.id.toolbarGroupChatsView)
+        open_chats_FloatingButton = view.findViewById(R.id.open_chats_FloatingButton)
+
+        open_chats_FloatingButton.setOnClickListener {
+            listener.openChats()
+        }
         //setiing mAuth as FirebaseAuth instance in the activity
         mAuth = FirebaseAuth.getInstance()
         //toolbar as actionBar

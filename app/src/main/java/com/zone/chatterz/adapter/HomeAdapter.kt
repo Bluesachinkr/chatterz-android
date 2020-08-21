@@ -3,6 +3,7 @@ package com.zone.chatterz.adapter
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -19,7 +20,6 @@ import com.zone.chatterz.R
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
-import com.zone.chatterz.inferfaces.CommentControlListener
 import com.zone.chatterz.mainFragment.HomeActivity
 import com.zone.chatterz.model.Comment
 import com.zone.chatterz.model.Post
@@ -31,15 +31,16 @@ class HomeAdapter(
     mContext: Context,
     postList: MutableList<Post>
 ) :
-    RecyclerView.Adapter<HomeAdapter.Viewholder>() {
+    RecyclerView.Adapter<HomeAdapter.Viewholder>(), PopupMenu.OnMenuItemClickListener {
 
     private val mContext = mContext
     private val postList = postList
+    private var current_item: Int = -1
 
     class Viewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val profileImage_post: CircularImageView = itemView.findViewById(R.id.profileImage_post)
         val profileName_post: TextView = itemView.findViewById(R.id.profileName_post)
-        val options_post: ImageView = itemView.findViewById(R.id.options_post)
+        val options_post: RelativeLayout = itemView.findViewById(R.id.options_post)
         val image_post: ImageView = itemView.findViewById(R.id.image_post)
         val like_post: ImageView = itemView.findViewById(R.id.like_post)
         val time_post: TextView = itemView.findViewById(R.id.time_post)
@@ -98,6 +99,17 @@ class HomeAdapter(
             MainActivity.comment_viewholder_changed = holder
         }
 
+        holder.options_post.setOnClickListener {
+            this.current_item = position
+            val popupMenu = PopupMenu(mContext, it)
+            popupMenu.setOnMenuItemClickListener(this)
+            popupMenu.inflate(R.menu.options_menu_post)
+            val menu = popupMenu.menu
+            if(post.postOwner != Connection.user){
+                menu.getItem(R.id.delete_options_post).setEnabled(false)
+            }
+            popupMenu.show()
+        }
         FirebaseMethods.singleValueEvent(Connection.likesRef + File.separator + post.postId + File.separator + Connection.user,
             object : RequestCallback() {
                 override fun onDataChanged(dataSnapshot: DataSnapshot) {
@@ -185,15 +197,15 @@ class HomeAdapter(
                     val user = dataSnapshot.getValue(User::class.java)
                     user?.let {
                         //setting profile image
-                        if(user.imageUrl.equals("null")){
-                            if(user.gender.equals("Male")){
+                        if (user.imageUrl.equals("null")) {
+                            if (user.gender.equals("Male")) {
                                 holder.profileImage_post.setImageResource(R.drawable.ic_male_gender_profile)
                                 holder.profileImage_comment_box_post.setImageResource(R.drawable.ic_male_gender_profile)
-                            }else{
+                            } else {
                                 holder.profileImage_post.setImageResource(R.drawable.ic_female_gender_profile)
                                 holder.profileImage_comment_box_post.setImageResource(R.drawable.ic_female_gender_profile)
                             }
-                        }else{
+                        } else {
                             Glide.with(mContext).load(it.imageUrl).into(holder.profileImage_post)
                             Glide.with(mContext).load(it.imageUrl)
                                 .into(holder.profileImage_comment_box_post)
@@ -202,6 +214,53 @@ class HomeAdapter(
                         //setting profile name
                         holder.profileName_post.text = it.username
                     }
+                }
+            })
+    }
+
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.delete_options_post -> {
+                val post = postList[current_item]
+                post?.let {
+                    val postId = post.postId
+                    deletePost(postId)
+                }
+                return true
+            }
+            R.id.save_options_post -> {
+                val post = postList[current_item]
+                post?.let {
+                    savePostArchive(it)
+                }
+                return true
+            }
+            else -> {
+                return false
+            }
+        }
+    }
+
+    private fun savePostArchive(post: Post) {
+        val hashMap = hashMapOf<String, Any>()
+        hashMap.put("postOwner", post.postOwner)
+        hashMap.put("postDescription", post.postDescription)
+        hashMap.put("postTime", post.postTime)
+        hashMap.put("postImage", post.postImage)
+        hashMap.put("postId", post.postId)
+        val databaseReference = FirebaseDatabase.getInstance().getReference(Connection.archivePost)
+            .child(Connection.user)
+            .push().setValue(hashMap)
+            .addOnSuccessListener {
+                Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun deletePost(postId: String) {
+        FirebaseMethods.singleValueEvent(Connection.postRef + File.separator + postId,
+            object : RequestCallback() {
+                override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                    dataSnapshot.ref.removeValue()
                 }
             })
     }

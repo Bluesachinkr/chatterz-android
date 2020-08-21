@@ -10,8 +10,8 @@
     <RelativeLayout
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
-        android:background="@color/AppBackground"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/AppBackground">
 
         <RelativeLayout
             android:id="@+id/main_activity_appbar"
@@ -23,11 +23,11 @@
                 android:id="@+id/search_view_main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/background_search_view"
-               android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="9dp"
+                android:layout_marginBottom="9dp"
+                android:layout_toLeftOf="@+id/camera_main_activity"
                 android:layout_toRightOf="@+id/profile_main_layout"
-                android:layout_toLeftOf="@+id/camera_main_activity">
+                android:background="@drawable/background_search_view">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -39,18 +39,19 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/search_dark_icon"/>
+                        android:src="@drawable/search_dark_icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/avenir_book"
-                        android:textColor="@color/white"
-                        android:text="Search"
-                        android:textSize="16sp"
                         android:layout_marginLeft="8dp"
-                        android:textStyle="bold"/>
+                        android:fontFamily="@font/avenir_book"
+                        android:text="Search"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -58,8 +59,8 @@
                 android:layout_width="?actionBarSize"
                 android:layout_height="?actionBarSize"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft ="4dp"
-                android:padding="10dp">
+                android:layout_marginLeft="4dp"
+                android:padding="12dp">
 
                 <com.mikhaellopez.circularimageview.CircularImageView
                     android:id="@+id/profile_image_main_frag"
@@ -78,15 +79,15 @@
                 android:layout_height="?actionBarSize"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="4dp"
-                android:padding="6dp">
+                android:padding="12dp">
 
                 <ImageView
                     android:id="@+id/camera_btn_main_frag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_outline_photo_camera_home"
+                    android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true" />
+                    android:src="@drawable/ic_outline_photo_camera_home" />
 
             </RelativeLayout>
 
@@ -96,8 +97,8 @@
             android:id="@+id/container_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/main_activity_appbar"
-            android:layout_above="@id/bottomNavigationBar" />
+            android:layout_above="@id/bottomNavigationBar"
+            android:layout_below="@id/main_activity_appbar" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationBar"
@@ -106,8 +107,8 @@
             android:layout_alignParentBottom="true"
             android:padding="4dp"
             android:visibility="visible"
-            app:labelVisibilityMode="unlabeled"
             app:itemIconTint="@color/appColor"
+            app:labelVisibilityMode="unlabeled"
             app:menu="@menu/bottombarmenu" />
 
         <RelativeLayout
@@ -152,9 +153,9 @@
         android:id="@+id/NavigationDrawerMenu"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        app:menu="@menu/drawerbar_menu"
+        android:layout_gravity="right"
         app:headerLayout="@layout/drawer_layout"
-        android:layout_gravity="right">
+        app:menu="@menu/drawerbar_menu">
 
     </com.google.android.material.navigation.NavigationView>
 

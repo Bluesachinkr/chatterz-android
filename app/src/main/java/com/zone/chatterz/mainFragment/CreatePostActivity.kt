@@ -12,7 +12,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.zone.chatterz.CreatePostCamera
+import com.zone.chatterz.camera.CameraChatterz
 import com.zone.chatterz.MainActivity
 import com.zone.chatterz.R
 import com.zone.chatterz.requirements.Timings
@@ -138,7 +138,7 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
                 sharePost()
             }
             camera_btn_create_post -> {
-                startActivity(Intent(this, CreatePostCamera::class.java))
+                startActivity(Intent(this, CameraChatterz::class.java))
             }
           /*  camera_take_photo_gallery -> {
                 val permission = arrayOf<String>(

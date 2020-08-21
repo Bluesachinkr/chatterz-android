@@ -5,6 +5,6 @@
     android:id="@+id/camera_frame_create_post"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreatePostCamera">
+    tools:context=".camera.CameraChatterz">
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

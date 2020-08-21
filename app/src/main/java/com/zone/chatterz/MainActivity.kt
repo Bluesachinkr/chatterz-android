@@ -21,10 +21,13 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.adapter.HomeAdapter
+import com.zone.chatterz.camera.CameraChatterz
 import com.zone.chatterz.data.UserData
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
+import com.zone.chatterz.groupChats.GroupChatsActivity
+import com.zone.chatterz.inferfaces.ChatControlListener
 import com.zone.chatterz.mainFragment.*
 import com.zone.chatterz.model.User
 import com.zone.chatterz.preActivities.WelcomeActivity
@@ -33,7 +36,8 @@ import com.zone.chatterz.requirements.Timings
 import com.zone.chatterz.singleChat.ChatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationControls {
+class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationControls,
+    ChatControlListener {
 
     private lateinit var drawer: DrawerLayout
     private lateinit var mAuth: FirebaseAuth
@@ -47,6 +51,9 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
 
     private var commentReadTextOpen = false
     private var postId: String = ""
+
+    private var isGroupEnabled = false
+    private var isChatsEnabled = true
 
     //add coment
     private lateinit var add_comment_post: ImageView
@@ -99,7 +106,7 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
             startActivity(intent)
         }
         camera_btn_layout_main.setOnClickListener {
-            startActivity(Intent(this, CreatePostCamera::class.java))
+            startActivity(Intent(this, CameraChatterz::class.java))
         }
 
         firebaseAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
@@ -162,10 +169,12 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.chat_bottombar -> {
-                    val chatActivity = ChatActivity(this)
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container_main, chatActivity)
-                        .addToBackStack(null).commit()
+                    if (!isGroupEnabled && isChatsEnabled) {
+                        openChats()
+                    }
+                    if(isGroupEnabled && !isChatsEnabled){
+                        openGroup()
+                    }
                     menuItem.setIcon(R.drawable.ic_chat)
                     main_activity_appbar.visibility = View.GONE
                     return@setOnNavigationItemSelectedListener true
@@ -308,6 +317,25 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
         removeNavigation()
         comment_layout_home.visibility = View.VISIBLE
     }
+
+    override fun openGroup() {
+        val chatActivity = GroupChatsActivity(this,this)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container_main, chatActivity)
+            .addToBackStack(null).commit()
+        isChatsEnabled = false
+        isGroupEnabled = true
+    }
+
+    override fun openChats() {
+        val chatActivity = ChatActivity(this,this)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container_main, chatActivity)
+            .addToBackStack(null).commit()
+        isChatsEnabled = true
+        isGroupEnabled = false
+    }
+
 }
 
 

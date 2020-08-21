@@ -7,6 +7,17 @@
     android:background="@color/AppBackground"
     tools:context=".singleChat.ChatActivity">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/open_group_FloatingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="36dp"
+        android:layout_marginRight="36dp"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/ic_account"/>
+
     <LinearLayout
         android:id="@+id/contentOnline"
         android:layout_width="match_parent"

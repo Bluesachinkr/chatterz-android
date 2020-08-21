@@ -3,6 +3,7 @@ package com.zone.chatterz.preActivities
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -19,15 +20,22 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.iceteck.silicompressorr.SiliCompressor
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.MainActivity
 import com.zone.chatterz.ManualAuthentication
 import com.zone.chatterz.R
 import com.zone.chatterz.adapter.SearchAdapter
+import com.zone.chatterz.firebaseConnection.Connection
+import com.zone.chatterz.firebaseConnection.FirebaseMethods
+import com.zone.chatterz.firebaseConnection.RequestCallback
 import com.zone.chatterz.model.User
+import java.io.ByteArrayOutputStream
 import java.io.File
 
-class RegisterActivity : AppCompatActivity(),View.OnClickListener,AdapterView.OnItemSelectedListener {
+class RegisterActivity : AppCompatActivity(), View.OnClickListener,
+    AdapterView.OnItemSelectedListener {
 
     private val PERMISSION_CODE = 101;
     private val TAKE_PHOTO_GALLERY = 201;
@@ -45,20 +53,21 @@ class RegisterActivity : AppCompatActivity(),View.OnClickListener,AdapterView.On
     private lateinit var signUpBtn: Button
     private lateinit var signInBtn: TextView
     private lateinit var progressBar: ProgressBar
-    private var selectedImage : Uri? = null
-    private var resultPath : String = ""
-    private val gender_array = arrayOf<String>("Male","Female")
+    private var selectedImage: Uri? = null
+    private var resultPath: String = ""
+    private val gender_array = arrayOf<String>("Male", "Female")
     private var choosed_gender = "Male"
     private var choosed_username = ""
 
-    private lateinit var other_info_register_layout:RelativeLayout
-    private lateinit var name_user_register_welcome : TextView
-    private lateinit var add_profile_photo_register : CircularImageView
-    private lateinit var add_proile_photo_btn_register : TextView
-  //  private lateinit var skip_btn_register : Button
-    private lateinit var next_btn_register : Button
-    private lateinit var register_layout : RelativeLayout
-    private lateinit var gender_chooose_spinner : Spinner
+    private lateinit var other_info_register_layout: RelativeLayout
+    private lateinit var name_user_register_welcome: TextView
+    private lateinit var add_profile_photo_register: CircularImageView
+    private lateinit var add_proile_photo_btn_register: TextView
+
+    //  private lateinit var skip_btn_register : Button
+    private lateinit var next_btn_register: Button
+    private lateinit var register_layout: RelativeLayout
+    private lateinit var gender_chooose_spinner: Spinner
 
     private lateinit var display_unique_name: String
     private var signUpState = false
@@ -78,7 +87,7 @@ class RegisterActivity : AppCompatActivity(),View.OnClickListener,AdapterView.On
         name_user_register_welcome = findViewById(R.id.name_user_register_welcome)
         add_profile_photo_register = findViewById(R.id.add_profile_photo_register)
         add_proile_photo_btn_register = findViewById(R.id.add_proile_photo_btn_register)
-     //   skip_btn_register = findViewById(R.id.skip_btn_register)
+        //   skip_btn_register = findViewById(R.id.skip_btn_register)
         next_btn_register = findViewById(R.id.next_btn_register)
         register_layout = findViewById(R.id.register_layout)
         gender_chooose_spinner = findViewById(R.id.gender_chooose_spinner)
@@ -138,7 +147,8 @@ class RegisterActivity : AppCompatActivity(),View.OnClickListener,AdapterView.On
         next_btn_register.setOnClickListener(this)
 
         //choose gender spinner
-        val adapter = ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,gender_array)
+        val adapter =
+            ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, gender_array)
         this.gender_chooose_spinner.adapter = adapter
 
         this.gender_chooose_spinner.onItemSelectedListener = this
@@ -159,7 +169,7 @@ class RegisterActivity : AppCompatActivity(),View.OnClickListener,AdapterView.On
                     hashMap.put("username", username)
                     hashMap.put("imageUrl", "null")
                     hashMap.put("bio", "null")
-                    hashMap.put("gender",choosed_gender)
+                    hashMap.put("gender", choosed_gender)
                     hashMap.put("status", "offline")
 
                     database.child(firebaseUser.uid).setValue(hashMap)
@@ -248,9 +258,43 @@ class RegisterActivity : AppCompatActivity(),View.OnClickListener,AdapterView.On
                 str = str?.substring(4)
                 val file = File(str)
                 resultPath = file.path
+                uploadProfilePhoto()
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun uploadProfilePhoto() {
+        val resultBitmap = SiliCompressor.with(this).getCompressBitmap(resultPath)
+        val stream = ByteArrayOutputStream()
+        resultBitmap.compress(Bitmap.CompressFormat.PNG,100,stream)
+        val resultArray = stream.toByteArray()
+
+        val storageRef = FirebaseStorage.getInstance().getReference("profileImages").child(Connection.user+".jpg")
+
+        FirebaseMethods.singleValueEvent(Connection.userRef+File.separator+Connection.user,object : RequestCallback(){
+            override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                val uploadTask = storageRef.putBytes(resultArray)
+
+                uploadTask.addOnSuccessListener {
+                    uploadTask.continueWithTask {
+                        if(!it.isSuccessful){
+                            throw it.exception!!
+                        }
+                        return@continueWithTask storageRef.downloadUrl
+                    }.addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            val uri = it.result
+                            val imgUrl = uri.toString()
+                            val hashMap = hashMapOf<String, Any>()
+                            hashMap.put("postImage", imgUrl)
+                            dataSnapshot.ref.updateChildren(hashMap)
+                            return@addOnCompleteListener
+                        }
+                    }
+                }
+            }
+        })
     }
 
     override fun onRequestPermissionsResult(
@@ -269,31 +313,31 @@ class RegisterActivity : AppCompatActivity(),View.OnClickListener,AdapterView.On
     }
 
     override fun onClick(v: View?) {
-        when(v){
-            signInBtn->{
+        when (v) {
+            signInBtn -> {
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
             }
-            next_signup_button->{
+            next_signup_button -> {
                 display_unique_name_register_layout.visibility = View.GONE
                 signUp_layout.visibility = View.VISIBLE
                 display_unique_name = unique_name_edittext_register.text.toString()
             }
-            signUpBtn->{
+            signUpBtn -> {
                 signUpBtn.visibility = View.INVISIBLE
                 progressBar.visibility = View.VISIBLE
                 resistTouch()
                 registerNewUser()
                 this.name_user_register_welcome.text = choosed_username
             }
-            next_btn_register->{
+            next_btn_register -> {
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent)
                 finish()
             }
-            add_proile_photo_btn_register->{
+            add_proile_photo_btn_register -> {
                 val permission = arrayOf<String>(
                     android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     android.Manifest.permission.READ_EXTERNAL_STORAGE
@@ -313,7 +357,7 @@ class RegisterActivity : AppCompatActivity(),View.OnClickListener,AdapterView.On
                     Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 startActivityForResult(intent, TAKE_PHOTO_GALLERY)
             }
-            else->{
+            else -> {
                 return
             }
         }

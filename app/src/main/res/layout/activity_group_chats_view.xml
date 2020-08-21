@@ -3,7 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/AppBackground"
     tools:context=".groupChats.GroupChatsActivity">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/open_chats_FloatingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="36dp"
+        android:backgroundTint="@color/black"
+        android:layout_marginRight="36dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_speak"/>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarGroupChatsView"
@@ -18,10 +31,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/carter_one"
+                android:fontFamily="@font/avenir_book"
+                android:textStyle="bold"
                 android:text="Groups"
-                android:textColor="#000000"
-                android:textSize="26sp" />
+                android:textColor="@color/white"
+                android:textSize="28sp" />
 
         </RelativeLayout>
 

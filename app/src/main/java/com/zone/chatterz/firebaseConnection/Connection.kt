@@ -21,5 +21,6 @@ open class Connection {
         val likesRef : String = "Likes"
         val commentsRef : String = "Comments"
         val commentReplyRef : String = "CommentsReply"
+        val archivePost : String = "Archive"
     }
 }

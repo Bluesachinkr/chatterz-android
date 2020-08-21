@@ -23,25 +23,44 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PostsActivity"></activity>
-        <activity android:name=".CreatePostCamera" />
-        <activity android:name=".mainFragment.SearchActivity" />
-        <activity android:name=".camera.FinalPreviewActivity" />
-        <activity android:name=".FollowingFollowersActivity" />
-        <activity android:name=".CommentActivity" />
-        <activity android:name=".mainFragment.CreatePostActivity" />
-        <activity android:name=".FollowersActivity" />
-        <activity android:name=".settings.EditProfileActivity" />
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".CreateNewGroup" />
-        <activity android:name=".groupChats.GroupChatMessageActivity" />
-        <activity android:name=".mainFragment.ProfileActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".singleChat.ChatMessageActivity" />
-        <activity android:name=".preActivities.RegisterActivity" />
-        <activity android:name=".preActivities.LoginActivity" />
-        <activity android:name=".preActivities.WelcomeActivity" />
-        <activity android:name=".preActivities.StartActivity">
+        <activity android:name=".PostsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".camera.CameraChatterz"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".mainFragment.SearchActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".camera.FinalPreviewActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".FollowingFollowersActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".CommentActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".mainFragment.CreatePostActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".FollowersActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".settings.EditProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SettingsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".CreateNewGroup"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".groupChats.GroupChatMessageActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".mainFragment.ProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".singleChat.ChatMessageActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".preActivities.RegisterActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".preActivities.LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".preActivities.WelcomeActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".preActivities.StartActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -75,7 +94,7 @@
             android:resource="@array/preloaded_fonts" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/blur" />
+            android:resource="@drawable/app_icon" />
     </application>
 
 </manifest>

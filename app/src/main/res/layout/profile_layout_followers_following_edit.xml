@@ -33,7 +33,7 @@
                     android:id="@+id/followers_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="200"
+                    android:text=""
                     android:textSize="14sp"
                     android:fontFamily="@font/avenir_book"
                     android:textColor="@color/white" />
@@ -69,7 +69,7 @@
                     android:id="@+id/following_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="200"
+                    android:text=""
                     android:textSize="14sp"
                     android:fontFamily="@font/avenir_book"
                     android:textColor="@color/white" />
@@ -103,7 +103,7 @@
                 android:id="@+id/display_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sachin Kumar"
+                android:text=""
                 android:textColor="@color/white"
                 android:fontFamily="@font/avenir_book"
                 android:textStyle="bold"

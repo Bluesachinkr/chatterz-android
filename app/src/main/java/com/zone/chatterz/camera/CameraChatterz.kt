@@ -1,14 +1,14 @@
-package com.zone.chatterz
+package com.zone.chatterz.camera
 
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
-import com.zone.chatterz.camera.CameraFragment
+import com.zone.chatterz.R
 import com.zone.chatterz.mainFragment.CreatePostActivity
 
-class CreatePostCamera : AppCompatActivity(){
+class CameraChatterz : AppCompatActivity(){
 
     private val permissionList: MutableList<String> = mutableListOf()
     private val REQUEST_CODE = 101

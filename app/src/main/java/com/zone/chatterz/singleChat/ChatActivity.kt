@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.database.*
 import com.google.firebase.iid.FirebaseInstanceId
@@ -24,12 +25,15 @@ import com.zone.chatterz.model.User
 import com.zone.chatterz.notification.Token
 import com.zone.chatterz.R
 import com.zone.chatterz.adapter.OnlineFriendAdapter
+import com.zone.chatterz.inferfaces.ChatControlListener
 import java.io.File
 
-open class ChatActivity(mContext : Context) : Fragment(), View.OnClickListener {
+open class ChatActivity(mContext : Context,listener : ChatControlListener) : Fragment(), View.OnClickListener {
 
     private val mContext =  mContext
+    private val listener = listener
     private lateinit var message_recyclerView: RecyclerView
+    private lateinit var open_group_FloatingButton : FloatingActionButton
     private lateinit var databaseReference: DatabaseReference
     private lateinit var chatRecentAdapter: ChatRecentAdapter
     private lateinit var usersList: MutableList<String>
@@ -54,6 +58,7 @@ open class ChatActivity(mContext : Context) : Fragment(), View.OnClickListener {
         message_recyclerView = view.findViewById(R.id.recent_RecyclerView)
         content = view.findViewById(R.id.contentOnline)
         new_chat_to_users = view.findViewById(R.id.new_chat_to_users)
+        open_group_FloatingButton = view.findViewById(R.id.open_group_FloatingButton)
 
         mRefreshLayoutChat = view.findViewById(R.id.swipe_refresh_recent_chats)
         mSwipeRefreshListener = SwipeRefreshLayout.OnRefreshListener {
@@ -65,6 +70,7 @@ open class ChatActivity(mContext : Context) : Fragment(), View.OnClickListener {
 
         mSwipeRefreshListener.onRefresh()
         new_chat_to_users.setOnClickListener(this)
+        open_group_FloatingButton.setOnClickListener(this)
         return view
     }
 
@@ -160,6 +166,9 @@ open class ChatActivity(mContext : Context) : Fragment(), View.OnClickListener {
         when (v) {
             new_chat_to_users -> {
 
+            }
+            open_group_FloatingButton->{
+                listener.openGroup()
             }
             else -> {
                 return

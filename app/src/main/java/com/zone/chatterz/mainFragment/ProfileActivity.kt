@@ -15,6 +15,7 @@ import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.FirebaseDatabase
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.*
 import com.zone.chatterz.firebaseConnection.Connection
@@ -24,21 +25,20 @@ import com.zone.chatterz.model.User
 import com.zone.chatterz.settings.EditProfileActivity
 import com.zone.chatterz.singleChat.ChatMessageActivity
 import java.io.File
-import java.lang.StringBuilder
-
 
 open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
     TabLayout.OnTabSelectedListener {
 
     private lateinit var user: String
     private lateinit var forPurpose: String
-    private var isFollowing : Boolean = false
+    private var isFollowing: Boolean = false
 
     private lateinit var profile_img_profile: CircularImageView
     private lateinit var display_unique_name: TextView
-    private lateinit var display_user_name : TextView
+    private lateinit var display_user_name: TextView
     private lateinit var about_me_profile: TextView
-    private lateinit var back_arrow_profile : ImageView
+    private lateinit var about_me_profile_text: TextView
+    private lateinit var back_arrow_profile: RelativeLayout
 
     private lateinit var setting_profile_btn: RelativeLayout
     private lateinit var message_profile_btn: RelativeLayout
@@ -47,7 +47,7 @@ open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
     private lateinit var follow_btn_check_profile: RelativeLayout
     private lateinit var following_btn_profile: RelativeLayout
     private lateinit var followers_btn_profile: RelativeLayout
-    private lateinit var follow_following_btn_profile_text : TextView
+    private lateinit var follow_following_btn_profile_text: TextView
     private lateinit var followers_count: TextView
     private lateinit var following_count: TextView
 
@@ -65,7 +65,7 @@ open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
         val intentFrom = intent
         this.forPurpose = intentFrom.extras?.get("for") as String
         this.user = intentFrom.extras?.get("user") as String
-        if(forPurpose.equals("checking")){
+        if (forPurpose.equals("checking")) {
             isFollowing = intentFrom.extras?.get("isFollowing") as Boolean
         }
 
@@ -73,6 +73,7 @@ open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
         display_unique_name = findViewById(R.id.display_unique_name)
         display_user_name = findViewById(R.id.display_user_name)
         about_me_profile = findViewById(R.id.about_me_profile)
+        about_me_profile_text = findViewById(R.id.about_me_profile_text)
 
         back_arrow_profile = findViewById(R.id.back_arrow_profile)
 
@@ -97,7 +98,7 @@ open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
 
         following_btn_profile.setOnClickListener(this)
         followers_btn_profile.setOnClickListener(this)
-
+        back_arrow_profile.setOnClickListener(this)
         message_profile_btn.setOnClickListener(this)
         edit_profile.setOnClickListener(this)
         follow_btn_check_profile.setOnClickListener(this)
@@ -111,9 +112,9 @@ open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
             follow_btn_check_profile.visibility = View.VISIBLE
             setting_profile_btn.visibility = View.GONE
             message_profile_btn.visibility = View.VISIBLE
-            if(isFollowing){
+            if (isFollowing) {
                 follow_following_btn_profile_text.text = "Following"
-            }else{
+            } else {
                 follow_following_btn_profile_text.text = "Follow"
             }
         }
@@ -151,38 +152,47 @@ open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
 
     private fun setUptabIcons() {
         tab_layout_profile.getTabAt(0)?.setIcon(R.drawable.ic_home_tab_profile)
-        tab_layout_profile.getTabAt(1)?.setIcon(R.drawable.ic_videos_tab_profile)
-        tab_layout_profile.getTabAt(2)?.setIcon(R.drawable.ic_archive_tab_profile)
+        /*  tab_layout_profile.getTabAt(1)?.setIcon(R.drawable.ic_videos_tab_profile)*/
+        tab_layout_profile.getTabAt(1)?.setIcon(R.drawable.ic_archive_tab_profile)
     }
 
     private fun loadFragments() {
-        fragments.add(PhotosPostProfileFragment(this,user))
-        fragments.add(VideosProfileFragment())
-        fragments.add(ArchiveFragment())
+        fragments.add(PhotosPostProfileFragment(this, user))
+        /*  fragments.add(VideosProfileFragment())*/
+        fragments.add(ArchiveFragment(this, user))
     }
 
     private fun loadUserData() {
-        FirebaseMethods.singleValueEvent(Connection.userRef+File.separator+user,object : RequestCallback(){
-            override fun onDataChanged(dataSnapshot: DataSnapshot) {
-                val data = dataSnapshot.getValue(User::class.java)
-                data?.let {
-                    display_user_name.text = data.username
-                    about_me_profile.text = data.bio
-                    display_unique_name.text = data.displayName
-                    //load image
-                    if (!data.imageUrl.equals("null")) {
-                        Glide.with(this@ProfileActivity).load(data.imageUrl)
-                            .into(profile_img_profile)
-                    }else{
-                        if(data.gender.equals("Male")){
-                            profile_img_profile.setImageResource(R.drawable.ic_male_gender_profile)
-                        }else{
-                            profile_img_profile.setImageResource(R.drawable.ic_female_gender_profile)
+        FirebaseMethods.singleValueEvent(Connection.userRef + File.separator + user,
+            object : RequestCallback() {
+                override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                    val data = dataSnapshot.getValue(User::class.java)
+                    data?.let {
+                        display_user_name.text = data.username
+
+                        //load bio
+                        if (data.bio.equals("null")) {
+                            about_me_profile_text.visibility = View.GONE
+                            about_me_profile.visibility = View.GONE
+                        } else {
+                            about_me_profile_text.text = data.bio
+                        }
+
+                        display_unique_name.text = data.displayName
+                        //load image
+                        if (!data.imageUrl.equals("null")) {
+                            Glide.with(this@ProfileActivity).load(data.imageUrl)
+                                .into(profile_img_profile)
+                        } else {
+                            if (data.gender.equals("Male")) {
+                                profile_img_profile.setImageResource(R.drawable.ic_male_gender_profile)
+                            } else {
+                                profile_img_profile.setImageResource(R.drawable.ic_female_gender_profile)
+                            }
                         }
                     }
                 }
-            }
-        })
+            })
 
         FirebaseMethods.singleValueEvent(Connection.followersRef + File.separator + user,
             object : RequestCallback() {
@@ -202,6 +212,9 @@ open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun onClick(v: View?) {
         when (v) {
+            back_arrow_profile -> {
+                onBackPressed()
+            }
             followers_btn_profile -> {
                 val intent = Intent(this, FollowingFollowersActivity::class.java)
                 intent.putExtra("from", "followers")
@@ -212,17 +225,60 @@ open class ProfileActivity : AppCompatActivity(), View.OnClickListener,
                 intent.putExtra("from", "following")
                 startActivity(intent)
             }
-            edit_profile->{
-                startActivity(Intent(this,EditProfileActivity::class.java))
+            edit_profile -> {
+                startActivity(Intent(this, EditProfileActivity::class.java))
             }
-            message_profile_btn->{
+            message_profile_btn -> {
                 val intent = Intent(this, ChatMessageActivity::class.java)
                 intent.putExtra("UserId", user)
                 startActivity(intent)
             }
+            follow_btn_check_profile -> {
+                setFollowOrFollowing()
+            }
             else -> {
                 return
             }
+        }
+    }
+
+    private fun setFollowOrFollowing() {
+        if (isFollowing) {
+            FirebaseMethods.singleValueEvent(Connection.followingRef + File.separator + Connection.user,
+                object : RequestCallback() {
+                    override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                        for (data in dataSnapshot.children) {
+                            data.key?.let {
+                                if (it.equals(user)) {
+                                    data.ref.removeValue()
+                                }
+                            }
+                        }
+                    }
+                })
+            follow_following_btn_profile_text.text = "Follow"
+            isFollowing = false
+            FirebaseMethods.singleValueEvent(Connection.followersRef + File.separator + user,
+                object : RequestCallback() {
+                    override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                        for (data in dataSnapshot.children) {
+                            data.key?.let {
+                                if (it.equals(user)) {
+                                    data.ref.removeValue()
+                                }
+                            }
+                        }
+                    }
+                })
+        } else {
+            FirebaseDatabase.getInstance().getReference(Connection.followingRef)
+                .child(Connection.user)
+                .child(user).setValue(true)
+            FirebaseDatabase.getInstance().getReference(Connection.followersRef).child(user)
+                .child(Connection.user)
+                .setValue(true)
+            follow_following_btn_profile_text.text = "Following"
+            isFollowing = true
         }
     }
 
