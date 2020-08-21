@@ -1,11 +1,13 @@
 package com.zone.chatterz.mainFragment
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +20,7 @@ import com.zone.chatterz.model.User
 import com.zone.chatterz.R
 
 
-open class SearchActivity : Fragment() {
+open class SearchActivity : AppCompatActivity() {
 
     private lateinit var searchBar: SearchView
     private lateinit var searchProgressBar: ProgressBar
@@ -28,25 +30,23 @@ open class SearchActivity : Fragment() {
     private lateinit var mSearchUser: MutableList<User>
     private var currentSearchtext: String = ""
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+
+    override fun onCreate(
         savedInstanceState: Bundle?
-    ): View? {
-
-        val view = inflater.inflate(R.layout.fragment_search, container, false)
-
+    ) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.fragment_search)
         mAuth = FirebaseAuth.getInstance()
         firebaseUser = mAuth.currentUser!!
 
-        searchBar = view.findViewById(R.id.searchBar)
-        searchedView = view.findViewById(R.id.searchedView)
-        searchProgressBar = view.findViewById(R.id.searchProgressBar)
+        searchBar = findViewById(R.id.searchBar)
+        searchedView = findViewById(R.id.searchedView)
+        searchProgressBar = findViewById(R.id.searchProgressBar)
 
-        (activity as DrawerLocker).setDrawerLockerEnabled(false)
         mSearchUser = mutableListOf()
         currentSearchtext = ""
 
-        val layoutManager = LinearLayoutManager(this.context)
+        val layoutManager = LinearLayoutManager(this)
         searchedView.layoutManager = layoutManager
 
         searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -75,9 +75,6 @@ open class SearchActivity : Fragment() {
             }
 
         })
-
-
-        return view
     }
 
     private fun searchUser(text: String?) {
@@ -98,7 +95,7 @@ open class SearchActivity : Fragment() {
                         }
                     }
                 }
-                val getContext = context!!
+                val getContext = this@SearchActivity
                 val adapter = SearchAdapter(getContext, mSearchUser)
                 searchedView.adapter = adapter
                 searchProgressBar.visibility = View.GONE
@@ -109,7 +106,7 @@ open class SearchActivity : Fragment() {
 
     private fun emptySearchedView() {
         mSearchUser.clear()
-        val getContext = context!!
+        val getContext = this
         val adapter = SearchAdapter(getContext, mSearchUser)
         searchedView.adapter = adapter
     }

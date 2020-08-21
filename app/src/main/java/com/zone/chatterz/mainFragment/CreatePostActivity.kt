@@ -41,9 +41,12 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
 
         val ig = intent
         ig?.let {
-            selectedImage = (it.extras?.get("output")) as Uri
-            selectedImage?.let {
-                this.resultPath = it.path.toString()
+            val from = it.extras?.get("from")
+            if(from!= null && from?.equals("main")){
+                selectedImage = (it.extras?.get("output")) as Uri
+                selectedImage?.let {
+                    this.resultPath = it.path.toString()
+                }
             }
         }
 

@@ -19,17 +19,16 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
+import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.adapter.HomeAdapter
 import com.zone.chatterz.data.UserData
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
+import com.zone.chatterz.mainFragment.*
 import com.zone.chatterz.model.User
 import com.zone.chatterz.preActivities.WelcomeActivity
 import com.zone.chatterz.settings.EditProfileActivity
-import com.zone.chatterz.mainFragment.CreatePostActivity
-import com.zone.chatterz.mainFragment.HomeActivity
-import com.zone.chatterz.mainFragment.SearchActivity
 import com.zone.chatterz.requirements.Timings
 import com.zone.chatterz.singleChat.ChatActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -42,14 +41,20 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
     private lateinit var content: RelativeLayout
     private lateinit var navigationDrawerMenu: NavigationView
     private lateinit var bottomnav_main_screen: BottomNavigationView
+    private lateinit var main_activity_appbar: RelativeLayout
+    private lateinit var profile_main_layout: RelativeLayout
+    private lateinit var search_view_main: RelativeLayout
 
     private var commentReadTextOpen = false
     private var postId: String = ""
 
     //add coment
     private lateinit var add_comment_post: ImageView
+    private lateinit var profile_image_main_frag: CircularImageView
     private lateinit var comment_edittext_comment_add: EditText
     private lateinit var comment_layout_home: RelativeLayout
+    private lateinit var camera_btn_layout_main: RelativeLayout
+    private lateinit var camera_btn_main_frag: ImageView
 
     companion object {
         var is_changed = false
@@ -65,9 +70,15 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
         this.mAuth = FirebaseAuth.getInstance()
         this.drawer = findViewById(R.id.drawerLayout)
         this.content = findViewById(R.id.contentLayout)
+        this.camera_btn_layout_main = findViewById(R.id.camera_main_activity)
+        this.camera_btn_main_frag = findViewById(R.id.camera_btn_main_frag)
+        this.profile_image_main_frag = findViewById(R.id.profile_image_main_frag)
         add_comment_post = findViewById(R.id.add_comment_post)
         comment_edittext_comment_add = findViewById(R.id.comment_edittext_add_comment)
         comment_layout_home = findViewById(R.id.comment_layout_home)
+        this.search_view_main = findViewById(R.id.search_view_main)
+        this.profile_main_layout = findViewById(R.id.profile_main_layout)
+        this.main_activity_appbar = findViewById(R.id.main_activity_appbar)
         this.bottomnav_main_screen = findViewById(R.id.bottomNavigationBar)
         this.navigationDrawerMenu = findViewById(R.id.NavigationDrawerMenu)
         drawer.setScrimColor(Color.TRANSPARENT)
@@ -79,6 +90,17 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
                 content.translationX = -slidex
             }
         })
+
+        //setonClickListener
+        profile_main_layout.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            intent.putExtra("for", "myOwn")
+            intent.putExtra("user", Connection.user)
+            startActivity(intent)
+        }
+        camera_btn_layout_main.setOnClickListener {
+            startActivity(Intent(this, CreatePostCamera::class.java))
+        }
 
         firebaseAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
             val user = FirebaseAuth.getInstance().currentUser
@@ -96,13 +118,18 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
             refreshPostComments()
         }
 
+        this.search_view_main.setOnClickListener {
+            startActivity(Intent(this, SearchActivity::class.java))
+        }
+
         setNavigationInitially()
 
         bottomnav_main_screen.setOnNavigationItemSelectedListener { menuItem ->
-            bottomNavigationBar.menu.getItem(0).setIcon(R.drawable.ic_outline_home_bottom_nav)
-            bottomNavigationBar.menu.getItem(1).setIcon(R.drawable.ic_create)
-            bottomNavigationBar.menu.getItem(2).setIcon(R.drawable.search_light_icon)
-            bottomNavigationBar.menu.getItem(3).setIcon(R.drawable.ic_chat)
+            bottomnav_main_screen.menu.getItem(0).setIcon(R.drawable.ic_outline_home_bottom_nav)
+            bottomnav_main_screen.menu.getItem(1).setIcon(R.drawable.ic_explore_icon_bottom_main)
+            bottomnav_main_screen.menu.getItem(2).setIcon(R.drawable.ic_create)
+            bottomnav_main_screen.menu.getItem(3).setIcon(R.drawable.ic_heart)
+            bottomnav_main_screen.menu.getItem(4).setIcon(R.drawable.ic_chat)
             when (menuItem.itemId) {
 
                 R.id.home -> {
@@ -111,18 +138,27 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
                         .replace(R.id.container_main, homeFragment, "HomeFragment")
                         .addToBackStack(null).commit()
                     menuItem.setIcon(R.drawable.ic_home_bottom_nav)
+                    main_activity_appbar.visibility = View.VISIBLE
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.create -> {
-                    startActivity(Intent(this, CreatePostCamera::class.java))
-                    return@setOnNavigationItemSelectedListener true
-                }
-                R.id.profile_bottombar -> {
-                    val searchActivity = SearchActivity()
+                R.id.explore_bottombar -> {
+                    val exploreActivity = ExploreActivity(this)
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container_main, searchActivity)
+                        .replace(R.id.container_main, exploreActivity)
                         .addToBackStack(null).commit()
-                    menuItem.setIcon(R.drawable.search_dark_icon)
+                    menuItem.setIcon(R.drawable.ic_explore_icon_bottom_main)
+                    main_activity_appbar.visibility = View.GONE
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.create_new_post -> {
+                    val intent = Intent(this, CreatePostActivity::class.java)
+                    intent.putExtra("from", "main")
+                    startActivity(intent)
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.notifications_bottombar -> {
+
+                    main_activity_appbar.visibility = View.GONE
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.chat_bottombar -> {
@@ -131,14 +167,14 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
                         .replace(R.id.container_main, chatActivity)
                         .addToBackStack(null).commit()
                     menuItem.setIcon(R.drawable.ic_chat)
+                    main_activity_appbar.visibility = View.GONE
                     return@setOnNavigationItemSelectedListener true
                 }
             }
             return@setOnNavigationItemSelectedListener false
         }
 
-        NavigationDrawerMenu.setNavigationItemSelectedListener { menuItem ->
-
+        navigationDrawerMenu.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.logout -> {
                     mAuth.signOut()
@@ -153,11 +189,9 @@ class MainActivity : AppCompatActivity(), DrawerLocker, HomeActivity.NavigationC
                     return@setNavigationItemSelectedListener false
                 }
             }
-            return@setNavigationItemSelectedListener true
         }
 
         updateOnlineStatus()
-
     }
 
     private fun setNavigationInitially() {

@@ -1,6 +1,7 @@
 package com.zone.chatterz
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -19,13 +20,14 @@ import com.zone.chatterz.firebaseConnection.RequestCallback
 import com.zone.chatterz.model.Post
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 class PhotosPostProfileFragment(mContext : Context,user: String) : Fragment() {
 
     private val mContext = mContext
     private val user = user
     private lateinit var grid_view_photos_post_profile : RecyclerView
-    private val mPostList = mutableListOf<Post>()
+    private val mPostList = arrayListOf<Post>()
     private lateinit var imageAdapter: ImageAdapter
 
     override fun onCreateView(
@@ -64,7 +66,7 @@ class PhotosPostProfileFragment(mContext : Context,user: String) : Fragment() {
         })
     }
 
-    private class ImageAdapter(mContext: Context,mPostList : MutableList<Post>) : RecyclerView.Adapter<ImageAdapter.ImageViewholder>(){
+    private class ImageAdapter(mContext: Context,mPostList : ArrayList<Post>) : RecyclerView.Adapter<ImageAdapter.ImageViewholder>(){
 
         private val mContext = mContext
         private val mPostList = mPostList
@@ -86,6 +88,12 @@ class PhotosPostProfileFragment(mContext : Context,user: String) : Fragment() {
             val post = mPostList[position]
 
             Glide.with(mContext).load(post.postImage).into(holder.imageView)
+
+            holder.itemView.setOnClickListener {
+                val intent = Intent(mContext,PostsActivity::class.java)
+                intent.putExtra("list",mPostList)
+                mContext.startActivity(intent)
+            }
         }
     }
 }

@@ -8,21 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.iid.FirebaseInstanceId
 import com.zone.chatterz.adapter.ChatRecentAdapter
 import com.zone.chatterz.firebaseConnection.Connection
 import com.zone.chatterz.firebaseConnection.FirebaseMethods
 import com.zone.chatterz.firebaseConnection.RequestCallback
-import com.zone.chatterz.model.Chat
 import com.zone.chatterz.model.User
 import com.zone.chatterz.notification.Token
 import com.zone.chatterz.R
@@ -39,8 +36,7 @@ open class ChatActivity(mContext : Context) : Fragment(), View.OnClickListener {
     private lateinit var drawerOnline: DrawerLayout
     private lateinit var naviagtionOnline: NavigationView
     private lateinit var content: LinearLayout
-    private lateinit var onlineBtn: ImageView
-    private lateinit var back_chat: ImageView
+    private lateinit var new_chat_to_users : ImageView
     private lateinit var onlineRecyclerView: RecyclerView
     private lateinit var headerView: View
     private lateinit var mOnlineUser: MutableList<User>
@@ -57,8 +53,7 @@ open class ChatActivity(mContext : Context) : Fragment(), View.OnClickListener {
         val view = inflater.inflate(R.layout.activity_chat,container,false)
         message_recyclerView = view.findViewById(R.id.recent_RecyclerView)
         content = view.findViewById(R.id.contentOnline)
-        onlineBtn = view.findViewById(R.id.onlinestatus)
-        back_chat = view.findViewById(R.id.back_chat)
+        new_chat_to_users = view.findViewById(R.id.new_chat_to_users)
 
         mRefreshLayoutChat = view.findViewById(R.id.swipe_refresh_recent_chats)
         mSwipeRefreshListener = SwipeRefreshLayout.OnRefreshListener {
@@ -69,7 +64,7 @@ open class ChatActivity(mContext : Context) : Fragment(), View.OnClickListener {
         onlineRecyclerView = view.findViewById(R.id.onlineRecyclerView)
 
         mSwipeRefreshListener.onRefresh()
-        back_chat.setOnClickListener(this)
+        new_chat_to_users.setOnClickListener(this)
         return view
     }
 
@@ -163,8 +158,8 @@ open class ChatActivity(mContext : Context) : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            back_chat -> {
-                //finish()
+            new_chat_to_users -> {
+
             }
             else -> {
                 return

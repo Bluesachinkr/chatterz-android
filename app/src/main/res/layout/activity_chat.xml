@@ -21,23 +21,35 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginRight="16dp">
+                android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/back_chat"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/back_arrow"
-                    android:layout_centerVertical="true"/>
-
-                <ImageView
-                    android:id="@+id/onlinestatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true"
-                    android:src="@drawable/online_icon" />
+                    android:layout_marginLeft="8dp"
+                    android:fontFamily="@font/avenir_book"
+                    android:text="Chats"
+                    android:textColor="@color/white"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:id="@+id/new_chat_to_user_layout"
+                    android:layout_width="?actionBarSize"
+                    android:layout_height="?actionBarSize"
+                    android:layout_alignParentEnd="true">
+
+                    <ImageView
+                        android:id="@+id/new_chat_to_users"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/add_new_group_icon" />
+
+                </RelativeLayout>
 
             </RelativeLayout>
 
@@ -51,7 +63,7 @@
                 android:id="@+id/onlineRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none"/>
+                android:scrollbars="none" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -67,7 +79,7 @@
                     android:id="@+id/recent_RecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"/>
+                    android:orientation="vertical" />
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -75,12 +87,12 @@
 
     </LinearLayout>
 
-   <!-- <com.google.android.material.navigation.NavigationView
-        android:id="@+id/activeOnlineMenu"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="right"
-        app:headerLayout="@layout/fragment_followers" />-->
+    <!-- <com.google.android.material.navigation.NavigationView
+         android:id="@+id/activeOnlineMenu"
+         android:layout_width="wrap_content"
+         android:layout_height="match_parent"
+         android:layout_gravity="right"
+         app:headerLayout="@layout/fragment_followers" />-->
 
 </RelativeLayout>
 

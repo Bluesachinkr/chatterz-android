@@ -1,6 +1,8 @@
 package com.zone.chatterz.model
 
 import com.google.firebase.database.PropertyName
+import java.io.Serializable
+
 
 data class Post(
     @get:PropertyName("postId")
@@ -19,6 +21,6 @@ data class Post(
     @set:PropertyName("postTime")
     var postTime : String
 
-) {
+) : Serializable{
     constructor():this("","","","","")
 }

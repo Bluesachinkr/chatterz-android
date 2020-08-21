@@ -28,13 +28,11 @@ import com.zone.chatterz.singleChat.ChatActivity
 import java.util.*
 
 
-class HomeActivity(context: Context, listener: NavigationControls) : Fragment(),
-    View.OnClickListener {
+class HomeActivity(context: Context, listener: NavigationControls) : Fragment(){
 
     private val mContext = context
 
     private lateinit var recyclerView_home: RecyclerView
-    private lateinit var profile_image_home_frag: ImageView
     private lateinit var bottomSheetBeahavior: BottomSheetBehavior<View>
 
     private lateinit var reloadProgressBar_home: ProgressBar
@@ -55,14 +53,8 @@ class HomeActivity(context: Context, listener: NavigationControls) : Fragment(),
         val view: View = inflater.inflate(R.layout.fragment_home, container, false)
 
         //Initialization of elements of Home fragment
-        profile_image_home_frag = view.findViewById(R.id.profile_image_home_frag)
-      //  chat_btn_home_frag = view.findViewById(R.id.chat_btn_home_frag)
         recyclerView_home = view.findViewById(R.id.recyclerView_home)
         reloadProgressBar_home = view.findViewById(R.id.reloadProgressBar_home)
-
-        //Setting on click listener of buttons in home fragment
-   //     chat_btn_home_frag.setOnClickListener(this)
-        profile_image_home_frag.setOnClickListener(this)
 
         reloadPosts()
 
@@ -104,7 +96,6 @@ class HomeActivity(context: Context, listener: NavigationControls) : Fragment(),
 
     override fun onStart() {
         super.onStart()
-        setProfilePic()
     }
 
     private fun reloadPosts() {
@@ -190,45 +181,6 @@ class HomeActivity(context: Context, listener: NavigationControls) : Fragment(),
                 }
             }
         })
-    }
-
-    private fun setProfilePic() {
-        FirebaseMethods.singleValueEventChild(Connection.userRef, object : RequestCallback() {
-            override fun onDataChanged(dataSnapshot: DataSnapshot) {
-                val user = dataSnapshot.getValue(User::class.java)
-                user?.let {
-                    if (!it.imageUrl.equals("null")) {
-                        Glide.with(mContext).load(it.imageUrl).into(profile_image_home_frag)
-                    } else {
-                        if(user.gender.equals("Male")){
-                            profile_image_home_frag.setImageResource(R.drawable.ic_male_gender_profile)
-                        }else{
-                            profile_image_home_frag.setImageResource(R.drawable.ic_female_gender_profile)
-                        }
-                    }
-
-                }
-            }
-        })
-    }
-
-    override fun onClick(v: View?) {
-        when (v) {
-           /* chat_btn_home_frag -> {
-                //chat button
-                startActivity(Intent(mContext, ChatActivity::class.java))
-            }*/
-            profile_image_home_frag -> {
-                //profile button
-                val intent = Intent(mContext,ProfileActivity::class.java)
-                intent.putExtra("for","myOwn")
-                intent.putExtra("user",Connection.user)
-                startActivity(intent)
-            }
-            else -> {
-                return
-            }
-        }
     }
 
     interface NavigationControls {

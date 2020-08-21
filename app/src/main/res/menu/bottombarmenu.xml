@@ -7,14 +7,20 @@
         android:title="Home" />
 
     <item
-        android:id="@+id/create"
+        android:id="@+id/explore_bottombar"
+        android:icon="@drawable/ic_explore_icon_bottom_main"
+        android:title="Explore"/>
+
+    <item
+        android:id="@+id/create_new_post"
         android:icon="@drawable/ic_create"
         android:title="Create"/>
 
     <item
-        android:id="@+id/profile_bottombar"
+        android:id="@+id/notifications_bottombar"
         android:icon="@drawable/ic_heart"
-        android:title="Profile" />
+        android:title="Notifications" />
+
 
     <item
         android:id="@+id/chat_bottombar"

@@ -7,76 +7,14 @@
     android:background="@color/AppBackground"
     tools:context=".mainFragment.HomeActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarlayout_home"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="@color/ElementsAppBackground"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <!--<ImageView
-                android:id="@+id/chat_btn_home_frag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_margin="8dp"
-                android:src="@drawable/ic_chat" />-->
-
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/search_view_home"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:layout_alignParentLeft="true"/>
-
-            <RelativeLayout
-                android:id="@+id/profile_home_layout"
-                android:layout_width="?actionBarSize"
-                android:layout_height="?actionBarSize"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="4dp"
-                android:padding="8dp">
-
-                <com.mikhaellopez.circularimageview.CircularImageView
-                    android:id="@+id/profile_image_home_frag"
-                    android:layout_width="?actionBarSize"
-                    android:layout_height="?actionBarSize"
-                    android:scaleType="centerCrop"
-                    android:padding="2dp"
-                    android:src="@drawable/ic_male_gender_profile"
-                    app:civ_border_color="@color/black"
-                    app:civ_border_width="3px" />
-
-            </RelativeLayout>
-
-            <!--<ImageView
-                android:id="@+id/camera_btn_home_frag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_outline_photo_camera_home"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"
-                android:layout_margin="8dp"/>-->
-
-        </RelativeLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?actionBarSize">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/home_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/comment_layout_home">
+            android:layout_height="match_parent">
 
             <ProgressBar
                 android:id="@+id/reloadProgressBar_home"
