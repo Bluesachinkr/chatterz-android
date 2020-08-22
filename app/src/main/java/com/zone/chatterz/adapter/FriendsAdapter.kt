@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mikhaellopez.circularimageview.CircularImageView
-import com.zone.chatterz.singleChat.ChatMessageActivity
+import com.zone.chatterz.chats.ChatMessageActivity
 import com.zone.chatterz.model.User
 import com.zone.chatterz.R
 

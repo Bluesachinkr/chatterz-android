@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/AppBackground"
-    tools:context=".CommentActivity">
+    tools:context=".home.CommentActivity">
 
     <RelativeLayout
         android:id="@+id/comment_app_bar_bottom_sheet"

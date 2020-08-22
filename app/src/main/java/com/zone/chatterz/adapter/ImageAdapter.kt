@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.zone.chatterz.PostsActivity
+import com.zone.chatterz.profile.PostsActivity
 import com.zone.chatterz.R
 import com.zone.chatterz.model.Post
 

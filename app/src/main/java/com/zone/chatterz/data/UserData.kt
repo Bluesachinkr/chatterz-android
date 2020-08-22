@@ -1,9 +1,9 @@
 package com.zone.chatterz.data
 
 import com.google.firebase.database.DataSnapshot
-import com.zone.chatterz.firebaseConnection.Connection
-import com.zone.chatterz.firebaseConnection.FirebaseMethods
-import com.zone.chatterz.firebaseConnection.RequestCallback
+import com.zone.chatterz.connection.Connection
+import com.zone.chatterz.connection.FirebaseMethods
+import com.zone.chatterz.connection.RequestCallback
 import com.zone.chatterz.model.User
 import java.io.File
 

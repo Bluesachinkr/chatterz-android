@@ -11,15 +11,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.database.DataSnapshot
 import com.mikhaellopez.circularimageview.CircularImageView
-import com.zone.chatterz.PostsActivity
+import com.zone.chatterz.profile.PostsActivity
 import com.zone.chatterz.R
-import com.zone.chatterz.firebaseConnection.Connection
-import com.zone.chatterz.firebaseConnection.FirebaseMethods
-import com.zone.chatterz.firebaseConnection.RequestCallback
+import com.zone.chatterz.connection.Connection
+import com.zone.chatterz.connection.FirebaseMethods
+import com.zone.chatterz.connection.RequestCallback
 import com.zone.chatterz.model.Comment
 import com.zone.chatterz.model.Post
 import com.zone.chatterz.model.User
-import com.zone.chatterz.requirements.Timings
+import com.zone.chatterz.common.Timings
 import java.io.File
 
 class ExploreAdapter(mContext: Context, postList: ArrayList<Post>) :

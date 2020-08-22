@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateNewGroup">
+    android:background="@color/AppBackground"
+    tools:context=".group.CreateNewGroup">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_create_new_group"
@@ -26,6 +27,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:padding="10dp"
                     android:layout_centerVertical="true"
                     android:src="@drawable/back_arrow" />
 
@@ -36,7 +38,9 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:text="Create New Group"
-                    android:textColor="#000000"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/avenir_book"
+                    android:textStyle="bold"
                     android:textSize="24sp" />
 
             </RelativeLayout>
@@ -48,7 +52,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:text="Next"
-                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textColor="@color/appColor"
                 android:textSize="20sp" />
 
         </RelativeLayout>
@@ -74,9 +79,9 @@
                 android:id="@+id/groupImage"
                 android:layout_width="140dp"
                 android:layout_height="140dp"
-                app:civ_border_color="#000000"
+                app:civ_border_color="@color/appColor"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/google_logo"
+                android:src="@drawable/ic_multiple_users_silhouette"
                 app:civ_border_width="2dp"/>
 
             <ImageView
@@ -96,6 +101,8 @@
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             android:padding="10dp"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
             android:hint="Group Name"
             android:layout_marginTop="160dp"
             android:background="@drawable/background_edittext_chatbox"/>

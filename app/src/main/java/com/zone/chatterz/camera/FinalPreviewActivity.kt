@@ -9,7 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.zone.chatterz.R
-import com.zone.chatterz.mainFragment.CreatePostActivity
+import com.zone.chatterz.home.CreatePostActivity
 import java.io.File
 
 

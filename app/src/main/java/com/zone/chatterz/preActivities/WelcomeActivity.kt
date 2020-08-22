@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.zone.chatterz.MainActivity
+import com.zone.chatterz.home.MainActivity
 import com.zone.chatterz.R
 import kotlinx.android.synthetic.main.activity_welcome.*
 

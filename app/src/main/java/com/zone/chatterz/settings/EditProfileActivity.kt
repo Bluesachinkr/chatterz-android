@@ -1,16 +1,13 @@
 package com.zone.chatterz.settings
 
-import com.zone.chatterz.inferfaces.OnEditListener
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
@@ -21,13 +18,11 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.iceteck.silicompressorr.SiliCompressor
 import com.mikhaellopez.circularimageview.CircularImageView
-import com.zone.chatterz.MainActivity
 import com.zone.chatterz.model.User
 import com.zone.chatterz.R
-import com.zone.chatterz.firebaseConnection.Connection
-import com.zone.chatterz.firebaseConnection.FirebaseMethods
-import com.zone.chatterz.firebaseConnection.RequestCallback
-import com.zone.chatterz.requirements.JpegImageCompressor
+import com.zone.chatterz.connection.Connection
+import com.zone.chatterz.connection.FirebaseMethods
+import com.zone.chatterz.connection.RequestCallback
 import java.io.ByteArrayOutputStream
 import java.io.File
 

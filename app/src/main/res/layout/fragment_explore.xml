@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/AppBackground"
     android:orientation="vertical"
-    tools:context=".mainFragment.ExploreActivity">
+    tools:context=".home.ExploreActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

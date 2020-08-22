@@ -12,10 +12,10 @@ import com.bumptech.glide.Glide
 import com.google.firebase.database.DataSnapshot
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.R
-import com.zone.chatterz.firebaseConnection.Connection
-import com.zone.chatterz.firebaseConnection.FirebaseMethods
-import com.zone.chatterz.firebaseConnection.RequestCallback
-import com.zone.chatterz.mainFragment.ProfileActivity
+import com.zone.chatterz.connection.Connection
+import com.zone.chatterz.connection.FirebaseMethods
+import com.zone.chatterz.connection.RequestCallback
+import com.zone.chatterz.home.ProfileActivity
 import com.zone.chatterz.model.User
 import java.io.File
 

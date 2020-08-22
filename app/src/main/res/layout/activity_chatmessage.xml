@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/AppBackground"
-    tools:context=".singleChat.ChatMessageActivity">
+    tools:context=".chats.ChatMessageActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarlayout"

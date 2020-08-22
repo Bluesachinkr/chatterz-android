@@ -12,7 +12,7 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.zone.chatterz.singleChat.ChatMessageActivity
+import com.zone.chatterz.chats.ChatMessageActivity
 import com.zone.chatterz.R
 
 class FirebaseMessage : FirebaseMessagingService() {

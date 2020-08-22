@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
+    android:background="@color/AppBackground"
     android:layout_height="wrap_content">
 
         <com.mikhaellopez.circularimageview.CircularImageView
@@ -19,11 +20,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:fontFamily="sans-serif"
+                android:fontFamily="@font/avenir_book"
                 android:layout_toEndOf="@id/profileImg_Friends"
                 android:maxLines="1"
                 android:text="UserName"
-                android:textColor="#686666"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="normal" />
 

@@ -4,8 +4,7 @@
 
     <item
         android:id="@+id/addNewgroup"
-        android:title="Add New Group"
-        app:showAsAction="always"
+        android:title="Create new group"
         android:icon="@drawable/add_new_group_icon"/>
 
 </menu>

@@ -15,7 +15,6 @@ import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -23,14 +22,12 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.iceteck.silicompressorr.SiliCompressor
 import com.mikhaellopez.circularimageview.CircularImageView
-import com.zone.chatterz.MainActivity
-import com.zone.chatterz.ManualAuthentication
+import com.zone.chatterz.home.MainActivity
+import com.zone.chatterz.common.ManualAuthentication
 import com.zone.chatterz.R
-import com.zone.chatterz.adapter.SearchAdapter
-import com.zone.chatterz.firebaseConnection.Connection
-import com.zone.chatterz.firebaseConnection.FirebaseMethods
-import com.zone.chatterz.firebaseConnection.RequestCallback
-import com.zone.chatterz.model.User
+import com.zone.chatterz.connection.Connection
+import com.zone.chatterz.connection.FirebaseMethods
+import com.zone.chatterz.connection.RequestCallback
 import java.io.ByteArrayOutputStream
 import java.io.File
 

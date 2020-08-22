@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.zone.chatterz.model.GroupChats
 import com.zone.chatterz.R
-import com.zone.chatterz.requirements.Timings
+import com.zone.chatterz.common.Timings
 
 class GroupChatAdapter(context: Context, mGroupChat: List<GroupChats>) :
     RecyclerView.Adapter<GroupChatAdapter.ViewHolder>() {

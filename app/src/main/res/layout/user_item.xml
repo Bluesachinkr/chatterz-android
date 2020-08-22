@@ -26,7 +26,6 @@
             android:layout_height="match_parent"
             app:civ_border_color="@color/appColor"
             app:civ_border_width="2px"
-            android:background="@color/white"
             android:scaleType="centerCrop"/>
 
             <com.mikhaellopez.circularimageview.CircularImageView

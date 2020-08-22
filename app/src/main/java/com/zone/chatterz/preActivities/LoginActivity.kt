@@ -7,8 +7,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
-import com.zone.chatterz.MainActivity
-import com.zone.chatterz.ManualAuthentication
+import com.zone.chatterz.home.MainActivity
+import com.zone.chatterz.common.ManualAuthentication
 import com.zone.chatterz.R
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {

@@ -20,7 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.common.util.concurrent.ListenableFuture
 import com.mikhaellopez.circularimageview.CircularImageView
-import com.zone.chatterz.CustomFiles
+import com.zone.chatterz.common.CustomFiles
 import com.zone.chatterz.R
 import java.io.File
 import java.nio.ByteBuffer

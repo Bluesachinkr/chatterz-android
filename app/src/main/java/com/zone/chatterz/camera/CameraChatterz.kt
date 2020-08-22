@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import com.zone.chatterz.R
-import com.zone.chatterz.mainFragment.CreatePostActivity
+import com.zone.chatterz.home.CreatePostActivity
 
 class CameraChatterz : AppCompatActivity(){
 

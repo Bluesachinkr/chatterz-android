@@ -13,11 +13,11 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.mikhaellopez.circularimageview.CircularImageView
-import com.zone.chatterz.groupChats.GroupChatMessageActivity
+import com.zone.chatterz.group.GroupChatMessageActivity
 import com.zone.chatterz.model.Group
 import com.zone.chatterz.model.GroupChats
 import com.zone.chatterz.R
-import com.zone.chatterz.requirements.Timings
+import com.zone.chatterz.common.Timings
 
 class GroupRecentAdapter(mContext: Context, mGroupRecent: List<Group>) :
     RecyclerView.Adapter<GroupRecentAdapter.ViewHolder>() {
@@ -63,7 +63,7 @@ class GroupRecentAdapter(mContext: Context, mGroupRecent: List<Group>) :
         var lastMsg = ""
         var time = ""
         val databaseReference = FirebaseDatabase.getInstance()
-            .getReference(com.zone.chatterz.firebaseConnection.Connection.groupChats).child(id)
+            .getReference(com.zone.chatterz.connection.Connection.groupChats).child(id)
         databaseReference.addValueEventListener(object
             : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {

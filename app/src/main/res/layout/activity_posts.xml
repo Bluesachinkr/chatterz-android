@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/AppBackground"
     android:orientation="vertical"
-    tools:context=".PostsActivity">
+    tools:context=".profile.PostsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

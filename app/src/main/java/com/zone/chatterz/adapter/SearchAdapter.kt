@@ -1,6 +1,8 @@
 package com.zone.chatterz.adapter
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -11,23 +13,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.mikhaellopez.circularimageview.CircularImageView
-import com.zone.chatterz.singleChat.ChatMessageActivity
 import com.zone.chatterz.model.User
 import com.zone.chatterz.R
-import com.zone.chatterz.firebaseConnection.Connection
-import com.zone.chatterz.firebaseConnection.FirebaseMethods
-import com.zone.chatterz.firebaseConnection.RequestCallback
+import com.zone.chatterz.connection.Connection
+import com.zone.chatterz.connection.FirebaseMethods
+import com.zone.chatterz.connection.RequestCallback
+import com.zone.chatterz.group.GroupChatMessageActivity
+import com.zone.chatterz.model.Group
 
-class SearchAdapter(context: Context, mlist: List<User>) :
+class SearchAdapter(context: Context, mlist: List<User>,mGroups : List<Group>,type : String) :
     RecyclerView.Adapter<SearchAdapter.Viewholder>() {
 
     private val mlist = mlist
     private val mContext = context
     private val mFriends = mutableListOf<String>()
+    private val mGroups = mGroups
+    private val type = type
     private val mAuth = FirebaseAuth.getInstance()
     private val firebaseUser = mAuth.currentUser!!
 
@@ -37,43 +40,83 @@ class SearchAdapter(context: Context, mlist: List<User>) :
     }
 
     override fun getItemCount(): Int {
-        return mlist.size
+        if(type.equals("Group")){
+            return mGroups.size
+        }else {
+            return mlist.size
+        }
     }
 
     override fun onBindViewHolder(holder: Viewholder, position: Int) {
-        val user = mlist.get(position)
+        if(type.equals("Group")){
+            val group = mGroups[position]
+            holder.userName.text = group.groupName
 
-        FirebaseMethods.addValueEventChild(Connection.friendRef, object : RequestCallback() {
-            override fun onDataChanged(dataSnapshot: DataSnapshot) {
-                mFriends.clear()
-                for (data in dataSnapshot.children) {
-                    data.key?.let { mFriends.add(it) }
-                }
+            if (group.groupImgUrl.equals("null")) {
+                holder.profileImg.setImageResource(R.drawable.ic_multiple_users_silhouette)
+            } else {
+                Glide.with(mContext).load(group.groupImgUrl).into(holder.profileImg)
             }
-        })
 
-        holder.userName.text = user.username
+            holder.itemView.setOnClickListener {
+                val alert = AlertDialog.Builder(mContext)
+                alert.setMessage("You want to join group")
+                alert.setPositiveButton("YES",object : DialogInterface.OnClickListener{
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        FirebaseDatabase.getInstance().getReference(Connection.groupMemRef).child(group.id).child(Connection.user).setValue(true)
+                        FirebaseDatabase.getInstance().getReference(Connection.groupJoinedRef).child(Connection.user).child(group.id).setValue(true)
+                        val intent = Intent(mContext,GroupChatMessageActivity::class.java)
+                        val list = arrayListOf<String>()
+                        list.add(group.id)
+                        list.add(group.groupName)
+                        intent.putStringArrayListExtra("groupInfo", list)
+                        mContext.startActivity(intent)
+                    }
+                })
+                alert.setNegativeButton("NO",object : DialogInterface.OnClickListener{
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        dialog?.let {
+                            it.dismiss()
+                        }
+                    }
+                })
+                alert.create().show()
+            }
+        }else {
+            val user = mlist.get(position)
 
-        if (user.imageUrl.equals("null")) {
-            holder.profileImg.setImageResource(R.drawable.google_logo)
-        } else {
-            Glide.with(mContext).load(user.imageUrl).into(holder.profileImg)
-        }
+            FirebaseMethods.addValueEventChild(Connection.friendRef, object : RequestCallback() {
+                override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                    mFriends.clear()
+                    for (data in dataSnapshot.children) {
+                        data.key?.let { mFriends.add(it) }
+                    }
+                }
+            })
 
-        if (mFriends.contains(user.id)) {
-            setVisibility(holder.friendButton, holder.unfriendButton)
-        } else {
-            setVisibility(holder.unfriendButton, holder.friendButton)
-        }
+            holder.userName.text = user.username
 
-        holder.friendButton.setOnClickListener {
-            setFollow(user.id, holder)
-            setVisibility(holder.friendButton, holder.unfriendButton)
-        }
+            if (user.imageUrl.equals("null")) {
+                holder.profileImg.setImageResource(R.drawable.google_logo)
+            } else {
+                Glide.with(mContext).load(user.imageUrl).into(holder.profileImg)
+            }
 
-        holder.unfriendButton.setOnClickListener {
-            removeFollow(user.id, holder)
-            setVisibility(holder.unfriendButton, holder.friendButton)
+            if (mFriends.contains(user.id)) {
+                setVisibility(holder.friendButton, holder.unfriendButton)
+            } else {
+                setVisibility(holder.unfriendButton, holder.friendButton)
+            }
+
+            holder.friendButton.setOnClickListener {
+                setFollow(user.id, holder)
+                setVisibility(holder.friendButton, holder.unfriendButton)
+            }
+
+            holder.unfriendButton.setOnClickListener {
+                removeFollow(user.id, holder)
+                setVisibility(holder.unfriendButton, holder.friendButton)
+            }
         }
     }
 

@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.database.DataSnapshot
 import com.mikhaellopez.circularimageview.CircularImageView
-import com.zone.chatterz.singleChat.ChatMessageActivity
-import com.zone.chatterz.firebaseConnection.Connection
-import com.zone.chatterz.firebaseConnection.FirebaseMethods
-import com.zone.chatterz.firebaseConnection.RequestCallback
+import com.zone.chatterz.chats.ChatMessageActivity
+import com.zone.chatterz.connection.Connection
+import com.zone.chatterz.connection.FirebaseMethods
+import com.zone.chatterz.connection.RequestCallback
 import com.zone.chatterz.model.Chat
 import com.zone.chatterz.model.User
 import com.zone.chatterz.R

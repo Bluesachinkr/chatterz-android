@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mikhaellopez.circularimageview.CircularImageView
-import com.zone.chatterz.CreateNewGroup
+import com.zone.chatterz.group.CreateNewGroup
 import com.zone.chatterz.inferfaces.GroupchatControl
 import com.zone.chatterz.model.Group
 import com.zone.chatterz.R

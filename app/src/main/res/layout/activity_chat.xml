@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/AppBackground"
-    tools:context=".singleChat.ChatActivity">
+    tools:context=".chats.ChatActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/open_group_FloatingButton"

@@ -14,15 +14,14 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.R
-import com.zone.chatterz.firebaseConnection.Connection
-import com.zone.chatterz.firebaseConnection.FirebaseMethods
-import com.zone.chatterz.firebaseConnection.RequestCallback
+import com.zone.chatterz.connection.Connection
+import com.zone.chatterz.connection.FirebaseMethods
+import com.zone.chatterz.connection.RequestCallback
 import com.zone.chatterz.inferfaces.CommentLayoutListener
 import com.zone.chatterz.inferfaces.CommentReloadListener
-import com.zone.chatterz.mainFragment.HomeActivity
 import com.zone.chatterz.model.Comment
 import com.zone.chatterz.model.User
-import com.zone.chatterz.requirements.Timings
+import com.zone.chatterz.common.Timings
 import java.io.File
 
 class CommentAdapter(

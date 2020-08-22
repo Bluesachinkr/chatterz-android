@@ -5,7 +5,8 @@
     android:id="@+id/drawerGroups"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".groupChats.GroupChatMessageActivity">
+    android:background="@color/AppBackground"
+    tools:context=".group.GroupChatMessageActivity">
 
     <RelativeLayout
         android:id="@+id/contentGroupChats"
@@ -36,7 +37,9 @@
             android:layout_height="wrap_content"
             android:text="Sachin Group"
             android:textSize="22sp"
-            android:textColor="#000000"
+            android:fontFamily="@font/avenir_book"
+            android:textStyle="bold"
+            android:textColor="@color/white"
             android:layout_toEndOf="@id/drawerOpenBtn"
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"/>
@@ -54,7 +57,7 @@
                 android:id="@+id/groupChatsRecyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#F0F0F0"
+                android:background="@color/AppBackground"
                 android:layout_above="@id/messageAreaChatGroup"/>
 
             <LinearLayout
@@ -68,17 +71,14 @@
                 <EditText
                     android:id="@+id/editextGrpMessage"
                     android:layout_width="0dp"
-                    android:layout_weight="4.6"
+                    android:layout_weight="5"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/GreyColorLittleHighlighted"
                     android:layout_height="match_parent"
                     android:layout_margin="5dp"
                     android:padding="12dp"
                     android:hint="Enter a message"
                     android:background="@drawable/background_edittext_chatbox"/>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".4" />
 
                 <ImageView
                     android:id="@+id/sendMessageGrpButton"

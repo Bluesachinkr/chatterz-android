@@ -7,9 +7,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.iceteck.silicompressorr.SiliCompressor
-import com.zone.chatterz.firebaseConnection.Connection
-import com.zone.chatterz.firebaseConnection.FirebaseMethods
-import com.zone.chatterz.firebaseConnection.RequestCallback
+import com.zone.chatterz.connection.Connection
+import com.zone.chatterz.connection.FirebaseMethods
+import com.zone.chatterz.connection.RequestCallback
 import java.io.ByteArrayOutputStream
 import java.io.File
 
@@ -25,14 +25,14 @@ class PostUploadService : IntentService(null) {
         compressImage(resultPath)
         if (time != null && description != null) {
             val hashMap = hashMapOf<String, Any>()
-            hashMap.put("postOwner", com.zone.chatterz.firebaseConnection.Connection.user)
+            hashMap.put("postOwner", com.zone.chatterz.connection.Connection.user)
             hashMap.put("postDescription", description)
             hashMap.put("postTime", time)
             hashMap.put("postImage", "null")
 
             val databaseReference = FirebaseDatabase.getInstance().reference
             val push =
-                databaseReference.child(com.zone.chatterz.firebaseConnection.Connection.postRef)
+                databaseReference.child(com.zone.chatterz.connection.Connection.postRef)
                     .push()
             val str = push.key.toString()
             hashMap.put("postId",str)
