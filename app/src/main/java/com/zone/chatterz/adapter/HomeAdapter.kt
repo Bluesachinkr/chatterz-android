@@ -25,7 +25,11 @@ import com.zone.chatterz.model.Comment
 import com.zone.chatterz.model.Post
 import com.zone.chatterz.model.User
 import com.zone.chatterz.common.Timings
+import com.zone.chatterz.inferfaces.APIService
+import com.zone.chatterz.notification.*
+import retrofit2.Call
 import java.io.File
+import java.lang.StringBuilder
 
 class HomeAdapter(
     mContext: Context,
@@ -82,6 +86,22 @@ class HomeAdapter(
 
         holder.like_post.setOnClickListener {
             likeOnPost(post.postId, holder)
+            FirebaseMethods.singleValueEvent(Connection.userRef+File.separator+Connection.user,object : RequestCallback(){
+                override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                    val user = dataSnapshot.getValue(User::class.java)
+                    user?.let {
+                        val builder = StringBuilder(user.displayName+" ")
+                        builder.append("liked on your post")
+                        sendNotification(builder.toString(),user.id,post.postImage)
+                        val hashMap = hashMapOf<String,Any>()
+                        hashMap.put("message",builder.toString())
+                        hashMap.put("image",post.postImage)
+                        hashMap.put("sender",Connection.user)
+                        FirebaseDatabase.getInstance().getReference(Connection.notification).child(post.postOwner)
+                            .push().setValue(hashMap)
+                    }
+                }
+            })
         }
 
         holder.comment_post.setOnClickListener {
@@ -104,10 +124,6 @@ class HomeAdapter(
             val popupMenu = PopupMenu(mContext, it)
             popupMenu.setOnMenuItemClickListener(this)
             popupMenu.inflate(R.menu.options_menu_post)
-            val menu = popupMenu.menu
-            if(post.postOwner != Connection.user){
-                menu.getItem(R.id.delete_options_post).setEnabled(false)
-            }
             popupMenu.show()
         }
         FirebaseMethods.singleValueEvent(Connection.likesRef + File.separator + post.postId + File.separator + Connection.user,
@@ -254,6 +270,42 @@ class HomeAdapter(
             .addOnSuccessListener {
                 Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun sendNotification(mes: String, reciever: String,imageUrl: String) {
+        val apiService = Client.getClient()?.create(APIService::class.java)!!
+        val databaseReference = FirebaseDatabase.getInstance().getReference("Tokens")
+        val query = databaseReference.orderByKey().equalTo(reciever)
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                for (data in p0.children) {
+                    val token = data.getValue(Token::class.java)
+                    if (token != null) {
+                        val data = Data(Connection.user,imageUrl,mes, NotificationType.chat,reciever)
+                        val sender = Sender(data, token.token)
+                        apiService.sendNotification(sender)
+                            .enqueue(object : retrofit2.Callback<Response> {
+                                override fun onFailure(call: Call<Response>, t: Throwable) {
+                                }
+
+                                override fun onResponse(
+                                    call: Call<Response>,
+                                    response: retrofit2.Response<Response>
+                                ) {
+                                    if (response.code() == 200) {
+                                        if (response.body()?.sucess != 1) {
+
+                                        }
+                                    }
+                                }
+                            })
+                    }
+                }
+            }
+        })
     }
 
     private fun deletePost(postId: String) {

@@ -14,7 +14,7 @@ class FirebaseIdService : FirebaseInstanceIdService() {
         val firebaseUser = FirebaseAuth.getInstance().currentUser!!
 
         firebaseUser?.let {
-            val token: String? = FirebaseInstanceId.getInstance().getToken()
+            val token: String? = FirebaseInstanceId.getInstance().token
             token?.let {
                 updateToken(it, firebaseUser)
             }

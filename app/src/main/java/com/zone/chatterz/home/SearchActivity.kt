@@ -19,14 +19,15 @@ import com.zone.chatterz.model.Group
 import java.sql.Connection
 
 
-open class SearchActivity : AppCompatActivity() {
+open class SearchActivity : AppCompatActivity(),TabLayout.OnTabSelectedListener {
 
-    private lateinit var searchBar: SearchView
+    private lateinit var searchBar: android.widget.SearchView
     private lateinit var tablayout_searchView: TabLayout
     private lateinit var searchProgressBar: ProgressBar
     private lateinit var searchedView: RecyclerView
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var mAuth: FirebaseAuth
+    private var selectedTab : Int = 0
     private lateinit var mSearchUser: MutableList<User>
     private var currentSearchtext: String = ""
 
@@ -62,7 +63,7 @@ open class SearchActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this)
         searchedView.layoutManager = layoutManager
 
-        searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchBar.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 currentSearchtext = query!!
                 if (query!!.isEmpty()) {
@@ -94,7 +95,6 @@ open class SearchActivity : AppCompatActivity() {
                     return true
                 }
             }
-
         })
     }
 
@@ -193,5 +193,15 @@ open class SearchActivity : AppCompatActivity() {
         val getContext = this
         val adapter = SearchAdapter(getContext, mSearchUser, arrayListOf(),"People")
         searchedView.adapter = adapter
+    }
+
+    override fun onTabSelected(tab: TabLayout.Tab?) {
+       selectedTab = tab?.position!!
+    }
+
+    override fun onTabUnselected(tab: TabLayout.Tab?) {
+    }
+
+    override fun onTabReselected(tab: TabLayout.Tab?) {
     }
 }

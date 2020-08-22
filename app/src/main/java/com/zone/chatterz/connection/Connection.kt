@@ -22,5 +22,6 @@ open class Connection {
         val commentsRef : String = "Comments"
         val commentReplyRef : String = "CommentsReply"
         val archivePost : String = "Archive"
+        val notification : String = "PopUp"
     }
 }

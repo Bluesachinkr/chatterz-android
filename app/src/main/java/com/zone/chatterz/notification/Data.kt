@@ -9,5 +9,4 @@ data class Data(
     var sented: String
 ) {
     constructor() : this("", "", "", "", "")
-
 }

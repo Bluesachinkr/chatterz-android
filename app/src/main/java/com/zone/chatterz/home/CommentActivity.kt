@@ -2,6 +2,7 @@ package com.zone.chatterz.home
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.service.autofill.UserData
 import android.text.Editable
 import android.view.View
 import android.widget.EditText
@@ -9,7 +10,9 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.zone.chatterz.R
 import com.zone.chatterz.adapter.CommentAdapter
 import com.zone.chatterz.connection.Connection
@@ -19,7 +22,12 @@ import com.zone.chatterz.inferfaces.CommentLayoutListener
 import com.zone.chatterz.inferfaces.CommentReloadListener
 import com.zone.chatterz.model.Comment
 import com.zone.chatterz.common.Timings
+import com.zone.chatterz.inferfaces.APIService
+import com.zone.chatterz.model.User
+import com.zone.chatterz.notification.*
+import retrofit2.Call
 import java.io.File
+import java.lang.StringBuilder
 
 class CommentActivity : AppCompatActivity(), View.OnClickListener, CommentLayoutListener,
     CommentReloadListener {

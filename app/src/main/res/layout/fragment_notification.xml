@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/AppBackground"
+    android:orientation="vertical"
+    tools:context=".home.NotificationFragment">
+
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:layout_height="?actionBarSize">
+
+       <ImageView
+           android:id="@+id/back_arrow_notification"
+           android:layout_width="?actionBarSize"
+           android:layout_height="?actionBarSize"
+           android:padding="12dp"
+           android:src="@drawable/back_arrow"/>
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textColor="@color/white"
+           android:textStyle="bold"
+           android:textSize="24sp"
+           android:layout_centerVertical="true"
+           android:fontFamily="@font/avenir_book"
+           android:layout_toRightOf="@id/back_arrow_notification"
+           android:text="Notifications"/>
+   </RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/notification_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"/>
+
+</LinearLayout>

@@ -1,15 +1,19 @@
 package com.zone.chatterz.chats
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.mikhaellopez.circularimageview.CircularImageView
 import com.zone.chatterz.adapter.ChatsAdapter
 import com.zone.chatterz.connection.Connection
 import com.zone.chatterz.connection.FirebaseMethods
@@ -19,7 +23,6 @@ import com.zone.chatterz.model.Chat
 import com.zone.chatterz.model.User
 import com.zone.chatterz.notification.*
 import com.zone.chatterz.R
-import kotlinx.android.synthetic.main.activity_chatmessage.*
 import retrofit2.Call
 import java.io.File
 
@@ -29,6 +32,13 @@ class ChatMessageActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var databaseReference: DatabaseReference
     private lateinit var mChat: MutableList<Chat>
     private lateinit var userId: String
+    private lateinit var chatsRecyclerview : RecyclerView
+    private lateinit var sendMessageButton : ImageView
+    private lateinit var backArrow : ImageView
+    private lateinit var editextMessage : EditText
+    private lateinit var userNameChatBox : TextView
+    private lateinit var lastOnline : TextView
+    private lateinit var profileImg_chatBar : CircularImageView
     private lateinit var apiService: APIService
 
     private var isActive: String = "active"
@@ -42,6 +52,14 @@ class ChatMessageActivity : AppCompatActivity(), View.OnClickListener {
         val intent = intent
         val id: String = intent.getStringExtra("UserId")
         userId = id
+
+        userNameChatBox = findViewById(R.id.userNameChatBox)
+        sendMessageButton = findViewById(R.id.sendMessageButton)
+        backArrow = findViewById(R.id.backArrow)
+        editextMessage = findViewById(R.id.editextMessage)
+        chatsRecyclerview = findViewById(R.id.chatsRecyclerview)
+        lastOnline = findViewById(R.id.lastOnline)
+        profileImg_chatBar = findViewById(R.id.profileImg_chatBar)
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
 
@@ -118,7 +136,7 @@ class ChatMessageActivity : AppCompatActivity(), View.OnClickListener {
                 val user = dataSnapshot.getValue(User::class.java)
                 if (user != null) {
                     if (notify) {
-                        sendNotification(mes, reciever, user.username)
+                        sendNotification(mes, reciever, user.username,user.imageUrl)
                     }
                     notify = false
                 }
@@ -126,7 +144,7 @@ class ChatMessageActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 
-    private fun sendNotification(mes: String, reciever: String, username: String) {
+    private fun sendNotification(mes: String, reciever: String, username: String, imageUrl: String) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Tokens")
         val query = databaseReference.orderByKey().equalTo(reciever)
         query.addValueEventListener(object : ValueEventListener {
@@ -137,15 +155,8 @@ class ChatMessageActivity : AppCompatActivity(), View.OnClickListener {
                 for (data in p0.children) {
                     val token = data.getValue(Token::class.java)
                     if (token != null) {
-                        val data = Data(
-                            firebaseUser.uid,
-                            R.mipmap.ic_launcher_round.toString(),
-                            username + ": " + mes,
-                            "New Message",
-                            userId
-                        )
+                        val data = Data(Connection.user,imageUrl,mes,NotificationType.chat,userId)
                         val sender = Sender(data, token.token)
-                        Log.d("SAchin", "Successfully notification send by using retrofit.")
                         apiService.sendNotification(sender)
                             .enqueue(object : retrofit2.Callback<Response> {
                                 override fun onFailure(call: Call<Response>, t: Throwable) {
@@ -231,17 +242,6 @@ class ChatMessageActivity : AppCompatActivity(), View.OnClickListener {
         when (v) {
             backArrow -> {
                 onBackPressed()
-            }
-            sendMessageButton -> {
-                notify = true
-                val message = editextMessage.text.toString()
-                if (!message.equals("")) {
-                    val sender = firebaseUser.uid
-                    val reciever = userId
-                    sendMessage(message, sender, reciever)
-                } else {
-                    Toast.makeText(this, "Can't send empty Message", Toast.LENGTH_SHORT).show()
-                }
             }
             else -> {
                 return

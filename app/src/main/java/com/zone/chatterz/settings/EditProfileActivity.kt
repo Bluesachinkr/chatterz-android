@@ -111,8 +111,11 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUESTCODE && data != null) {
 
             val uri = data.data
-            val resultPath = uri.toString()
-            val compressedImg = SiliCompressor.with(this).getCompressBitmap(File(resultPath).toString())
+            var str = uri.toString()
+            str = str?.substring(4)
+            val file = File(str)
+            val resultPath = file.path
+            val compressedImg = SiliCompressor.with(this).getCompressBitmap(resultPath)
             val stream = ByteArrayOutputStream()
             compressedImg.compress(Bitmap.CompressFormat.PNG,100,stream)
             val array = stream.toByteArray()

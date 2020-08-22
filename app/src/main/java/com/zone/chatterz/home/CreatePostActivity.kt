@@ -28,7 +28,6 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var create_post_image: ImageView
 
     private lateinit var create_post_description: EditText
-
     private lateinit var camera_btn_create_post: ImageView
 
     private var selectedImage: Uri? = null
