@@ -35,7 +35,7 @@ class FinalPreviewActivity() :
         image_final_preview_btn.setOnClickListener {
             val intent = Intent(this,CreatePostActivity::class.java)
             intent.putExtra("from","camera")
-            intent.putExtra("output", Uri.fromFile(file))
+            intent.putExtra("output", Uri.fromFile(file).path)
             startActivity(intent)
         }
 

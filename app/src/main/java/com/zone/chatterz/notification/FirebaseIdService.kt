@@ -10,10 +10,7 @@ class FirebaseIdService : FirebaseInstanceIdService() {
 
     override fun onTokenRefresh() {
         super.onTokenRefresh()
-
-        val firebaseUser = FirebaseAuth.getInstance().currentUser!!
-
-        firebaseUser?.let {
+        FirebaseAuth.getInstance()?.currentUser?.let { firebaseUser->
             val token: String? = FirebaseInstanceId.getInstance().token
             token?.let {
                 updateToken(it, firebaseUser)
