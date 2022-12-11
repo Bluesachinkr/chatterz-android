@@ -1,109 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/AppBackground"
-    tools:context=".chats.ChatActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/open_group_FloatingButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="36dp"
-        android:layout_marginRight="36dp"
-        android:backgroundTint="@color/white"
-        android:src="@drawable/ic_account"/>
-
-    <LinearLayout
-        android:id="@+id/contentOnline"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="@color/AppBackground"
+        tools:context=".chats.ChatActivity">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarMain"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/open_group_FloatingButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="36dp"
+            android:layout_marginBottom="36dp"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/ic_account" />
+
+        <LinearLayout
+            android:id="@+id/contentOnline"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbarMain"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="8dp"
+                        android:fontFamily="@font/avenir_book"
+                        android:text="Chats"
+                        android:textColor="@color/white"
+                        android:textSize="28sp"
+                        android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:id="@+id/new_chat_to_user_layout"
+                        android:layout_width="?actionBarSize"
+                        android:layout_height="?actionBarSize"
+                        android:layout_alignParentEnd="true">
+
+                        <ImageView
+                            android:id="@+id/new_chat_to_users"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/add_new_group_icon" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/onlineRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="8dp"
-                    android:fontFamily="@font/avenir_book"
-                    android:text="Chats"
-                    android:textColor="@color/white"
-                    android:textSize="28sp"
-                    android:textStyle="bold" />
+                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                    android:id="@+id/swipe_refresh_recent_chats"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <RelativeLayout
-                    android:id="@+id/new_chat_to_user_layout"
-                    android:layout_width="?actionBarSize"
-                    android:layout_height="?actionBarSize"
-                    android:layout_alignParentEnd="true">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recent_RecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical" />
 
-                    <ImageView
-                        android:id="@+id/new_chat_to_users"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/add_new_group_icon" />
-
-                </RelativeLayout>
+                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
             </RelativeLayout>
 
-        </androidx.appcompat.widget.Toolbar>
+        </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <!-- <com.google.android.material.navigation.NavigationView
+             android:id="@+id/activeOnlineMenu"
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent"
+             android:layout_gravity="right"
+             app:headerLayout="@layout/fragment_followers" />-->
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/onlineRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="none" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/swipe_refresh_recent_chats"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recent_RecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical" />
-
-            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-    <!-- <com.google.android.material.navigation.NavigationView
-         android:id="@+id/activeOnlineMenu"
-         android:layout_width="wrap_content"
-         android:layout_height="match_parent"
-         android:layout_gravity="right"
-         app:headerLayout="@layout/fragment_followers" />-->
-
-</RelativeLayout>
+    </RelativeLayout>
+</layout>
 

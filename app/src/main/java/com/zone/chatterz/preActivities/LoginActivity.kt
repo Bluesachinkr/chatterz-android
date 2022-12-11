@@ -46,8 +46,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         val isValidPassword =
             ManualAuthentication.validatePassword(userPasswordInput)
 
-        if (isValidEmail.equals("Valid")) {
-            if (isValidPassword.equals("Valid")) {
+        if (isValidEmail == "Valid") {
+            if (isValidPassword == "Valid") {
                 signIn(userEmailInput, userPasswordInput)
             } else {
                 passwordInput.setText("")
@@ -55,7 +55,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         } else {
             emailInput.setText("")
-            emailInput.setError(isValidEmail)
+            emailInput.error = isValidEmail
         }
     }
 
